@@ -1,2 +1,2 @@
-# intrvl.github.io
+# intrvlstudio.github.io
 INTRVL STUDIO OFFICIAL SITE
