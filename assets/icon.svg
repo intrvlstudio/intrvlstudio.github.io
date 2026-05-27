@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_2" data-name="圖層 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 674.32 674.32">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: url(#_未命名漸層_44);
+      }
+    </style>
+    <linearGradient id="_未命名漸層_44" data-name="未命名漸層 44" x1="-57.37" y1="730.15" x2="740.41" y2="-64.53" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8c17f"/>
+      <stop offset=".5" stop-color="#ee84b2"/>
+      <stop offset=".99" stop-color="#af6fac"/>
+    </linearGradient>
+  </defs>
+  <g id="_圖層_3" data-name="圖層 3">
+    <g>
+      <rect class="cls-2" width="674.32" height="674.32"/>
+      <g>
+        <polygon class="cls-1" points="245.59 319.69 157.41 517.7 516.9 517.7 429.15 319.3 245.59 319.69"/>
+        <path class="cls-1" d="M401.98,257.87l-36.08-81.57c-11.6-26.22-44.76-26.27-56.42-.09l-36.34,81.6,128.84.05Z"/>
+      </g>
+    </g>
+  </g>
+</svg>
