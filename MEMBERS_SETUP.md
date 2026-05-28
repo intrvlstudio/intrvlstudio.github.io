@@ -63,7 +63,7 @@
 
 ## 日常管理
 
-- **發公告 / 加連結**：用管理員帳號登入 `members.html`，直接在頁面上新增、刪除。
+- **發公告 / 加連結**：用管理員帳號登入 `members.html`，直接在頁面上新增、編輯（鉛筆圖示）、刪除（垃圾桶圖示）。
   （也可以在 Firebase Console → Firestore → Data 手動編輯。）
 - **新增成員**：Firebase Console → Authentication → Users → Add user。
 - **移除成員**：在 Users 清單刪除該帳號。
