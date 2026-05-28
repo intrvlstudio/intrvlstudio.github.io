@@ -95,6 +95,23 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
 .tile:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -22px rgba(31,24,20,0.25); }
 .tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; word-break: break-word; }
 .tile p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
+.tile .cat {
+  display: inline-block; margin-bottom: 9px; padding: 2px 9px;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  color: var(--mauve); background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); border-radius: 999px;
+}
+
+/* 分類篩選 / 表單下拉 */
+.cat-filter, .editor select {
+  padding: 8px 13px; font-family: inherit; font-size: 14px;
+  color: var(--ink); background: #fff; border: 1px solid var(--rule);
+  border-radius: 10px; outline: none; cursor: pointer;
+}
+.cat-filter:focus, .editor select:focus {
+  border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
+}
+.editor select { flex: 1 1 180px; margin-bottom: 10px; }
 
 .ann { padding: 20px 22px; background: #fff; border: 1px solid var(--rule);
   border-radius: 14px; margin-bottom: 14px; position: relative; }
@@ -198,6 +215,7 @@ body.is-admin .admin-only { display: block; }
         <span class="lang-zh">快速連結</span>
         <span class="lang-ko">바로가기</span>
       </span>
+      <select class="cat-filter" id="catFilter" aria-label="Filter by category"></select>
     </div>
     <div class="grid" id="linksGrid"></div>
 
@@ -214,6 +232,7 @@ body.is-admin .admin-only { display: block; }
           <input id="linkDesc" placeholder="Description / 說明">
         </div>
         <div class="row">
+          <select id="linkCategory" aria-label="Category"></select>
           <input id="linkUrl" type="url" placeholder="https://..." required>
           <button type="submit">
             <span class="lang-en">Add link</span>
@@ -290,29 +309,74 @@ const safeUrl = (u) => /^https?:\/\//i.test(String(u ?? '').trim()) ? String(u).
 const linksGrid = document.getElementById('linksGrid');
 const annList   = document.getElementById('annList');
 const loadError = document.getElementById('loadError');
+const catFilter = document.getElementById('catFilter');
+const linkCategory = document.getElementById('linkCategory');
+
+/* ---------- 分類定義 ----------
+   要新增分類：在這裡加一筆，並同步更新 firestore.rules 的
+   d.category in [...] 名單即可。 */
+const CATS = [
+  { id: 'work',  label: { 'zh-TW': '工作相關', en: 'Work',  ko: '업무 관련' } },
+  { id: 'staff', label: { 'zh-TW': '員工相關', en: 'Staff', ko: '직원 관련' } }
+];
+const allLabel = { 'zh-TW': '全部分類', en: 'All', ko: '전체' };
+const catLabel = (id) => {
+  const c = CATS.find(c => c.id === id);
+  return c ? (c.label[lang()] || c.label.en) : '';
+};
+
+/* 依目前語言填入「篩選下拉」與「新增表單下拉」，並保留現有選擇 */
+function populateCatControls() {
+  const opts = CATS.map(c =>
+    `<option value="${c.id}">${esc(c.label[lang()] || c.label.en)}</option>`).join('');
+
+  const prevFilter = catFilter.value || 'all';
+  catFilter.innerHTML =
+    `<option value="all">${esc(allLabel[lang()] || allLabel.en)}</option>` + opts;
+  catFilter.value = prevFilter;
+
+  const prevCat = linkCategory.value || CATS[0].id;
+  linkCategory.innerHTML = opts;
+  linkCategory.value = prevCat;
+}
 
 /* ---------- 載入快速連結 ---------- */
+let allLinks = [];
 async function loadLinks() {
   const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);
-  if (snap.empty) {
+  allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderLinks();
+}
+
+/* 依目前篩選分類渲染連結 */
+function renderLinks() {
+  const filter = catFilter.value || 'all';
+  const items = filter === 'all'
+    ? allLinks
+    : allLinks.filter(v => (v.category || '') === filter);
+
+  if (!items.length) {
     linksGrid.innerHTML = `<p class="empty">${t('noLinks')}</p>`;
     return;
   }
   linksGrid.innerHTML = '';
-  snap.forEach(d => {
-    const v = d.data();
+  items.forEach(v => {
     const a = document.createElement('a');
     a.className = 'tile';
     a.href = safeUrl(v.url);
     a.target = '_blank'; a.rel = 'noopener';
+    const tag = v.category ? `<span class="cat">${esc(catLabel(v.category))}</span>` : '';
     a.innerHTML =
-      `<button class="del" data-col="links" data-id="${d.id}" title="delete">✕</button>
-       <h3>${esc(v.title)}</h3>
+      `<button class="del" data-col="links" data-id="${v.id}" title="delete">✕</button>
+       ${tag}<h3>${esc(v.title)}</h3>
        <p>${esc(v.desc || '')}</p>`;
     linksGrid.appendChild(a);
   });
 }
+
+/* 切換篩選 → 重新渲染（不需重新查詢資料庫） */
+catFilter.addEventListener('change', renderLinks);
 
 /* ---------- 載入公告 ---------- */
 async function loadAnnouncements() {
@@ -367,6 +431,7 @@ document.getElementById('linkForm').addEventListener('submit', async (e) => {
       title: document.getElementById('linkTitle').value.trim(),
       desc:  document.getElementById('linkDesc').value.trim(),
       url:   document.getElementById('linkUrl').value.trim(),
+      category: linkCategory.value,
       createdAt: serverTimestamp()
     });
     e.target.reset();
@@ -414,8 +479,11 @@ function setLanguage(l) {
   document.documentElement.lang = l;
   buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === l));
   try { localStorage.setItem('intrvl_lang', l); } catch(e) {}
+  populateCatControls();  // 下拉選單文字隨語言更新
+  renderLinks();          // 連結分類標籤隨語言更新
 }
 buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+populateCatControls();
 try {
   const saved = localStorage.getItem('intrvl_lang');
   if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);
