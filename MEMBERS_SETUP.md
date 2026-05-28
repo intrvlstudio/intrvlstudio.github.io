@@ -21,7 +21,8 @@
    - 不開放公開註冊，所以只有你手動加入的人能登入。
 5. **專案設定（齒輪 → Project settings）→ Your apps → 點 `</>` (Web)** 註冊一個 Web App，
    複製 `firebaseConfig` 物件。
-6. 打開 `assets/auth.js`，把 `firebaseConfig` 裡的占位字串換成你複製的值。
+6. 打開 `assets/auth.js`，把 `firebaseConfig` 裡的值換成你複製的設定。
+   （本專案已填入 `intrvl-studio` 的設定，若沿用同一專案此步可略過。）
 7. 回到 **Authentication → Settings → Authorized domains**，
    新增 `intrvlstudio.github.io`（`localhost` 預設已在清單中）。
 
@@ -44,11 +45,20 @@
 
 ### 資料結構（系統會自動建立，了解即可）
 
-| 集合 | 欄位 |
-|------|------|
-| `announcements` | `title`、`body`、`createdAt` |
-| `links` | `title`、`desc`、`url`、`createdAt` |
-| `admins` | 文件 ID = 管理員的 UID |
+`firestore.rules` 會在後端強制以下欄位與長度限制，不符合的寫入會被拒絕：
+
+| 集合 | 欄位 | 後端限制 |
+|------|------|----------|
+| `announcements` | `title` | 必填字串，≤ 150 字 |
+| | `body` | 必填字串，≤ 5000 字 |
+| | `createdAt` | 必須等於伺服器時間（防偽造） |
+| `links` | `title` | 必填字串，≤ 100 字 |
+| | `desc` | 選填字串，≤ 300 字 |
+| | `url` | 必須是 `http://` 或 `https://` 開頭，≤ 2000 字 |
+| | `createdAt` | 必須等於伺服器時間（防偽造） |
+| `admins` | 文件 ID = 管理員的 UID | 只能在 Console 手動管理 |
+
+> 規則只接受上表列出的欄位（`hasOnly`），塞入額外欄位會被拒絕。
 
 ## 日常管理
 
@@ -65,6 +75,11 @@
   真正的防護來自「授權網域」、Authentication 後端驗證，以及 Firestore 安全規則。
 - 公告與連結內容存在 Firestore，受 `firestore.rules` 保護：**沒登入完全讀不到**，
   只有 `admins` 名單裡的人能修改。這些規則跑在 Google 後端，前端無法繞過。
+- **寫入內容會在後端驗證**：欄位白名單、長度上限、連結協定（只允許 `http(s)://`、
+  擋掉 `javascript:` 等），以及 `createdAt` 必須是伺服器時間。即使有人略過前端
+  直接打 API，也無法塞入不合規的資料。
+- **連結顯示防 XSS**：`members.html` 的 `safeUrl()` 在渲染前再驗一次連結協定，
+  與後端規則雙重把關，避免惡意連結被當成可點擊項目。
 - `members.html` 這個檔案本身仍是公開靜態檔，但它現在只剩版面骨架、**不含任何
   機密內容**，所以即使有人看原始碼也拿不到資料。
 - 永遠不要把任何成員密碼寫進這些檔案。
