@@ -31,6 +31,18 @@ import {
   setPersistence,
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ▼▼▼ INTRVL Studio Firebase 專案設定 ▼▼▼ */
 const firebaseConfig = {
@@ -46,13 +58,40 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 /* 讓登入狀態保存在瀏覽器（關閉分頁再回來仍維持登入） */
 setPersistence(auth, browserLocalPersistence).catch(() => {});
+
+/* 檢查目前登入者是不是管理員。
+   作法：在 Firestore 建一個 admins 集合，文件 ID = 該成員的 User UID
+   （UID 可在 Authentication → Users 找到）。有文件 = 管理員。
+   安全規則會在後端再次驗證，所以這只是用來決定要不要顯示編輯介面。 */
+async function isAdmin(uid) {
+  if (!uid) return false;
+  try {
+    const snap = await getDoc(doc(db, "admins", uid));
+    return snap.exists();
+  } catch (e) {
+    return false;
+  }
+}
 
 export {
   auth,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  /* Firestore */
+  db,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  serverTimestamp,
+  isAdmin
 };

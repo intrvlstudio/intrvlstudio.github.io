@@ -77,25 +77,73 @@ body.checking::after {
 h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
 .lede { color: var(--ink-soft); margin-bottom: 40px; max-width: 60ch; }
 
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; margin: 48px 0 16px;
+}
+.section-title {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-mute);
+}
+
 .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .tile {
-  display: block; padding: 22px; background: #fff;
+  position: relative; display: block; padding: 22px; background: #fff;
   border: 1px solid var(--rule); border-radius: 16px;
   transition: transform .12s, box-shadow .15s;
 }
 .tile:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -22px rgba(31,24,20,0.25); }
-.tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
-.tile p { font-size: 13.5px; color: var(--ink-mute); }
+.tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; word-break: break-word; }
+.tile p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
 
-.section-title {
-  margin: 48px 0 16px; font-size: 13px; font-weight: 700;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-mute);
-}
+.ann { padding: 20px 22px; background: #fff; border: 1px solid var(--rule);
+  border-radius: 14px; margin-bottom: 14px; position: relative; }
+.ann h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.ann time { font-size: 12px; color: var(--ink-mute); }
+.ann p { margin-top: 8px; color: var(--ink-soft); white-space: pre-wrap; }
+
 .note {
   padding: 18px 20px; background: var(--bg-alt);
   border: 1px solid var(--rule-soft); border-radius: 14px;
   font-size: 14px; color: var(--ink-soft);
 }
+.empty { color: var(--ink-mute); font-size: 14px; padding: 4px 2px; }
+
+/* 刪除鈕（管理員才看得到） */
+.del {
+  position: absolute; top: 10px; right: 10px;
+  width: 26px; height: 26px; cursor: pointer; line-height: 1;
+  font-size: 15px; color: var(--ink-mute);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
+  display: none;
+}
+body.is-admin .del { display: block; }
+.del:hover { color: #B23B36; border-color: #E7B8B5; }
+
+/* 管理員編輯區 */
+.admin-only { display: none; }
+body.is-admin .admin-only { display: block; }
+.editor {
+  margin-top: 14px; padding: 20px; background: #fff;
+  border: 1px dashed var(--mauve); border-radius: 16px;
+}
+.editor .row { display: flex; gap: 10px; flex-wrap: wrap; }
+.editor input, .editor textarea {
+  flex: 1 1 180px; padding: 10px 13px; font-family: inherit; font-size: 14px;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 10px; outline: none; margin-bottom: 10px; resize: vertical;
+}
+.editor input:focus, .editor textarea:focus {
+  border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
+}
+.editor textarea { flex-basis: 100%; min-height: 70px; }
+.editor button {
+  padding: 10px 20px; cursor: pointer; font-family: inherit;
+  font-size: 14px; font-weight: 700; color: #fff;
+  background: var(--gradient); border: none; border-radius: 10px;
+}
+.editor button:disabled { opacity: .6; cursor: not-allowed; }
+.editor .hint { font-size: 12px; color: var(--ink-mute); margin-bottom: 12px; }
 
 .lang-toggle { display: flex; align-items: center; gap: 4px; }
 .lang-toggle button {
@@ -143,82 +191,221 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
       <span class="lang-ko">INTRVL Studio 멤버를 위한 내부 자료 및 공지입니다.</span>
     </p>
 
-    <!-- ▼▼▼ 以下是範例內容，請自由替換成你的內部連結 / 公告 ▼▼▼ -->
-    <p class="section-title">
-      <span class="lang-en">Quick Links</span>
-      <span class="lang-zh">快速連結</span>
-      <span class="lang-ko">바로가기</span>
-    </p>
-    <div class="grid">
-      <a class="tile" href="#" target="_blank" rel="noopener">
-        <h3>Google Drive</h3>
-        <p>
-          <span class="lang-en">Shared studio files</span>
-          <span class="lang-zh">工作室共用檔案</span>
-          <span class="lang-ko">스튜디오 공유 파일</span>
+    <!-- ============ QUICK LINKS ============ -->
+    <div class="section-head">
+      <span class="section-title">
+        <span class="lang-en">Quick Links</span>
+        <span class="lang-zh">快速連結</span>
+        <span class="lang-ko">바로가기</span>
+      </span>
+    </div>
+    <div class="grid" id="linksGrid"></div>
+
+    <!-- 管理員：新增連結 -->
+    <div class="admin-only">
+      <form class="editor" id="linkForm">
+        <p class="hint">
+          <span class="lang-en">Admin · add a quick link</span>
+          <span class="lang-zh">管理員 · 新增快速連結</span>
+          <span class="lang-ko">관리자 · 바로가기 추가</span>
         </p>
-      </a>
-      <a class="tile" href="#" target="_blank" rel="noopener">
-        <h3>
-          <span class="lang-en">Schedule</span>
-          <span class="lang-zh">排程表</span>
-          <span class="lang-ko">일정표</span>
-        </h3>
-        <p>
-          <span class="lang-en">Weekly production calendar</span>
-          <span class="lang-zh">每週製作行事曆</span>
-          <span class="lang-ko">주간 제작 캘린더</span>
-        </p>
-      </a>
-      <a class="tile" href="#" target="_blank" rel="noopener">
-        <h3>
-          <span class="lang-en">Style Guide</span>
-          <span class="lang-zh">風格指南</span>
-          <span class="lang-ko">스타일 가이드</span>
-        </h3>
-        <p>
-          <span class="lang-en">Art & writing references</span>
-          <span class="lang-zh">作畫與腳本參考</span>
-          <span class="lang-ko">작화·각본 참고</span>
-        </p>
-      </a>
+        <div class="row">
+          <input id="linkTitle" placeholder="Title / 標題" required>
+          <input id="linkDesc" placeholder="Description / 說明">
+        </div>
+        <div class="row">
+          <input id="linkUrl" type="url" placeholder="https://..." required>
+          <button type="submit">
+            <span class="lang-en">Add link</span>
+            <span class="lang-zh">新增</span>
+            <span class="lang-ko">추가</span>
+          </button>
+        </div>
+      </form>
     </div>
 
-    <p class="section-title">
-      <span class="lang-en">Announcements</span>
-      <span class="lang-zh">公告</span>
-      <span class="lang-ko">공지</span>
-    </p>
-    <div class="note">
-      <span class="lang-en">Edit <code>members.html</code> to post studio announcements here.</span>
-      <span class="lang-zh">編輯 <code>members.html</code> 即可在這裡張貼工作室公告。</span>
-      <span class="lang-ko"><code>members.html</code>을 수정하여 여기에 공지를 올리세요.</span>
+    <!-- ============ ANNOUNCEMENTS ============ -->
+    <div class="section-head">
+      <span class="section-title">
+        <span class="lang-en">Announcements</span>
+        <span class="lang-zh">公告</span>
+        <span class="lang-ko">공지</span>
+      </span>
     </div>
-    <!-- ▲▲▲ 範例內容結束 ▲▲▲ -->
+    <div id="annList"></div>
+
+    <!-- 管理員：新增公告 -->
+    <div class="admin-only">
+      <form class="editor" id="annForm">
+        <p class="hint">
+          <span class="lang-en">Admin · post an announcement</span>
+          <span class="lang-zh">管理員 · 張貼公告</span>
+          <span class="lang-ko">관리자 · 공지 작성</span>
+        </p>
+        <div class="row">
+          <input id="annTitle" placeholder="Title / 標題" required>
+        </div>
+        <div class="row">
+          <textarea id="annBody" placeholder="Message / 內容" required></textarea>
+        </div>
+        <div class="row">
+          <button type="submit">
+            <span class="lang-en">Post</span>
+            <span class="lang-zh">張貼</span>
+            <span class="lang-ko">게시</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="note" id="loadError" style="display:none; margin-top:28px;">
+      <span class="lang-en">Couldn't load content. Make sure Firestore is enabled and the security rules are published (see MEMBERS_SETUP.md).</span>
+      <span class="lang-zh">無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。</span>
+      <span class="lang-ko">콘텐츠를 불러오지 못했습니다. Firestore가 활성화되고 보안 규칙이 게시되었는지 확인하세요.</span>
+    </div>
   </main>
 </div>
 
 <script type="module">
-import { auth, signOut, onAuthStateChanged } from "./assets/auth.js";
+import {
+  auth, signOut, onAuthStateChanged, isAdmin,
+  db, collection, doc, getDocs, addDoc, deleteDoc,
+  query, orderBy, serverTimestamp
+} from "./assets/auth.js";
 
-/* 驗證守門：沒登入就踢回登入頁；登入了才顯示內容 */
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.replace('login.html');
+const lang = () => document.documentElement.lang;
+const txt = {
+  confirmDel: { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
+  noLinks:    { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
+  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
+};
+const t = (k) => txt[k][lang()] || txt[k].en;
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+
+const linksGrid = document.getElementById('linksGrid');
+const annList   = document.getElementById('annList');
+const loadError = document.getElementById('loadError');
+
+/* ---------- 載入快速連結 ---------- */
+async function loadLinks() {
+  const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    linksGrid.innerHTML = `<p class="empty">${t('noLinks')}</p>`;
     return;
   }
+  linksGrid.innerHTML = '';
+  snap.forEach(d => {
+    const v = d.data();
+    const a = document.createElement('a');
+    a.className = 'tile';
+    a.href = v.url || '#';
+    a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML =
+      `<button class="del" data-col="links" data-id="${d.id}" title="delete">✕</button>
+       <h3>${esc(v.title)}</h3>
+       <p>${esc(v.desc || '')}</p>`;
+    linksGrid.appendChild(a);
+  });
+}
+
+/* ---------- 載入公告 ---------- */
+async function loadAnnouncements() {
+  const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    annList.innerHTML = `<p class="empty">${t('noAnn')}</p>`;
+    return;
+  }
+  annList.innerHTML = '';
+  snap.forEach(d => {
+    const v = d.data();
+    const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString() : '';
+    const el = document.createElement('div');
+    el.className = 'ann';
+    el.innerHTML =
+      `<button class="del" data-col="announcements" data-id="${d.id}" title="delete">✕</button>
+       <h3>${esc(v.title)}</h3>
+       <time>${esc(date)}</time>
+       <p>${esc(v.body)}</p>`;
+    annList.appendChild(el);
+  });
+}
+
+async function loadAll() {
+  loadError.style.display = 'none';
+  try {
+    await Promise.all([loadLinks(), loadAnnouncements()]);
+  } catch (e) {
+    loadError.style.display = 'block';
+  }
+}
+
+/* ---------- 刪除（事件委派，僅管理員可成功，後端規則再把關） ---------- */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.del');
+  if (!btn) return;
+  e.preventDefault();
+  if (!confirm(t('confirmDel'))) return;
+  try {
+    await deleteDoc(doc(db, btn.dataset.col, btn.dataset.id));
+    await loadAll();
+  } catch (err) { alert(err.message); }
+});
+
+/* ---------- 新增連結 ---------- */
+document.getElementById('linkForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const b = e.target.querySelector('button'); b.disabled = true;
+  try {
+    await addDoc(collection(db, 'links'), {
+      title: document.getElementById('linkTitle').value.trim(),
+      desc:  document.getElementById('linkDesc').value.trim(),
+      url:   document.getElementById('linkUrl').value.trim(),
+      createdAt: serverTimestamp()
+    });
+    e.target.reset();
+    await loadLinks();
+  } catch (err) { alert(err.message); }
+  finally { b.disabled = false; }
+});
+
+/* ---------- 新增公告 ---------- */
+document.getElementById('annForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const b = e.target.querySelector('button'); b.disabled = true;
+  try {
+    await addDoc(collection(db, 'announcements'), {
+      title: document.getElementById('annTitle').value.trim(),
+      body:  document.getElementById('annBody').value.trim(),
+      createdAt: serverTimestamp()
+    });
+    e.target.reset();
+    await loadAnnouncements();
+  } catch (err) { alert(err.message); }
+  finally { b.disabled = false; }
+});
+
+/* ---------- 驗證守門 ---------- */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.replace('login.html'); return; }
   document.getElementById('userEmail').textContent = user.email || '';
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
+
+  if (await isAdmin(user.uid)) document.body.classList.add('is-admin');
+  loadAll();
 });
 
-/* 登出 */
+/* ---------- 登出 ---------- */
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   await signOut(auth);
   window.location.replace('login.html');
 });
 
-/* 語言切換 */
+/* ---------- 語言切換 ---------- */
 const buttons = document.querySelectorAll('#langToggle button');
 function setLanguage(l) {
   document.documentElement.lang = l;

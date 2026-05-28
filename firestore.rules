@@ -1,0 +1,49 @@
+rules_version = '2';
+
+// =========================================================
+// INTRVL Studio — Firestore 安全規則
+// ---------------------------------------------------------
+// 把這份內容貼到 Firebase Console → Firestore Database → Rules，
+// 然後按「Publish」。這些規則跑在 Google 後端，無法被前端繞過。
+// =========================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 是否已登入
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // 是否為管理員：admins 集合裡存在一份文件 ID = 自己的 UID
+    // （在 Console 手動建立 admins/<你的UID> 即可成為管理員）
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // 公告：登入成員可讀；只有管理員可新增/修改/刪除
+    match /announcements/{id} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 快速連結：登入成員可讀；只有管理員可寫
+    match /links/{id} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 管理員名單：登入成員可讀（前端用來判斷要不要顯示編輯介面）；
+    // 不開放任何前端寫入，只能在 Console 手動管理。
+    match /admins/{uid} {
+      allow read:  if isSignedIn();
+      allow write: if false;
+    }
+
+    // 其他一切預設拒絕
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
