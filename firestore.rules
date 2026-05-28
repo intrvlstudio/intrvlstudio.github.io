@@ -22,16 +22,45 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // 公告：登入成員可讀；只有管理員可新增/修改/刪除
-    match /announcements/{id} {
-      allow read:  if isSignedIn();
-      allow write: if isAdmin();
+    // 非空字串、且長度不超過上限
+    function validStr(v, maxLen) {
+      return v is string && v.size() > 0 && v.size() <= maxLen;
     }
 
-    // 快速連結：登入成員可讀；只有管理員可寫
+    // 快速連結寫入驗證：只允許這些欄位、url 必須是 http(s)://
+    // （前端 safeUrl() 的後端對應，擋掉 javascript: 等危險協定）
+    function validLink() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['title', 'desc', 'url', 'createdAt'])
+        && validStr(d.title, 100)
+        && d.url is string
+        && d.url.size() <= 2000
+        && d.url.matches('https?://.*')
+        && (!('desc' in d) || (d.desc is string && d.desc.size() <= 300))
+        && d.createdAt == request.time;
+    }
+
+    // 公告寫入驗證
+    function validAnnouncement() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['title', 'body', 'createdAt'])
+        && validStr(d.title, 150)
+        && validStr(d.body, 5000)
+        && d.createdAt == request.time;
+    }
+
+    // 公告：登入成員可讀；只有管理員可新增（須通過內容驗證）、修改、刪除
+    match /announcements/{id} {
+      allow read:           if isSignedIn();
+      allow create:         if isAdmin() && validAnnouncement();
+      allow update, delete: if isAdmin();
+    }
+
+    // 快速連結：登入成員可讀；只有管理員可寫（須通過內容驗證）
     match /links/{id} {
-      allow read:  if isSignedIn();
-      allow write: if isAdmin();
+      allow read:           if isSignedIn();
+      allow create:         if isAdmin() && validLink();
+      allow update, delete: if isAdmin();
     }
 
     // 管理員名單：登入成員可讀（前端用來判斷要不要顯示編輯介面）；
