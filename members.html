@@ -36,7 +36,7 @@ body {
 html[lang="zh-TW"] body { font-family: "Huninn", "Noto Sans TC", sans-serif; }
 html[lang="ko"] body { font-family: "Noto Sans KR", sans-serif; }
 img { display: block; max-width: 100%; }
-a { color: inherit; }
+a { color: inherit; text-decoration: none; }
 
 html[lang="zh-TW"] .lang-en, html[lang="zh-TW"] .lang-ko { display: none !important; }
 html[lang="en"] .lang-zh, html[lang="en"] .lang-ko { display: none !important; }
@@ -126,16 +126,21 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
 }
 .empty { color: var(--ink-mute); font-size: 14px; padding: 4px 2px; }
 
-/* 刪除鈕（管理員才看得到） */
-.del {
+/* 管理員動作按鈕（編輯 / 刪除，管理員才看得到） */
+.actions {
   position: absolute; top: 10px; right: 10px;
-  width: 26px; height: 26px; cursor: pointer; line-height: 1;
-  font-size: 15px; color: var(--ink-mute);
-  background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
-  display: none;
+  display: none; gap: 6px;
 }
-body.is-admin .del { display: block; }
-.del:hover { color: #B23B36; border-color: #E7B8B5; }
+body.is-admin .actions { display: flex; }
+.act {
+  width: 28px; height: 28px; padding: 0; cursor: pointer;
+  display: grid; place-items: center; color: var(--ink-mute);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.act svg { width: 15px; height: 15px; }
+.act.edit:hover  { color: var(--mauve); border-color: var(--mauve); background: #fff; }
+.act.del:hover   { color: #B23B36; border-color: #E7B8B5; background: #fff; }
 
 /* 管理員編輯區 */
 .admin-only { display: none; }
@@ -160,7 +165,15 @@ body.is-admin .admin-only { display: block; }
   background: var(--gradient); border: none; border-radius: 10px;
 }
 .editor button:disabled { opacity: .6; cursor: not-allowed; }
+.editor .btn-cancel {
+  background: #fff; color: var(--ink-soft);
+  border: 1px solid var(--rule); display: none;
+}
+.editor .btn-cancel:hover { background: var(--bg-alt); }
+.editor.editing .btn-cancel { display: inline-block; }
+.editor.editing { border-style: solid; border-color: var(--mauve); }
 .editor .hint { font-size: 12px; color: var(--ink-mute); margin-bottom: 12px; }
+.editor.editing .hint { color: var(--mauve); font-weight: 700; }
 
 .lang-toggle { display: flex; align-items: center; gap: 4px; }
 .lang-toggle button {
@@ -222,11 +235,7 @@ body.is-admin .admin-only { display: block; }
     <!-- 管理員：新增連結 -->
     <div class="admin-only">
       <form class="editor" id="linkForm">
-        <p class="hint">
-          <span class="lang-en">Admin · add a quick link</span>
-          <span class="lang-zh">管理員 · 新增快速連結</span>
-          <span class="lang-ko">관리자 · 바로가기 추가</span>
-        </p>
+        <p class="hint" id="linkHint"></p>
         <div class="row">
           <input id="linkTitle" placeholder="Title / 標題" required>
           <input id="linkDesc" placeholder="Description / 說明">
@@ -234,11 +243,8 @@ body.is-admin .admin-only { display: block; }
         <div class="row">
           <select id="linkCategory" aria-label="Category"></select>
           <input id="linkUrl" type="url" placeholder="https://..." required>
-          <button type="submit">
-            <span class="lang-en">Add link</span>
-            <span class="lang-zh">新增</span>
-            <span class="lang-ko">추가</span>
-          </button>
+          <button type="submit" id="linkSubmit"></button>
+          <button type="button" class="btn-cancel" id="linkCancel"></button>
         </div>
       </form>
     </div>
@@ -256,11 +262,7 @@ body.is-admin .admin-only { display: block; }
     <!-- 管理員：新增公告 -->
     <div class="admin-only">
       <form class="editor" id="annForm">
-        <p class="hint">
-          <span class="lang-en">Admin · post an announcement</span>
-          <span class="lang-zh">管理員 · 張貼公告</span>
-          <span class="lang-ko">관리자 · 공지 작성</span>
-        </p>
+        <p class="hint" id="annHint"></p>
         <div class="row">
           <input id="annTitle" placeholder="Title / 標題" required>
         </div>
@@ -268,11 +270,8 @@ body.is-admin .admin-only { display: block; }
           <textarea id="annBody" placeholder="Message / 內容" required></textarea>
         </div>
         <div class="row">
-          <button type="submit">
-            <span class="lang-en">Post</span>
-            <span class="lang-zh">張貼</span>
-            <span class="lang-ko">게시</span>
-          </button>
+          <button type="submit" id="annSubmit"></button>
+          <button type="button" class="btn-cancel" id="annCancel"></button>
         </div>
       </form>
     </div>
@@ -288,7 +287,7 @@ body.is-admin .admin-only { display: block; }
 <script type="module">
 import {
   auth, signOut, onAuthStateChanged, isAdmin,
-  db, collection, doc, getDocs, addDoc, deleteDoc,
+  db, collection, doc, getDocs, addDoc, deleteDoc, updateDoc,
   query, orderBy, serverTimestamp
 } from "./assets/auth.js";
 
@@ -296,7 +295,16 @@ const lang = () => document.documentElement.lang;
 const txt = {
   confirmDel: { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
   noLinks:    { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
-  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
+  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' },
+  addLink:  { 'zh-TW': '新增', en: 'Add link', ko: '추가' },
+  saveLink: { 'zh-TW': '儲存', en: 'Save', ko: '저장' },
+  addAnn:   { 'zh-TW': '張貼', en: 'Post', ko: '게시' },
+  saveAnn:  { 'zh-TW': '儲存', en: 'Save', ko: '저장' },
+  cancel:   { 'zh-TW': '取消', en: 'Cancel', ko: '취소' },
+  hintAddLink:  { 'zh-TW': '管理員 · 新增快速連結', en: 'Admin · add a quick link', ko: '관리자 · 바로가기 추가' },
+  hintEditLink: { 'zh-TW': '管理員 · 編輯連結中', en: 'Admin · editing link', ko: '관리자 · 링크 편집 중' },
+  hintAddAnn:   { 'zh-TW': '管理員 · 張貼公告', en: 'Admin · post an announcement', ko: '관리자 · 공지 작성' },
+  hintEditAnn:  { 'zh-TW': '管理員 · 編輯公告中', en: 'Admin · editing announcement', ko: '관리자 · 공지 편집 중' }
 };
 const t = (k) => txt[k][lang()] || txt[k].en;
 
@@ -305,6 +313,15 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
 
 /* 只允許 http/https 連結，擋掉 javascript: 等危險協定 */
 const safeUrl = (u) => /^https?:\/\//i.test(String(u ?? '').trim()) ? String(u).trim() : '#';
+
+/* 管理員動作按鈕的圖示（鉛筆 / 垃圾桶） */
+const ICON_EDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+const ICON_TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
+const actions = (col, id) =>
+  `<div class="actions">
+     <button type="button" class="act edit" data-action="edit" data-col="${col}" data-id="${id}" title="edit">${ICON_EDIT}</button>
+     <button type="button" class="act del" data-action="delete" data-col="${col}" data-id="${id}" title="delete">${ICON_TRASH}</button>
+   </div>`;
 
 const linksGrid = document.getElementById('linksGrid');
 const annList   = document.getElementById('annList');
@@ -368,7 +385,7 @@ function renderLinks() {
     a.target = '_blank'; a.rel = 'noopener';
     const tag = v.category ? `<span class="cat">${esc(catLabel(v.category))}</span>` : '';
     a.innerHTML =
-      `<button class="del" data-col="links" data-id="${v.id}" title="delete">✕</button>
+      `${actions('links', v.id)}
        ${tag}<h3>${esc(v.title)}</h3>
        <p>${esc(v.desc || '')}</p>`;
     linksGrid.appendChild(a);
@@ -379,21 +396,26 @@ function renderLinks() {
 catFilter.addEventListener('change', renderLinks);
 
 /* ---------- 載入公告 ---------- */
+let allAnns = [];
 async function loadAnnouncements() {
   const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);
-  if (snap.empty) {
+  allAnns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderAnns();
+}
+
+function renderAnns() {
+  if (!allAnns.length) {
     annList.innerHTML = `<p class="empty">${t('noAnn')}</p>`;
     return;
   }
   annList.innerHTML = '';
-  snap.forEach(d => {
-    const v = d.data();
+  allAnns.forEach(v => {
     const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString() : '';
     const el = document.createElement('div');
     el.className = 'ann';
     el.innerHTML =
-      `<button class="del" data-col="announcements" data-id="${d.id}" title="delete">✕</button>
+      `${actions('announcements', v.id)}
        <h3>${esc(v.title)}</h3>
        <time>${esc(date)}</time>
        <p>${esc(v.body)}</p>`;
@@ -410,47 +432,121 @@ async function loadAll() {
   }
 }
 
-/* ---------- 刪除（事件委派，僅管理員可成功，後端規則再把關） ---------- */
+/* ---------- 編輯狀態 ---------- */
+let editingLink = null;   // 正在編輯的連結 id（null = 新增模式）
+let editingAnn  = null;   // 正在編輯的公告 id
+
+const linkForm = document.getElementById('linkForm');
+const annForm  = document.getElementById('annForm');
+
+/* 依語言與編輯狀態更新表單按鈕、提示文字 */
+function refreshEditorUI() {
+  document.getElementById('linkSubmit').textContent = t(editingLink ? 'saveLink' : 'addLink');
+  document.getElementById('linkCancel').textContent = t('cancel');
+  document.getElementById('linkHint').textContent   = t(editingLink ? 'hintEditLink' : 'hintAddLink');
+  document.getElementById('annSubmit').textContent  = t(editingAnn ? 'saveAnn' : 'addAnn');
+  document.getElementById('annCancel').textContent  = t('cancel');
+  document.getElementById('annHint').textContent    = t(editingAnn ? 'hintEditAnn' : 'hintAddAnn');
+}
+
+/* ---------- 進入 / 取消 編輯 ---------- */
+function startEditLink(id) {
+  const v = allLinks.find(x => x.id === id);
+  if (!v) return;
+  editingLink = id;
+  document.getElementById('linkTitle').value = v.title || '';
+  document.getElementById('linkDesc').value  = v.desc || '';
+  document.getElementById('linkUrl').value   = v.url || '';
+  linkCategory.value = v.category || CATS[0].id;
+  linkForm.classList.add('editing');
+  refreshEditorUI();
+  linkForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function cancelEditLink() {
+  editingLink = null;
+  linkForm.reset();
+  linkForm.classList.remove('editing');
+  refreshEditorUI();
+}
+
+function startEditAnn(id) {
+  const v = allAnns.find(x => x.id === id);
+  if (!v) return;
+  editingAnn = id;
+  document.getElementById('annTitle').value = v.title || '';
+  document.getElementById('annBody').value  = v.body || '';
+  annForm.classList.add('editing');
+  refreshEditorUI();
+  annForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function cancelEditAnn() {
+  editingAnn = null;
+  annForm.reset();
+  annForm.classList.remove('editing');
+  refreshEditorUI();
+}
+
+document.getElementById('linkCancel').addEventListener('click', cancelEditLink);
+document.getElementById('annCancel').addEventListener('click', cancelEditAnn);
+
+/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ---------- */
 document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.del');
+  const btn = e.target.closest('.act');
   if (!btn) return;
   e.preventDefault();
-  if (!confirm(t('confirmDel'))) return;
-  try {
-    await deleteDoc(doc(db, btn.dataset.col, btn.dataset.id));
-    await loadAll();
-  } catch (err) { alert(err.message); }
+  const { action, col, id } = btn.dataset;
+  if (action === 'edit') {
+    if (col === 'links') startEditLink(id); else startEditAnn(id);
+    return;
+  }
+  if (action === 'delete') {
+    if (!confirm(t('confirmDel'))) return;
+    try {
+      await deleteDoc(doc(db, col, id));
+      if (col === 'links' && editingLink === id) cancelEditLink();
+      if (col === 'announcements' && editingAnn === id) cancelEditAnn();
+      await loadAll();
+    } catch (err) { alert(err.message); }
+  }
 });
 
-/* ---------- 新增連結 ---------- */
-document.getElementById('linkForm').addEventListener('submit', async (e) => {
+/* ---------- 新增 / 儲存 連結 ---------- */
+linkForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const b = e.target.querySelector('button'); b.disabled = true;
+  const b = document.getElementById('linkSubmit'); b.disabled = true;
+  const data = {
+    title: document.getElementById('linkTitle').value.trim(),
+    desc:  document.getElementById('linkDesc').value.trim(),
+    url:   document.getElementById('linkUrl').value.trim(),
+    category: linkCategory.value
+  };
   try {
-    await addDoc(collection(db, 'links'), {
-      title: document.getElementById('linkTitle').value.trim(),
-      desc:  document.getElementById('linkDesc').value.trim(),
-      url:   document.getElementById('linkUrl').value.trim(),
-      category: linkCategory.value,
-      createdAt: serverTimestamp()
-    });
-    e.target.reset();
+    if (editingLink) {
+      await updateDoc(doc(db, 'links', editingLink), data);
+    } else {
+      await addDoc(collection(db, 'links'), { ...data, createdAt: serverTimestamp() });
+    }
+    cancelEditLink();
     await loadLinks();
   } catch (err) { alert(err.message); }
   finally { b.disabled = false; }
 });
 
-/* ---------- 新增公告 ---------- */
-document.getElementById('annForm').addEventListener('submit', async (e) => {
+/* ---------- 新增 / 儲存 公告 ---------- */
+annForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const b = e.target.querySelector('button'); b.disabled = true;
+  const b = document.getElementById('annSubmit'); b.disabled = true;
+  const data = {
+    title: document.getElementById('annTitle').value.trim(),
+    body:  document.getElementById('annBody').value.trim()
+  };
   try {
-    await addDoc(collection(db, 'announcements'), {
-      title: document.getElementById('annTitle').value.trim(),
-      body:  document.getElementById('annBody').value.trim(),
-      createdAt: serverTimestamp()
-    });
-    e.target.reset();
+    if (editingAnn) {
+      await updateDoc(doc(db, 'announcements', editingAnn), data);
+    } else {
+      await addDoc(collection(db, 'announcements'), { ...data, createdAt: serverTimestamp() });
+    }
+    cancelEditAnn();
     await loadAnnouncements();
   } catch (err) { alert(err.message); }
   finally { b.disabled = false; }
@@ -481,9 +577,12 @@ function setLanguage(l) {
   try { localStorage.setItem('intrvl_lang', l); } catch(e) {}
   populateCatControls();  // 下拉選單文字隨語言更新
   renderLinks();          // 連結分類標籤隨語言更新
+  renderAnns();           // 公告日期/空狀態隨語言更新
+  refreshEditorUI();      // 表單按鈕/提示隨語言更新
 }
 buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
 populateCatControls();
+refreshEditorUI();
 try {
   const saved = localStorage.getItem('intrvl_lang');
   if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);

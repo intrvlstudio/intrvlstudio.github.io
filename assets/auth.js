@@ -39,6 +39,7 @@ import {
   getDocs,
   addDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   serverTimestamp
@@ -90,6 +91,7 @@ export {
   getDocs,
   addDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   serverTimestamp,
