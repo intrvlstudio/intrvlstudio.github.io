@@ -55,6 +55,7 @@
 | `links` | `title` | 必填字串，≤ 100 字 |
 | | `desc` | 選填字串，≤ 300 字 |
 | | `url` | 必須是 `http://` 或 `https://` 開頭，≤ 2000 字 |
+| | `category` | 選填，限 `work`（工作相關）或 `staff`（員工相關） |
 | | `createdAt` | 必須等於伺服器時間（防偽造） |
 | `admins` | 文件 ID = 管理員的 UID | 只能在 Console 手動管理 |
 
