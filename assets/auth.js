@@ -32,16 +32,17 @@ import {
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-/* ▼▼▼ 把下面整段換成你 Firebase 專案的設定 ▼▼▼ */
+/* ▼▼▼ INTRVL Studio Firebase 專案設定 ▼▼▼ */
 const firebaseConfig = {
-  apiKey: "REPLACE_WITH_YOUR_API_KEY",
-  authDomain: "REPLACE_WITH_YOUR_PROJECT.firebaseapp.com",
-  projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
-  storageBucket: "REPLACE_WITH_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "REPLACE_WITH_YOUR_SENDER_ID",
-  appId: "REPLACE_WITH_YOUR_APP_ID"
+  apiKey: "AIzaSyCDzNWIyOtzviVPpCrPFMfkhVXMBSsVtZw",
+  authDomain: "intrvl-studio.firebaseapp.com",
+  projectId: "intrvl-studio",
+  storageBucket: "intrvl-studio.firebasestorage.app",
+  messagingSenderId: "482541745497",
+  appId: "1:482541745497:web:d53b80595147f8571d8848",
+  measurementId: "G-BXG250PCXZ"
 };
-/* ▲▲▲ 換完即可，其餘不用動 ▲▲▲ */
+/* ▲▲▲ ▲▲▲ */
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
