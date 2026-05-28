@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Members Area · 成員專區 — INTRVL Studio</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="alternate icon" type="image/png" href="assets/icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Jua&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+@font-face {
+  font-family: "Bauhaus 93";
+  src: url("assets/fonts/BAUHS93.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+:root {
+  --bg: #FBF6EE; --bg-alt: #F4ECDD;
+  --ink: #1F1814; --ink-soft: #4F4239; --ink-mute: #8E7C6E;
+  --rule: #D9CFBE; --rule-soft: #EAE0CE;
+  --peach: #F2A776; --pink: #E69BB6; --mauve: #B581A3;
+  --gradient: linear-gradient(95deg, #F2B689 0%, #ECA4A8 30%, #DC97B9 60%, #B581A3 100%);
+  --display: "Bauhaus 93", "Huninn", "Noto Sans TC", sans-serif;
+  --body: "Manrope", "Huninn", "Noto Sans TC", -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body); background: var(--bg); color: var(--ink);
+  -webkit-font-smoothing: antialiased; line-height: 1.6;
+}
+html[lang="zh-TW"] body { font-family: "Huninn", "Noto Sans TC", sans-serif; }
+html[lang="ko"] body { font-family: "Noto Sans KR", sans-serif; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+
+html[lang="zh-TW"] .lang-en, html[lang="zh-TW"] .lang-ko { display: none !important; }
+html[lang="en"] .lang-zh, html[lang="en"] .lang-ko { display: none !important; }
+html[lang="ko"] .lang-zh, html[lang="ko"] .lang-en { display: none !important; }
+
+/* 驗證完成前先全部隱藏，避免內容閃現 */
+#gate { display: none; }
+body.ready #gate { display: block; }
+body.checking::after {
+  content: ""; position: fixed; inset: 0; background: var(--bg);
+  display: grid; place-items: center;
+}
+
+.nav {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 16px 28px;
+  background: rgba(251,246,238,0.85); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule-soft);
+}
+.nav .logo { height: 24px; }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.user-email { font-size: 13px; color: var(--ink-mute); max-width: 200px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-out {
+  padding: 8px 16px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 600; color: var(--ink-soft);
+  background: #fff; border: 1px solid var(--rule); border-radius: 10px;
+  transition: background .15s;
+}
+.btn-out:hover { background: var(--bg-alt); }
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 56px 28px 90px; }
+.eyebrow {
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-mute); margin-bottom: 8px;
+}
+h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
+.lede { color: var(--ink-soft); margin-bottom: 40px; max-width: 60ch; }
+
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; margin: 48px 0 16px;
+}
+.section-title {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-mute);
+}
+
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.tile {
+  position: relative; display: block; padding: 22px; background: #fff;
+  border: 1px solid var(--rule); border-radius: 16px;
+  transition: transform .12s, box-shadow .15s;
+}
+.tile:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -22px rgba(31,24,20,0.25); }
+.tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; word-break: break-word; }
+.tile p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
+
+.ann { padding: 20px 22px; background: #fff; border: 1px solid var(--rule);
+  border-radius: 14px; margin-bottom: 14px; position: relative; }
+.ann h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.ann time { font-size: 12px; color: var(--ink-mute); }
+.ann p { margin-top: 8px; color: var(--ink-soft); white-space: pre-wrap; }
+
+.note {
+  padding: 18px 20px; background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); border-radius: 14px;
+  font-size: 14px; color: var(--ink-soft);
+}
+.empty { color: var(--ink-mute); font-size: 14px; padding: 4px 2px; }
+
+/* 刪除鈕（管理員才看得到） */
+.del {
+  position: absolute; top: 10px; right: 10px;
+  width: 26px; height: 26px; cursor: pointer; line-height: 1;
+  font-size: 15px; color: var(--ink-mute);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
+  display: none;
+}
+body.is-admin .del { display: block; }
+.del:hover { color: #B23B36; border-color: #E7B8B5; }
+
+/* 管理員編輯區 */
+.admin-only { display: none; }
+body.is-admin .admin-only { display: block; }
+.editor {
+  margin-top: 14px; padding: 20px; background: #fff;
+  border: 1px dashed var(--mauve); border-radius: 16px;
+}
+.editor .row { display: flex; gap: 10px; flex-wrap: wrap; }
+.editor input, .editor textarea {
+  flex: 1 1 180px; padding: 10px 13px; font-family: inherit; font-size: 14px;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 10px; outline: none; margin-bottom: 10px; resize: vertical;
+}
+.editor input:focus, .editor textarea:focus {
+  border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
+}
+.editor textarea { flex-basis: 100%; min-height: 70px; }
+.editor button {
+  padding: 10px 20px; cursor: pointer; font-family: inherit;
+  font-size: 14px; font-weight: 700; color: #fff;
+  background: var(--gradient); border: none; border-radius: 10px;
+}
+.editor button:disabled { opacity: .6; cursor: not-allowed; }
+.editor .hint { font-size: 12px; color: var(--ink-mute); margin-bottom: 12px; }
+
+.lang-toggle { display: flex; align-items: center; gap: 4px; }
+.lang-toggle button {
+  padding: 3px 8px; cursor: pointer; background: none; border: none;
+  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink-mute);
+  border-radius: 6px;
+}
+.lang-toggle button.active { color: var(--ink); background: var(--bg-alt); }
+</style>
+</head>
+<body class="checking">
+
+<div id="gate">
+  <nav class="nav">
+    <a href="index.html"><img class="logo" src="assets/logo_en.svg" alt="INTRVL Studio"></a>
+    <div class="nav-right">
+      <div class="lang-toggle" id="langToggle">
+        <button data-lang="zh-TW" class="active">中</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ko">한</button>
+      </div>
+      <span class="user-email" id="userEmail"></span>
+      <button class="btn-out" id="logoutBtn">
+        <span class="lang-en">Sign out</span>
+        <span class="lang-zh">登出</span>
+        <span class="lang-ko">로그아웃</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <p class="eyebrow">
+      <span class="lang-en">Members Only</span>
+      <span class="lang-zh">成員專區</span>
+      <span class="lang-ko">멤버 전용</span>
+    </p>
+    <h1>
+      <span class="lang-en">Welcome back</span>
+      <span class="lang-zh">歡迎回來</span>
+      <span class="lang-ko">다시 오신 걸 환영합니다</span>
+    </h1>
+    <p class="lede">
+      <span class="lang-en">Internal resources and announcements for INTRVL Studio members.</span>
+      <span class="lang-zh">INTRVL Studio 成員的內部資源與公告。</span>
+      <span class="lang-ko">INTRVL Studio 멤버를 위한 내부 자료 및 공지입니다.</span>
+    </p>
+
+    <!-- ============ QUICK LINKS ============ -->
+    <div class="section-head">
+      <span class="section-title">
+        <span class="lang-en">Quick Links</span>
+        <span class="lang-zh">快速連結</span>
+        <span class="lang-ko">바로가기</span>
+      </span>
+    </div>
+    <div class="grid" id="linksGrid"></div>
+
+    <!-- 管理員：新增連結 -->
+    <div class="admin-only">
+      <form class="editor" id="linkForm">
+        <p class="hint">
+          <span class="lang-en">Admin · add a quick link</span>
+          <span class="lang-zh">管理員 · 新增快速連結</span>
+          <span class="lang-ko">관리자 · 바로가기 추가</span>
+        </p>
+        <div class="row">
+          <input id="linkTitle" placeholder="Title / 標題" required>
+          <input id="linkDesc" placeholder="Description / 說明">
+        </div>
+        <div class="row">
+          <input id="linkUrl" type="url" placeholder="https://..." required>
+          <button type="submit">
+            <span class="lang-en">Add link</span>
+            <span class="lang-zh">新增</span>
+            <span class="lang-ko">추가</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ============ ANNOUNCEMENTS ============ -->
+    <div class="section-head">
+      <span class="section-title">
+        <span class="lang-en">Announcements</span>
+        <span class="lang-zh">公告</span>
+        <span class="lang-ko">공지</span>
+      </span>
+    </div>
+    <div id="annList"></div>
+
+    <!-- 管理員：新增公告 -->
+    <div class="admin-only">
+      <form class="editor" id="annForm">
+        <p class="hint">
+          <span class="lang-en">Admin · post an announcement</span>
+          <span class="lang-zh">管理員 · 張貼公告</span>
+          <span class="lang-ko">관리자 · 공지 작성</span>
+        </p>
+        <div class="row">
+          <input id="annTitle" placeholder="Title / 標題" required>
+        </div>
+        <div class="row">
+          <textarea id="annBody" placeholder="Message / 內容" required></textarea>
+        </div>
+        <div class="row">
+          <button type="submit">
+            <span class="lang-en">Post</span>
+            <span class="lang-zh">張貼</span>
+            <span class="lang-ko">게시</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="note" id="loadError" style="display:none; margin-top:28px;">
+      <span class="lang-en">Couldn't load content. Make sure Firestore is enabled and the security rules are published (see MEMBERS_SETUP.md).</span>
+      <span class="lang-zh">無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。</span>
+      <span class="lang-ko">콘텐츠를 불러오지 못했습니다. Firestore가 활성화되고 보안 규칙이 게시되었는지 확인하세요.</span>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import {
+  auth, signOut, onAuthStateChanged, isAdmin,
+  db, collection, doc, getDocs, addDoc, deleteDoc,
+  query, orderBy, serverTimestamp
+} from "./assets/auth.js";
+
+const lang = () => document.documentElement.lang;
+const txt = {
+  confirmDel: { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
+  noLinks:    { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
+  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
+};
+const t = (k) => txt[k][lang()] || txt[k].en;
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+
+const linksGrid = document.getElementById('linksGrid');
+const annList   = document.getElementById('annList');
+const loadError = document.getElementById('loadError');
+
+/* ---------- 載入快速連結 ---------- */
+async function loadLinks() {
+  const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    linksGrid.innerHTML = `<p class="empty">${t('noLinks')}</p>`;
+    return;
+  }
+  linksGrid.innerHTML = '';
+  snap.forEach(d => {
+    const v = d.data();
+    const a = document.createElement('a');
+    a.className = 'tile';
+    a.href = v.url || '#';
+    a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML =
+      `<button class="del" data-col="links" data-id="${d.id}" title="delete">✕</button>
+       <h3>${esc(v.title)}</h3>
+       <p>${esc(v.desc || '')}</p>`;
+    linksGrid.appendChild(a);
+  });
+}
+
+/* ---------- 載入公告 ---------- */
+async function loadAnnouncements() {
+  const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    annList.innerHTML = `<p class="empty">${t('noAnn')}</p>`;
+    return;
+  }
+  annList.innerHTML = '';
+  snap.forEach(d => {
+    const v = d.data();
+    const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString() : '';
+    const el = document.createElement('div');
+    el.className = 'ann';
+    el.innerHTML =
+      `<button class="del" data-col="announcements" data-id="${d.id}" title="delete">✕</button>
+       <h3>${esc(v.title)}</h3>
+       <time>${esc(date)}</time>
+       <p>${esc(v.body)}</p>`;
+    annList.appendChild(el);
+  });
+}
+
+async function loadAll() {
+  loadError.style.display = 'none';
+  try {
+    await Promise.all([loadLinks(), loadAnnouncements()]);
+  } catch (e) {
+    loadError.style.display = 'block';
+  }
+}
+
+/* ---------- 刪除（事件委派，僅管理員可成功，後端規則再把關） ---------- */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.del');
+  if (!btn) return;
+  e.preventDefault();
+  if (!confirm(t('confirmDel'))) return;
+  try {
+    await deleteDoc(doc(db, btn.dataset.col, btn.dataset.id));
+    await loadAll();
+  } catch (err) { alert(err.message); }
+});
+
+/* ---------- 新增連結 ---------- */
+document.getElementById('linkForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const b = e.target.querySelector('button'); b.disabled = true;
+  try {
+    await addDoc(collection(db, 'links'), {
+      title: document.getElementById('linkTitle').value.trim(),
+      desc:  document.getElementById('linkDesc').value.trim(),
+      url:   document.getElementById('linkUrl').value.trim(),
+      createdAt: serverTimestamp()
+    });
+    e.target.reset();
+    await loadLinks();
+  } catch (err) { alert(err.message); }
+  finally { b.disabled = false; }
+});
+
+/* ---------- 新增公告 ---------- */
+document.getElementById('annForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const b = e.target.querySelector('button'); b.disabled = true;
+  try {
+    await addDoc(collection(db, 'announcements'), {
+      title: document.getElementById('annTitle').value.trim(),
+      body:  document.getElementById('annBody').value.trim(),
+      createdAt: serverTimestamp()
+    });
+    e.target.reset();
+    await loadAnnouncements();
+  } catch (err) { alert(err.message); }
+  finally { b.disabled = false; }
+});
+
+/* ---------- 驗證守門 ---------- */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.replace('login.html'); return; }
+  document.getElementById('userEmail').textContent = user.email || '';
+  document.body.classList.remove('checking');
+  document.body.classList.add('ready');
+
+  if (await isAdmin(user.uid)) document.body.classList.add('is-admin');
+  loadAll();
+});
+
+/* ---------- 登出 ---------- */
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await signOut(auth);
+  window.location.replace('login.html');
+});
+
+/* ---------- 語言切換 ---------- */
+const buttons = document.querySelectorAll('#langToggle button');
+function setLanguage(l) {
+  document.documentElement.lang = l;
+  buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+  try { localStorage.setItem('intrvl_lang', l); } catch(e) {}
+}
+buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+try {
+  const saved = localStorage.getItem('intrvl_lang');
+  if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);
+} catch(e) {}
+</script>
+</body>
+</html>
