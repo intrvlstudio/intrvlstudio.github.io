@@ -3,29 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Members · 成員登入 — INTRVL Studio</title>
+<title>成員登入 — INTRVL Studio</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="alternate icon" type="image/png" href="assets/icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Jua&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-@font-face {
-  font-family: "Bauhaus 93";
-  src: url("assets/fonts/BAUHS93.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
 :root {
   --bg: #FBF6EE; --bg-alt: #F4ECDD;
   --ink: #1F1814; --ink-soft: #4F4239; --ink-mute: #8E7C6E;
   --rule: #D9CFBE; --rule-soft: #EAE0CE;
   --peach: #F2A776; --pink: #E69BB6; --mauve: #B581A3;
   --gradient: linear-gradient(95deg, #F2B689 0%, #ECA4A8 30%, #DC97B9 60%, #B581A3 100%);
-  --display: "Bauhaus 93", "Huninn", "Noto Sans TC", sans-serif;
-  --body: "Manrope", "Huninn", "Noto Sans TC", -apple-system, sans-serif;
+  --body: "Huninn", "Noto Sans TC", -apple-system, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -35,15 +29,8 @@ body {
   -webkit-font-smoothing: antialiased; line-height: 1.55;
   min-height: 100vh; display: grid; place-items: center; padding: 24px;
 }
-html[lang="zh-TW"] body { font-family: "Huninn", "Noto Sans TC", sans-serif; }
-html[lang="ko"] body { font-family: "Noto Sans KR", sans-serif; }
 img { display: block; max-width: 100%; }
 a { color: inherit; }
-
-/* language visibility */
-html[lang="zh-TW"] .lang-en, html[lang="zh-TW"] .lang-ko { display: none !important; }
-html[lang="en"] .lang-zh, html[lang="en"] .lang-ko { display: none !important; }
-html[lang="ko"] .lang-zh, html[lang="ko"] .lang-en { display: none !important; }
 
 .card {
   width: 100%; max-width: 400px;
@@ -88,68 +75,29 @@ button:disabled { opacity: .6; cursor: not-allowed; }
 .msg.info  { display: block; background: var(--bg-alt); color: var(--ink-soft); border: 1px solid var(--rule-soft); }
 .foot { margin-top: 24px; text-align: center; font-size: 13px; }
 .foot a { color: var(--ink-mute); text-decoration: underline; text-underline-offset: 3px; }
-.lang-toggle {
-  display: flex; justify-content: center; gap: 6px;
-  margin-top: 22px; font-size: 13px; color: var(--ink-mute);
-}
-.lang-toggle button {
-  width: auto; padding: 2px 8px; background: none; color: var(--ink-mute);
-  font-weight: 600; border-radius: 6px;
-}
-.lang-toggle button.active { color: var(--ink); background: var(--bg-alt); }
 </style>
 </head>
 <body>
 <main class="card">
   <a href="index.html"><img class="logo" src="assets/logo_en.svg" alt="INTRVL Studio"></a>
-  <p class="eyebrow">
-    <span class="lang-en">Studio Members</span>
-    <span class="lang-zh">工作室成員</span>
-    <span class="lang-ko">스튜디오 멤버</span>
-  </p>
-  <h1>
-    <span class="lang-en">Sign in</span>
-    <span class="lang-zh">成員登入</span>
-    <span class="lang-ko">로그인</span>
-  </h1>
+  <p class="eyebrow">工作室成員</p>
+  <h1>成員登入</h1>
 
   <form id="loginForm" autocomplete="on">
-    <label for="email">
-      <span class="lang-en">Email</span>
-      <span class="lang-zh">電子郵件</span>
-      <span class="lang-ko">이메일</span>
-    </label>
+    <label for="email">電子郵件</label>
     <input id="email" type="email" autocomplete="email" required>
 
-    <label for="password">
-      <span class="lang-en">Password</span>
-      <span class="lang-zh">密碼</span>
-      <span class="lang-ko">비밀번호</span>
-    </label>
+    <label for="password">密碼</label>
     <input id="password" type="password" autocomplete="current-password" required>
 
-    <button type="submit" id="submitBtn">
-      <span class="lang-en">Sign in</span>
-      <span class="lang-zh">登入</span>
-      <span class="lang-ko">로그인</span>
-    </button>
+    <button type="submit" id="submitBtn">登入</button>
   </form>
 
   <div class="msg" id="msg"></div>
 
   <p class="foot">
-    <a href="index.html">
-      <span class="lang-en">← Back to site</span>
-      <span class="lang-zh">← 回到首頁</span>
-      <span class="lang-ko">← 홈으로</span>
-    </a>
+    <a href="index.html">← 回到首頁</a>
   </p>
-
-  <div class="lang-toggle" id="langToggle">
-    <button data-lang="zh-TW" class="active">中</button>
-    <button data-lang="en">EN</button>
-    <button data-lang="ko">한</button>
-  </div>
 </main>
 
 <script type="module">
@@ -160,15 +108,12 @@ const form = document.getElementById('loginForm');
 const btn = document.getElementById('submitBtn');
 const msg = document.getElementById('msg');
 
-/* 多語訊息 */
-const lang = () => document.documentElement.lang;
-const T = {
-  signingIn: { 'zh-TW': '登入中…', en: 'Signing in…', ko: '로그인 중…' },
-  badCred:   { 'zh-TW': '電子郵件或密碼錯誤。', en: 'Incorrect email or password.', ko: '이메일 또는 비밀번호가 올바르지 않습니다.' },
-  tooMany:   { 'zh-TW': '嘗試次數過多，請稍後再試。', en: 'Too many attempts. Please try again later.', ko: '시도가 너무 많습니다. 잠시 후 다시 시도하세요.' },
-  generic:   { 'zh-TW': '登入失敗，請再試一次。', en: 'Sign-in failed. Please try again.', ko: '로그인에 실패했습니다. 다시 시도하세요.' }
+const MSG = {
+  signingIn: '登入中…',
+  badCred:   '電子郵件或密碼錯誤。',
+  tooMany:   '嘗試次數過多，請稍後再試。',
+  generic:   '登入失敗，請再試一次。'
 };
-const t = (key) => T[key][lang()] || T[key].en;
 
 function show(text, type) {
   msg.textContent = text;
@@ -186,7 +131,7 @@ form.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
 
   btn.disabled = true;
-  show(t('signingIn'), 'info');
+  show(MSG.signingIn, 'info');
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -197,22 +142,9 @@ form.addEventListener('submit', async (e) => {
     if (['auth/invalid-credential','auth/wrong-password','auth/user-not-found','auth/invalid-email']
         .includes(err.code)) key = 'badCred';
     else if (err.code === 'auth/too-many-requests') key = 'tooMany';
-    show(t(key), 'error');
+    show(MSG[key], 'error');
   }
 });
-
-/* 語言切換 */
-const buttons = document.querySelectorAll('#langToggle button');
-function setLanguage(l) {
-  document.documentElement.lang = l;
-  buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === l));
-  try { localStorage.setItem('intrvl_lang', l); } catch(e) {}
-}
-buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
-try {
-  const saved = localStorage.getItem('intrvl_lang');
-  if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);
-} catch(e) {}
 </script>
 </body>
 </html>
