@@ -108,16 +108,15 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
   border: 1px solid var(--rule-soft); border-radius: 999px;
 }
 
-/* 分類篩選 / 表單下拉 */
-.cat-filter, .editor select {
+/* 分類篩選下拉 */
+.cat-filter {
   padding: 8px 13px; font-family: inherit; font-size: 14px;
   color: var(--ink); background: #fff; border: 1px solid var(--rule);
   border-radius: 10px; outline: none; cursor: pointer;
 }
-.cat-filter:focus, .editor select:focus {
+.cat-filter:focus {
   border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
 }
-.editor select { flex: 1 1 180px; margin-bottom: 10px; }
 
 .ann { padding: 20px 22px; background: #fff; border: 1px solid var(--rule);
   border-radius: 14px; margin-bottom: 14px; position: relative; }
@@ -148,38 +147,18 @@ body.is-admin .actions { display: flex; }
 .act.edit:hover  { color: var(--mauve); border-color: var(--mauve); background: #fff; }
 .act.del:hover   { color: #B23B36; border-color: #E7B8B5; background: #fff; }
 
-/* 管理員編輯區 */
+/* 管理員專用元素（如「發佈」按鈕），非管理員隱藏 */
 .admin-only { display: none; }
-body.is-admin .admin-only { display: block; }
-.editor {
-  margin-top: 14px; padding: 20px; background: #fff;
-  border: 1px dashed var(--mauve); border-radius: 16px;
-}
-.editor .row { display: flex; gap: 10px; flex-wrap: wrap; }
-.editor input, .editor textarea {
-  flex: 1 1 180px; padding: 10px 13px; font-family: inherit; font-size: 14px;
-  color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
-  border-radius: 10px; outline: none; margin-bottom: 10px; resize: vertical;
-}
-.editor input:focus, .editor textarea:focus {
-  border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
-}
-.editor textarea { flex-basis: 100%; min-height: 70px; }
-.editor button {
-  padding: 10px 20px; cursor: pointer; font-family: inherit;
-  font-size: 14px; font-weight: 700; color: #fff;
+body.is-admin .admin-only { display: inline-block; }
+
+/* 發佈入口按鈕 */
+.btn-pub {
+  padding: 8px 16px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 700; color: #fff;
   background: var(--gradient); border: none; border-radius: 10px;
+  transition: filter .15s;
 }
-.editor button:disabled { opacity: .6; cursor: not-allowed; }
-.editor .btn-cancel {
-  background: #fff; color: var(--ink-soft);
-  border: 1px solid var(--rule); display: none;
-}
-.editor .btn-cancel:hover { background: var(--bg-alt); }
-.editor.editing .btn-cancel { display: inline-block; }
-.editor.editing { border-style: solid; border-color: var(--mauve); }
-.editor .hint { font-size: 12px; color: var(--ink-mute); margin-bottom: 12px; }
-.editor.editing .hint { color: var(--mauve); font-weight: 700; }
+.btn-pub:hover { filter: brightness(1.04); }
 
 .lang-toggle { display: flex; align-items: center; gap: 4px; }
 .lang-toggle button {
@@ -201,6 +180,11 @@ body.is-admin .admin-only { display: block; }
         <button data-lang="en">EN</button>
         <button data-lang="ko">한</button>
       </div>
+      <a class="btn-pub admin-only" href="publish.html">
+        <span class="lang-en">+ Publish</span>
+        <span class="lang-zh">＋ 發佈</span>
+        <span class="lang-ko">+ 게시</span>
+      </a>
       <span class="user-email" id="userEmail"></span>
       <button class="btn-out" id="logoutBtn">
         <span class="lang-en">Sign out</span>
@@ -238,23 +222,6 @@ body.is-admin .admin-only { display: block; }
     </div>
     <div class="grid" id="linksGrid"></div>
 
-    <!-- 管理員：新增連結 -->
-    <div class="admin-only">
-      <form class="editor" id="linkForm">
-        <p class="hint" id="linkHint"></p>
-        <div class="row">
-          <input id="linkTitle" placeholder="Title / 標題" required>
-          <input id="linkDesc" placeholder="Description / 說明">
-        </div>
-        <div class="row">
-          <select id="linkCategory" aria-label="Category"></select>
-          <input id="linkUrl" type="url" placeholder="https://..." required>
-          <button type="submit" id="linkSubmit"></button>
-          <button type="button" class="btn-cancel" id="linkCancel"></button>
-        </div>
-      </form>
-    </div>
-
     <!-- ============ ANNOUNCEMENTS ============ -->
     <div class="section-head">
       <span class="section-title">
@@ -264,23 +231,6 @@ body.is-admin .admin-only { display: block; }
       </span>
     </div>
     <div id="annList"></div>
-
-    <!-- 管理員：新增公告 -->
-    <div class="admin-only">
-      <form class="editor" id="annForm">
-        <p class="hint" id="annHint"></p>
-        <div class="row">
-          <input id="annTitle" placeholder="Title / 標題" required>
-        </div>
-        <div class="row">
-          <textarea id="annBody" placeholder="Message / 內容" required></textarea>
-        </div>
-        <div class="row">
-          <button type="submit" id="annSubmit"></button>
-          <button type="button" class="btn-cancel" id="annCancel"></button>
-        </div>
-      </form>
-    </div>
 
     <div class="note" id="loadError" style="display:none; margin-top:28px;">
       <span class="lang-en">Couldn't load content. Make sure Firestore is enabled and the security rules are published (see MEMBERS_SETUP.md).</span>
@@ -292,25 +242,16 @@ body.is-admin .admin-only { display: block; }
 
 <script type="module">
 import {
-  auth, signOut, onAuthStateChanged, isAdmin,
-  db, collection, doc, getDocs, getDocsFromCache, addDoc, deleteDoc, updateDoc,
-  query, orderBy, serverTimestamp
+  auth, signOut, onAuthStateChanged, isAdmin, CATS,
+  db, collection, doc, getDocs, getDocsFromCache, deleteDoc,
+  query, orderBy
 } from "./assets/auth.js";
 
 const lang = () => document.documentElement.lang;
 const txt = {
   confirmDel: { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
   noLinks:    { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
-  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' },
-  addLink:  { 'zh-TW': '新增', en: 'Add link', ko: '추가' },
-  saveLink: { 'zh-TW': '儲存', en: 'Save', ko: '저장' },
-  addAnn:   { 'zh-TW': '張貼', en: 'Post', ko: '게시' },
-  saveAnn:  { 'zh-TW': '儲存', en: 'Save', ko: '저장' },
-  cancel:   { 'zh-TW': '取消', en: 'Cancel', ko: '취소' },
-  hintAddLink:  { 'zh-TW': '管理員 · 新增快速連結', en: 'Admin · add a quick link', ko: '관리자 · 바로가기 추가' },
-  hintEditLink: { 'zh-TW': '管理員 · 編輯連結中', en: 'Admin · editing link', ko: '관리자 · 링크 편집 중' },
-  hintAddAnn:   { 'zh-TW': '管理員 · 張貼公告', en: 'Admin · post an announcement', ko: '관리자 · 공지 작성' },
-  hintEditAnn:  { 'zh-TW': '管理員 · 編輯公告中', en: 'Admin · editing announcement', ko: '관리자 · 공지 편집 중' }
+  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
 };
 const t = (k) => txt[k][lang()] || txt[k].en;
 
@@ -333,34 +274,21 @@ const linksGrid = document.getElementById('linksGrid');
 const annList   = document.getElementById('annList');
 const loadError = document.getElementById('loadError');
 const catFilter = document.getElementById('catFilter');
-const linkCategory = document.getElementById('linkCategory');
 
-/* ---------- 分類定義 ----------
-   要新增分類：在這裡加一筆，並同步更新 firestore.rules 的
-   d.category in [...] 名單即可。 */
-const CATS = [
-  { id: 'work',  label: { 'zh-TW': '工作相關', en: 'Work',  ko: '업무 관련' } },
-  { id: 'staff', label: { 'zh-TW': '員工相關', en: 'Staff', ko: '직원 관련' } }
-];
+/* 分類定義由 assets/auth.js 共用匯入（與 publish.html 一致） */
 const allLabel = { 'zh-TW': '全部分類', en: 'All', ko: '전체' };
 const catLabel = (id) => {
   const c = CATS.find(c => c.id === id);
   return c ? (c.label[lang()] || c.label.en) : '';
 };
 
-/* 依目前語言填入「篩選下拉」與「新增表單下拉」，並保留現有選擇 */
+/* 依目前語言填入分類篩選下拉，並保留現有選擇 */
 function populateCatControls() {
-  const opts = CATS.map(c =>
-    `<option value="${c.id}">${esc(c.label[lang()] || c.label.en)}</option>`).join('');
-
   const prevFilter = catFilter.value || 'all';
   catFilter.innerHTML =
-    `<option value="all">${esc(allLabel[lang()] || allLabel.en)}</option>` + opts;
+    `<option value="all">${esc(allLabel[lang()] || allLabel.en)}</option>` +
+    CATS.map(c => `<option value="${c.id}">${esc(c.label[lang()] || c.label.en)}</option>`).join('');
   catFilter.value = prevFilter;
-
-  const prevCat = linkCategory.value || CATS[0].id;
-  linkCategory.innerHTML = opts;
-  linkCategory.value = prevCat;
 }
 
 /* ---------- 載入快速連結 ---------- */
@@ -456,124 +384,25 @@ async function loadAll() {
   }
 }
 
-/* ---------- 編輯狀態 ---------- */
-let editingLink = null;   // 正在編輯的連結 id（null = 新增模式）
-let editingAnn  = null;   // 正在編輯的公告 id
-
-const linkForm = document.getElementById('linkForm');
-const annForm  = document.getElementById('annForm');
-
-/* 依語言與編輯狀態更新表單按鈕、提示文字 */
-function refreshEditorUI() {
-  document.getElementById('linkSubmit').textContent = t(editingLink ? 'saveLink' : 'addLink');
-  document.getElementById('linkCancel').textContent = t('cancel');
-  document.getElementById('linkHint').textContent   = t(editingLink ? 'hintEditLink' : 'hintAddLink');
-  document.getElementById('annSubmit').textContent  = t(editingAnn ? 'saveAnn' : 'addAnn');
-  document.getElementById('annCancel').textContent  = t('cancel');
-  document.getElementById('annHint').textContent    = t(editingAnn ? 'hintEditAnn' : 'hintAddAnn');
-}
-
-/* ---------- 進入 / 取消 編輯 ---------- */
-function startEditLink(id) {
-  const v = allLinks.find(x => x.id === id);
-  if (!v) return;
-  editingLink = id;
-  document.getElementById('linkTitle').value = v.title || '';
-  document.getElementById('linkDesc').value  = v.desc || '';
-  document.getElementById('linkUrl').value   = v.url || '';
-  linkCategory.value = v.category || CATS[0].id;
-  linkForm.classList.add('editing');
-  refreshEditorUI();
-  linkForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-function cancelEditLink() {
-  editingLink = null;
-  linkForm.reset();
-  linkForm.classList.remove('editing');
-  refreshEditorUI();
-}
-
-function startEditAnn(id) {
-  const v = allAnns.find(x => x.id === id);
-  if (!v) return;
-  editingAnn = id;
-  document.getElementById('annTitle').value = v.title || '';
-  document.getElementById('annBody').value  = v.body || '';
-  annForm.classList.add('editing');
-  refreshEditorUI();
-  annForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-function cancelEditAnn() {
-  editingAnn = null;
-  annForm.reset();
-  annForm.classList.remove('editing');
-  refreshEditorUI();
-}
-
-document.getElementById('linkCancel').addEventListener('click', cancelEditLink);
-document.getElementById('annCancel').addEventListener('click', cancelEditAnn);
-
-/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ---------- */
+/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ----------
+   編輯導向發佈頁 publish.html（帶 type 與 id），刪除則就地處理。 */
 document.addEventListener('click', async (e) => {
   const btn = e.target.closest('.act');
   if (!btn) return;
   e.preventDefault();
   const { action, col, id } = btn.dataset;
   if (action === 'edit') {
-    if (col === 'links') startEditLink(id); else startEditAnn(id);
+    const type = col === 'links' ? 'link' : 'ann';
+    location.href = `publish.html?type=${type}&id=${encodeURIComponent(id)}`;
     return;
   }
   if (action === 'delete') {
     if (!confirm(t('confirmDel'))) return;
     try {
       await deleteDoc(doc(db, col, id));
-      if (col === 'links' && editingLink === id) cancelEditLink();
-      if (col === 'announcements' && editingAnn === id) cancelEditAnn();
       await loadAll();
     } catch (err) { alert(err.message); }
   }
-});
-
-/* ---------- 新增 / 儲存 連結 ---------- */
-linkForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const b = document.getElementById('linkSubmit'); b.disabled = true;
-  const data = {
-    title: document.getElementById('linkTitle').value.trim(),
-    desc:  document.getElementById('linkDesc').value.trim(),
-    url:   document.getElementById('linkUrl').value.trim(),
-    category: linkCategory.value
-  };
-  try {
-    if (editingLink) {
-      await updateDoc(doc(db, 'links', editingLink), data);
-    } else {
-      await addDoc(collection(db, 'links'), { ...data, createdAt: serverTimestamp() });
-    }
-    cancelEditLink();
-    await loadLinks();
-  } catch (err) { alert(err.message); }
-  finally { b.disabled = false; }
-});
-
-/* ---------- 新增 / 儲存 公告 ---------- */
-annForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const b = document.getElementById('annSubmit'); b.disabled = true;
-  const data = {
-    title: document.getElementById('annTitle').value.trim(),
-    body:  document.getElementById('annBody').value.trim()
-  };
-  try {
-    if (editingAnn) {
-      await updateDoc(doc(db, 'announcements', editingAnn), data);
-    } else {
-      await addDoc(collection(db, 'announcements'), { ...data, createdAt: serverTimestamp() });
-    }
-    cancelEditAnn();
-    await loadAnnouncements();
-  } catch (err) { alert(err.message); }
-  finally { b.disabled = false; }
 });
 
 /* ---------- 驗證守門 ---------- */
@@ -604,11 +433,9 @@ function setLanguage(l) {
   populateCatControls();  // 下拉選單文字隨語言更新
   renderLinks();          // 連結分類標籤隨語言更新
   renderAnns();           // 公告日期/空狀態隨語言更新
-  refreshEditorUI();      // 表單按鈕/提示隨語言更新
 }
 buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
 populateCatControls();
-refreshEditorUI();
 try {
   const saved = localStorage.getItem('intrvl_lang');
   if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);

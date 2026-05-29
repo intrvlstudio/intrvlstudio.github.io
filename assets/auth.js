@@ -87,7 +87,16 @@ async function isAdmin(uid) {
   }
 }
 
+/* 快速連結的分類定義（members.html 與 publish.html 共用一份）。
+   要新增分類：在這裡加一筆，並同步更新 firestore.rules 的
+   d.category in [...] 名單。 */
+const CATS = [
+  { id: 'work',  label: { 'zh-TW': '工作相關', en: 'Work',  ko: '업무 관련' } },
+  { id: 'staff', label: { 'zh-TW': '員工相關', en: 'Staff', ko: '직원 관련' } }
+];
+
 export {
+  CATS,
   auth,
   signInWithEmailAndPassword,
   signOut,
