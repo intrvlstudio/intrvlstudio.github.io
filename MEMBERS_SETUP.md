@@ -8,8 +8,9 @@
 | 檔案 | 用途 |
 |------|------|
 | `login.html` | 成員登入頁 |
-| `members.html` | 登入後的成員專區（公告 / 連結改由 Firestore 載入） |
-| `assets/auth.js` | Firebase Auth + Firestore 共用程式 |
+| `members.html` | 登入後的成員專區（公告 / 連結由 Firestore 載入、可篩選、可刪除） |
+| `publish.html` | 管理員專用發佈頁：選擇「快速連結 / 公告」後填表單，新增或編輯 |
+| `assets/auth.js` | Firebase Auth + Firestore 共用程式（含分類定義 `CATS`） |
 | `firestore.rules` | Firestore 安全規則（需貼到 Console 發布） |
 
 ## 一次性設定步驟
@@ -63,7 +64,10 @@
 
 ## 日常管理
 
-- **發公告 / 加連結**：用管理員帳號登入 `members.html`，直接在頁面上新增、編輯（鉛筆圖示）、刪除（垃圾桶圖示）。
+- **發公告 / 加連結**：用管理員帳號登入後，點成員頁右上角的「＋ 發佈」進入 `publish.html`，
+  選擇類型（快速連結 / 公告）填表單送出。
+- **編輯 / 刪除**：在成員頁的每張卡片右上角，鉛筆圖示＝編輯（會帶你到發佈頁修改），
+  垃圾桶圖示＝刪除。
   （也可以在 Firebase Console → Firestore → Data 手動編輯。）
 - **新增成員**：Firebase Console → Authentication → Users → Add user。
 - **移除成員**：在 Users 清單刪除該帳號。
