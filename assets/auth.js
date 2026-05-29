@@ -32,11 +32,14 @@ import {
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
   collection,
   doc,
   getDoc,
   getDocs,
+  getDocsFromCache,
   addDoc,
   deleteDoc,
   updateDoc,
@@ -59,7 +62,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+
+/* 啟用本機持久快取（IndexedDB）：
+   重複造訪時可先從快取即時顯示，再向伺服器更新，大幅加快感知速度。
+   persistentMultipleTabManager 讓多分頁共用同一份快取，避免衝突。 */
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+});
 
 /* 讓登入狀態保存在瀏覽器（關閉分頁再回來仍維持登入） */
 setPersistence(auth, browserLocalPersistence).catch(() => {});
@@ -89,6 +98,7 @@ export {
   doc,
   getDoc,
   getDocs,
+  getDocsFromCache,
   addDoc,
   deleteDoc,
   updateDoc,

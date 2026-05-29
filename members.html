@@ -46,9 +46,15 @@ html[lang="ko"] .lang-zh, html[lang="ko"] .lang-en { display: none !important; }
 #gate { display: none; }
 body.ready #gate { display: block; }
 body.checking::after {
-  content: ""; position: fixed; inset: 0; background: var(--bg);
-  display: grid; place-items: center;
+  content: ""; position: fixed; inset: 0; z-index: 1; background: var(--bg);
 }
+body.checking::before {
+  content: ""; position: fixed; z-index: 2; left: 50%; top: 50%;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 3px solid var(--rule-soft); border-top-color: var(--mauve);
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .nav {
   position: sticky; top: 0; z-index: 10;
@@ -287,7 +293,7 @@ body.is-admin .admin-only { display: block; }
 <script type="module">
 import {
   auth, signOut, onAuthStateChanged, isAdmin,
-  db, collection, doc, getDocs, addDoc, deleteDoc, updateDoc,
+  db, collection, doc, getDocs, getDocsFromCache, addDoc, deleteDoc, updateDoc,
   query, orderBy, serverTimestamp
 } from "./assets/auth.js";
 
@@ -361,6 +367,15 @@ function populateCatControls() {
 let allLinks = [];
 async function loadLinks() {
   const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
+  // 先用本機快取即時顯示（重複造訪幾乎瞬間出現）
+  try {
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) {
+      allLinks = cached.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderLinks();
+    }
+  } catch (e) { /* 無快取則略過 */ }
+  // 再向伺服器取最新資料並更新畫面
   const snap = await getDocs(q);
   allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderLinks();
@@ -399,6 +414,15 @@ catFilter.addEventListener('change', renderLinks);
 let allAnns = [];
 async function loadAnnouncements() {
   const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+  // 先用本機快取即時顯示
+  try {
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) {
+      allAnns = cached.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAnns();
+    }
+  } catch (e) { /* 無快取則略過 */ }
+  // 再向伺服器取最新資料並更新畫面
   const snap = await getDocs(q);
   allAnns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderAnns();
@@ -553,14 +577,16 @@ annForm.addEventListener('submit', async (e) => {
 });
 
 /* ---------- 驗證守門 ---------- */
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
   document.getElementById('userEmail').textContent = user.email || '';
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
 
-  if (await isAdmin(user.uid)) document.body.classList.add('is-admin');
-  loadAll();
+  loadAll();   // 立即載入內容，不等管理員檢查完成
+  isAdmin(user.uid).then(ok => {   // 並行檢查，完成後才顯示編輯介面
+    if (ok) document.body.classList.add('is-admin');
+  });
 });
 
 /* ---------- 登出 ---------- */
