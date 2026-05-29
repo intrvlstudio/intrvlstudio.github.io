@@ -3,29 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Members Area · 成員專區 — INTRVL Studio</title>
+<title>成員專區 — INTRVL Studio</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="alternate icon" type="image/png" href="assets/icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Jua&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-@font-face {
-  font-family: "Bauhaus 93";
-  src: url("assets/fonts/BAUHS93.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
 :root {
   --bg: #FBF6EE; --bg-alt: #F4ECDD;
   --ink: #1F1814; --ink-soft: #4F4239; --ink-mute: #8E7C6E;
   --rule: #D9CFBE; --rule-soft: #EAE0CE;
   --peach: #F2A776; --pink: #E69BB6; --mauve: #B581A3;
   --gradient: linear-gradient(95deg, #F2B689 0%, #ECA4A8 30%, #DC97B9 60%, #B581A3 100%);
-  --display: "Bauhaus 93", "Huninn", "Noto Sans TC", sans-serif;
-  --body: "Manrope", "Huninn", "Noto Sans TC", -apple-system, sans-serif;
+  --body: "Huninn", "Noto Sans TC", -apple-system, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -33,14 +27,8 @@ body {
   font-family: var(--body); background: var(--bg); color: var(--ink);
   -webkit-font-smoothing: antialiased; line-height: 1.6;
 }
-html[lang="zh-TW"] body { font-family: "Huninn", "Noto Sans TC", sans-serif; }
-html[lang="ko"] body { font-family: "Noto Sans KR", sans-serif; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
-
-html[lang="zh-TW"] .lang-en, html[lang="zh-TW"] .lang-ko { display: none !important; }
-html[lang="en"] .lang-zh, html[lang="en"] .lang-ko { display: none !important; }
-html[lang="ko"] .lang-zh, html[lang="ko"] .lang-en { display: none !important; }
 
 /* 驗證完成前先全部隱藏，避免內容閃現 */
 #gate { display: none; }
@@ -64,16 +52,30 @@ body.checking::before {
   border-bottom: 1px solid var(--rule-soft);
 }
 .nav .logo { height: 24px; }
-.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
 .user-email { font-size: 13px; color: var(--ink-mute); max-width: 200px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* nav 按鈕（圖示 + 文字；手機只留圖示） */
+.btn-out, .btn-pub {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 15px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 700; border-radius: 10px;
+  transition: background .15s, filter .15s;
+}
 .btn-out {
-  padding: 8px 16px; cursor: pointer; font-family: inherit;
-  font-size: 13px; font-weight: 600; color: var(--ink-soft);
-  background: #fff; border: 1px solid var(--rule); border-radius: 10px;
-  transition: background .15s;
+  color: var(--ink-soft); background: #fff; border: 1px solid var(--rule); font-weight: 600;
 }
 .btn-out:hover { background: var(--bg-alt); }
+.btn-pub {
+  color: #fff; background: var(--gradient); border: none;
+}
+.btn-pub:hover { filter: brightness(1.04); }
+.btn-out .ico, .btn-pub .ico { width: 16px; height: 16px; flex: none; }
+
+/* 管理員專用元素（如「發佈」按鈕），非管理員隱藏 */
+.admin-only { display: none; }
+body.is-admin .admin-only { display: inline-flex; }
 
 .wrap { max-width: 860px; margin: 0 auto; padding: 56px 28px 90px; }
 .eyebrow {
@@ -147,26 +149,13 @@ body.is-admin .actions { display: flex; }
 .act.edit:hover  { color: var(--mauve); border-color: var(--mauve); background: #fff; }
 .act.del:hover   { color: #B23B36; border-color: #E7B8B5; background: #fff; }
 
-/* 管理員專用元素（如「發佈」按鈕），非管理員隱藏 */
-.admin-only { display: none; }
-body.is-admin .admin-only { display: inline-block; }
-
-/* 發佈入口按鈕 */
-.btn-pub {
-  padding: 8px 16px; cursor: pointer; font-family: inherit;
-  font-size: 13px; font-weight: 700; color: #fff;
-  background: var(--gradient); border: none; border-radius: 10px;
-  transition: filter .15s;
+/* 手機版：登出 / 發佈按鈕只留圖示 */
+@media (max-width: 600px) {
+  .nav { padding: 14px 18px; }
+  .btn-out .btn-label, .btn-pub .btn-label { display: none; }
+  .btn-out, .btn-pub { padding: 9px; }
+  .user-email { display: none; }
 }
-.btn-pub:hover { filter: brightness(1.04); }
-
-.lang-toggle { display: flex; align-items: center; gap: 4px; }
-.lang-toggle button {
-  padding: 3px 8px; cursor: pointer; background: none; border: none;
-  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink-mute);
-  border-radius: 6px;
-}
-.lang-toggle button.active { color: var(--ink); background: var(--bg-alt); }
 </style>
 </head>
 <body class="checking">
@@ -175,67 +164,38 @@ body.is-admin .admin-only { display: inline-block; }
   <nav class="nav">
     <a href="index.html"><img class="logo" src="assets/logo_en.svg" alt="INTRVL Studio"></a>
     <div class="nav-right">
-      <div class="lang-toggle" id="langToggle">
-        <button data-lang="zh-TW" class="active">中</button>
-        <button data-lang="en">EN</button>
-        <button data-lang="ko">한</button>
-      </div>
-      <a class="btn-pub admin-only" href="publish.html">
-        <span class="lang-en">+ Publish</span>
-        <span class="lang-zh">＋ 發佈</span>
-        <span class="lang-ko">+ 게시</span>
+      <a class="btn-pub admin-only" href="publish.html" aria-label="發佈" title="發佈">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span class="btn-label">發佈</span>
       </a>
       <span class="user-email" id="userEmail"></span>
-      <button class="btn-out" id="logoutBtn">
-        <span class="lang-en">Sign out</span>
-        <span class="lang-zh">登出</span>
-        <span class="lang-ko">로그아웃</span>
+      <button class="btn-out" id="logoutBtn" aria-label="登出" title="登出">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        <span class="btn-label">登出</span>
       </button>
     </div>
   </nav>
 
   <main class="wrap">
-    <p class="eyebrow">
-      <span class="lang-en">Members Only</span>
-      <span class="lang-zh">成員專區</span>
-      <span class="lang-ko">멤버 전용</span>
-    </p>
-    <h1>
-      <span class="lang-en">Welcome back</span>
-      <span class="lang-zh">歡迎回來</span>
-      <span class="lang-ko">다시 오신 걸 환영합니다</span>
-    </h1>
-    <p class="lede">
-      <span class="lang-en">Internal resources and announcements for INTRVL Studio members.</span>
-      <span class="lang-zh">INTRVL Studio 成員的內部資源與公告。</span>
-      <span class="lang-ko">INTRVL Studio 멤버를 위한 내부 자료 및 공지입니다.</span>
-    </p>
+    <p class="eyebrow">成員專區</p>
+    <h1>歡迎回來</h1>
+    <p class="lede">INTRVL Studio 成員的內部資源與公告。</p>
 
     <!-- ============ QUICK LINKS ============ -->
     <div class="section-head">
-      <span class="section-title">
-        <span class="lang-en">Quick Links</span>
-        <span class="lang-zh">快速連結</span>
-        <span class="lang-ko">바로가기</span>
-      </span>
-      <select class="cat-filter" id="catFilter" aria-label="Filter by category"></select>
+      <span class="section-title">快速連結</span>
+      <select class="cat-filter" id="catFilter" aria-label="依分類篩選"></select>
     </div>
     <div class="grid" id="linksGrid"></div>
 
     <!-- ============ ANNOUNCEMENTS ============ -->
     <div class="section-head">
-      <span class="section-title">
-        <span class="lang-en">Announcements</span>
-        <span class="lang-zh">公告</span>
-        <span class="lang-ko">공지</span>
-      </span>
+      <span class="section-title">公告</span>
     </div>
     <div id="annList"></div>
 
     <div class="note" id="loadError" style="display:none; margin-top:28px;">
-      <span class="lang-en">Couldn't load content. Make sure Firestore is enabled and the security rules are published (see MEMBERS_SETUP.md).</span>
-      <span class="lang-zh">無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。</span>
-      <span class="lang-ko">콘텐츠를 불러오지 못했습니다. Firestore가 활성화되고 보안 규칙이 게시되었는지 확인하세요.</span>
+      無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。
     </div>
   </main>
 </div>
@@ -246,14 +206,6 @@ import {
   db, collection, doc, getDocs, getDocsFromCache, deleteDoc,
   query, orderBy
 } from "./assets/auth.js";
-
-const lang = () => document.documentElement.lang;
-const txt = {
-  confirmDel: { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
-  noLinks:    { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
-  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
-};
-const t = (k) => txt[k][lang()] || txt[k].en;
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
   ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
@@ -266,8 +218,8 @@ const ICON_EDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const ICON_TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
 const actions = (col, id) =>
   `<div class="actions">
-     <button type="button" class="act edit" data-action="edit" data-col="${col}" data-id="${id}" title="edit">${ICON_EDIT}</button>
-     <button type="button" class="act del" data-action="delete" data-col="${col}" data-id="${id}" title="delete">${ICON_TRASH}</button>
+     <button type="button" class="act edit" data-action="edit" data-col="${col}" data-id="${id}" title="編輯">${ICON_EDIT}</button>
+     <button type="button" class="act del" data-action="delete" data-col="${col}" data-id="${id}" title="刪除">${ICON_TRASH}</button>
    </div>`;
 
 const linksGrid = document.getElementById('linksGrid');
@@ -275,19 +227,18 @@ const annList   = document.getElementById('annList');
 const loadError = document.getElementById('loadError');
 const catFilter = document.getElementById('catFilter');
 
-/* 分類定義由 assets/auth.js 共用匯入（與 publish.html 一致） */
-const allLabel = { 'zh-TW': '全部分類', en: 'All', ko: '전체' };
+/* 分類定義由 assets/auth.js 共用匯入（與 publish.html 一致；只取中文標籤） */
 const catLabel = (id) => {
   const c = CATS.find(c => c.id === id);
-  return c ? (c.label[lang()] || c.label.en) : '';
+  return c ? c.label['zh-TW'] : '';
 };
 
-/* 依目前語言填入分類篩選下拉，並保留現有選擇 */
+/* 填入分類篩選下拉，並保留現有選擇 */
 function populateCatControls() {
   const prevFilter = catFilter.value || 'all';
   catFilter.innerHTML =
-    `<option value="all">${esc(allLabel[lang()] || allLabel.en)}</option>` +
-    CATS.map(c => `<option value="${c.id}">${esc(c.label[lang()] || c.label.en)}</option>`).join('');
+    `<option value="all">全部分類</option>` +
+    CATS.map(c => `<option value="${c.id}">${esc(c.label['zh-TW'])}</option>`).join('');
   catFilter.value = prevFilter;
 }
 
@@ -317,7 +268,7 @@ function renderLinks() {
     : allLinks.filter(v => (v.category || '') === filter);
 
   if (!items.length) {
-    linksGrid.innerHTML = `<p class="empty">${t('noLinks')}</p>`;
+    linksGrid.innerHTML = `<p class="empty">尚無連結。</p>`;
     return;
   }
   linksGrid.innerHTML = '';
@@ -358,12 +309,12 @@ async function loadAnnouncements() {
 
 function renderAnns() {
   if (!allAnns.length) {
-    annList.innerHTML = `<p class="empty">${t('noAnn')}</p>`;
+    annList.innerHTML = `<p class="empty">尚無公告。</p>`;
     return;
   }
   annList.innerHTML = '';
   allAnns.forEach(v => {
-    const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString() : '';
+    const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString('zh-TW') : '';
     const el = document.createElement('div');
     el.className = 'ann';
     el.innerHTML =
@@ -397,7 +348,7 @@ document.addEventListener('click', async (e) => {
     return;
   }
   if (action === 'delete') {
-    if (!confirm(t('confirmDel'))) return;
+    if (!confirm('確定要刪除嗎？')) return;
     try {
       await deleteDoc(doc(db, col, id));
       await loadAll();
@@ -413,7 +364,7 @@ onAuthStateChanged(auth, (user) => {
   document.body.classList.add('ready');
 
   loadAll();   // 立即載入內容，不等管理員檢查完成
-  isAdmin(user.uid).then(ok => {   // 並行檢查，完成後才顯示編輯介面
+  isAdmin(user.uid).then(ok => {   // 並行檢查，完成後才顯示管理員介面
     if (ok) document.body.classList.add('is-admin');
   });
 });
@@ -424,22 +375,8 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   window.location.replace('login.html');
 });
 
-/* ---------- 語言切換 ---------- */
-const buttons = document.querySelectorAll('#langToggle button');
-function setLanguage(l) {
-  document.documentElement.lang = l;
-  buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === l));
-  try { localStorage.setItem('intrvl_lang', l); } catch(e) {}
-  populateCatControls();  // 下拉選單文字隨語言更新
-  renderLinks();          // 連結分類標籤隨語言更新
-  renderAnns();           // 公告日期/空狀態隨語言更新
-}
-buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+/* 初始化分類篩選下拉 */
 populateCatControls();
-try {
-  const saved = localStorage.getItem('intrvl_lang');
-  if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);
-} catch(e) {}
 </script>
 </body>
 </html>
