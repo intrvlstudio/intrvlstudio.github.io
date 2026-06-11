@@ -96,6 +96,45 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
 .tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; word-break: break-word; }
 .tile p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
 
+/* 專案傳送門 — 帶編號徽章的卡片 */
+.portal { padding-right: 46px; }
+.portal .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; margin-bottom: 12px;
+  font-family: var(--display); font-size: 14px; font-weight: 700; color: #fff;
+  background: var(--gradient); border-radius: 9px; letter-spacing: .02em;
+}
+.portal .go {
+  position: absolute; top: 22px; right: 20px;
+  font-size: 17px; color: var(--ink-mute); transition: transform .12s, color .12s;
+}
+.portal:hover .go { transform: translateX(3px); color: var(--mauve); }
+
+/* 工作排程 — 橫幅卡片(漸層描邊) */
+.schedule-card {
+  position: relative; display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px; margin-bottom: 14px; border-radius: 16px;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    var(--gradient) border-box;
+  transition: transform .12s, box-shadow .15s;
+}
+.schedule-card:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -22px rgba(31,24,20,0.25); }
+.schedule-card .ico {
+  flex: none; width: 44px; height: 44px; display: grid; place-items: center;
+  font-size: 22px; background: var(--bg-alt); border-radius: 12px;
+}
+.schedule-card .meta { min-width: 0; }
+.schedule-card .meta h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; word-break: break-word; }
+.schedule-card .meta p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
+.schedule-card .go { margin-left: auto; flex: none; font-size: 18px; color: var(--ink-mute);
+  transition: transform .12s, color .12s; }
+.schedule-card:hover .go { transform: translateX(3px); color: var(--mauve); }
+
+/* 群組標題前的小圖示 */
+.section-title .ico { margin-right: 6px; }
+
 .ann { padding: 20px 22px; background: #fff; border: 1px solid var(--rule);
   border-radius: 14px; margin-bottom: 14px; position: relative; }
 .ann h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
@@ -128,14 +167,15 @@ body.is-admin .admin-only { display: block; }
   border: 1px dashed var(--mauve); border-radius: 16px;
 }
 .editor .row { display: flex; gap: 10px; flex-wrap: wrap; }
-.editor input, .editor textarea {
+.editor input, .editor textarea, .editor select {
   flex: 1 1 180px; padding: 10px 13px; font-family: inherit; font-size: 14px;
   color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
   border-radius: 10px; outline: none; margin-bottom: 10px; resize: vertical;
 }
-.editor input:focus, .editor textarea:focus {
+.editor input:focus, .editor textarea:focus, .editor select:focus {
   border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
 }
+.editor select { flex-basis: 100%; cursor: pointer; }
 .editor textarea { flex-basis: 100%; min-height: 70px; }
 .editor button {
   padding: 10px 20px; cursor: pointer; font-family: inherit;
@@ -191,9 +231,32 @@ body.is-admin .admin-only { display: block; }
       <span class="lang-ko">INTRVL Studio 멤버를 위한 내부 자료 및 공지입니다.</span>
     </p>
 
-    <!-- ============ QUICK LINKS ============ -->
+    <!-- ============ 專案傳送門 ============ -->
     <div class="section-head">
       <span class="section-title">
+        <span class="ico">🎬</span>
+        <span class="lang-en">Project Portals</span>
+        <span class="lang-zh">專案傳送門</span>
+        <span class="lang-ko">프로젝트 포털</span>
+      </span>
+    </div>
+    <div class="grid" id="projectGrid"></div>
+
+    <!-- ============ 工作排程 ============ -->
+    <div class="section-head">
+      <span class="section-title">
+        <span class="ico">🗓</span>
+        <span class="lang-en">Schedule</span>
+        <span class="lang-zh">工作排程</span>
+        <span class="lang-ko">일정</span>
+      </span>
+    </div>
+    <div id="scheduleList"></div>
+
+    <!-- ============ 快速連結（其他） ============ -->
+    <div class="section-head">
+      <span class="section-title">
+        <span class="ico">🔗</span>
         <span class="lang-en">Quick Links</span>
         <span class="lang-zh">快速連結</span>
         <span class="lang-ko">바로가기</span>
@@ -205,10 +268,17 @@ body.is-admin .admin-only { display: block; }
     <div class="admin-only">
       <form class="editor" id="linkForm">
         <p class="hint">
-          <span class="lang-en">Admin · add a quick link</span>
-          <span class="lang-zh">管理員 · 新增快速連結</span>
-          <span class="lang-ko">관리자 · 바로가기 추가</span>
+          <span class="lang-en">Admin · add a link</span>
+          <span class="lang-zh">管理員 · 新增連結</span>
+          <span class="lang-ko">관리자 · 링크 추가</span>
         </p>
+        <div class="row">
+          <select id="linkCat">
+            <option value="project">🎬 專案傳送門 / Project</option>
+            <option value="schedule">🗓 工作排程 / Schedule</option>
+            <option value="general" selected>🔗 快速連結 / Quick Link</option>
+          </select>
+        </div>
         <div class="row">
           <input id="linkTitle" placeholder="Title / 標題" required>
           <input id="linkDesc" placeholder="Description / 說明">
@@ -275,9 +345,11 @@ import {
 
 const lang = () => document.documentElement.lang;
 const txt = {
-  confirmDel: { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
-  noLinks:    { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
-  noAnn:      { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
+  confirmDel:  { 'zh-TW': '確定要刪除嗎？', en: 'Delete this item?', ko: '삭제하시겠습니까?' },
+  noProjects:  { 'zh-TW': '尚無專案。', en: 'No projects yet.', ko: '아직 프로젝트가 없습니다.' },
+  noSchedule:  { 'zh-TW': '尚無排程連結。', en: 'No schedule yet.', ko: '아직 일정이 없습니다.' },
+  noLinks:     { 'zh-TW': '尚無連結。', en: 'No links yet.', ko: '아직 링크가 없습니다.' },
+  noAnn:       { 'zh-TW': '尚無公告。', en: 'No announcements yet.', ko: '아직 공지가 없습니다.' }
 };
 const t = (k) => txt[k][lang()] || txt[k].en;
 
@@ -287,27 +359,84 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
 /* 只允許 http/https 連結，擋掉 javascript: 等危險協定 */
 const safeUrl = (u) => /^https?:\/\//i.test(String(u ?? '').trim()) ? String(u).trim() : '#';
 
-const linksGrid = document.getElementById('linksGrid');
-const annList   = document.getElementById('annList');
-const loadError = document.getElementById('loadError');
+const projectGrid  = document.getElementById('projectGrid');
+const scheduleList = document.getElementById('scheduleList');
+const linksGrid    = document.getElementById('linksGrid');
+const annList      = document.getElementById('annList');
+const loadError    = document.getElementById('loadError');
 
-/* ---------- 載入快速連結 ---------- */
+const CATS = ['project', 'schedule', 'general'];
+
+/* 共用：刪除鈕（管理員才看得到，由 CSS 控制顯示） */
+const delBtn = (id) =>
+  `<button class="del" data-col="links" data-id="${id}" title="delete">✕</button>`;
+
+/* ---------- 載入連結，依分類分桶渲染 ---------- */
 async function loadLinks() {
   const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);
-  if (snap.empty) {
-    linksGrid.innerHTML = `<p class="empty">${t('noLinks')}</p>`;
-    return;
-  }
-  linksGrid.innerHTML = '';
+
+  const buckets = { project: [], schedule: [], general: [] };
   snap.forEach(d => {
     const v = d.data();
+    const cat = CATS.includes(v.category) ? v.category : 'general';
+    buckets[cat].push({ id: d.id, v });
+  });
+
+  renderProjects(buckets.project);
+  renderSchedule(buckets.schedule);
+  renderGeneral(buckets.general);
+}
+
+/* 專案傳送門：最早新增的排前面，編號 01、02、03… */
+function renderProjects(items) {
+  if (!items.length) { projectGrid.innerHTML = `<p class="empty">${t('noProjects')}</p>`; return; }
+  const ordered = items.slice().reverse();
+  projectGrid.innerHTML = '';
+  ordered.forEach((it, i) => {
+    const v = it.v;
+    const a = document.createElement('a');
+    a.className = 'tile portal';
+    a.href = safeUrl(v.url); a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML =
+      `${delBtn(it.id)}
+       <span class="num">${String(i + 1).padStart(2, '0')}</span>
+       <span class="go">→</span>
+       <h3>${esc(v.title)}</h3>
+       <p>${esc(v.desc || '')}</p>`;
+    projectGrid.appendChild(a);
+  });
+}
+
+/* 工作排程：橫幅卡片 */
+function renderSchedule(items) {
+  if (!items.length) { scheduleList.innerHTML = `<p class="empty">${t('noSchedule')}</p>`; return; }
+  scheduleList.innerHTML = '';
+  items.forEach(it => {
+    const v = it.v;
+    const a = document.createElement('a');
+    a.className = 'schedule-card';
+    a.href = safeUrl(v.url); a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML =
+      `${delBtn(it.id)}
+       <span class="ico">🗓</span>
+       <span class="meta"><h3>${esc(v.title)}</h3><p>${esc(v.desc || '')}</p></span>
+       <span class="go">→</span>`;
+    scheduleList.appendChild(a);
+  });
+}
+
+/* 快速連結（其他） */
+function renderGeneral(items) {
+  if (!items.length) { linksGrid.innerHTML = `<p class="empty">${t('noLinks')}</p>`; return; }
+  linksGrid.innerHTML = '';
+  items.forEach(it => {
+    const v = it.v;
     const a = document.createElement('a');
     a.className = 'tile';
-    a.href = safeUrl(v.url);
-    a.target = '_blank'; a.rel = 'noopener';
+    a.href = safeUrl(v.url); a.target = '_blank'; a.rel = 'noopener';
     a.innerHTML =
-      `<button class="del" data-col="links" data-id="${d.id}" title="delete">✕</button>
+      `${delBtn(it.id)}
        <h3>${esc(v.title)}</h3>
        <p>${esc(v.desc || '')}</p>`;
     linksGrid.appendChild(a);
@@ -364,9 +493,10 @@ document.getElementById('linkForm').addEventListener('submit', async (e) => {
   const b = e.target.querySelector('button'); b.disabled = true;
   try {
     await addDoc(collection(db, 'links'), {
-      title: document.getElementById('linkTitle').value.trim(),
-      desc:  document.getElementById('linkDesc').value.trim(),
-      url:   document.getElementById('linkUrl').value.trim(),
+      title:    document.getElementById('linkTitle').value.trim(),
+      desc:     document.getElementById('linkDesc').value.trim(),
+      url:      document.getElementById('linkUrl').value.trim(),
+      category: document.getElementById('linkCat').value,
       createdAt: serverTimestamp()
     });
     e.target.reset();
