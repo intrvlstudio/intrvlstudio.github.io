@@ -287,7 +287,8 @@ function renderLinks() {
     a.className = 'tile';
     a.href = safeUrl(v.url);
     a.target = '_blank'; a.rel = 'noopener';
-    const tag = v.category ? `<span class="cat">${esc(catLabel(v.category))}</span>` : '';
+    const label = catLabel(v.category);
+    const tag = label ? `<span class="cat">${esc(label)}</span>` : '';
     a.innerHTML =
       `${actions('links', v.id)}
        ${tag}<h3>${esc(v.title)}</h3>
