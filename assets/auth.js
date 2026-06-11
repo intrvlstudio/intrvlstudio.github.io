@@ -32,13 +32,17 @@ import {
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
   collection,
   doc,
   getDoc,
   getDocs,
+  getDocsFromCache,
   addDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   serverTimestamp
@@ -58,7 +62,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+
+/* 啟用本機持久快取（IndexedDB）：
+   重複造訪時可先從快取即時顯示，再向伺服器更新，大幅加快感知速度。
+   persistentMultipleTabManager 讓多分頁共用同一份快取，避免衝突。 */
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+});
 
 /* 讓登入狀態保存在瀏覽器（關閉分頁再回來仍維持登入） */
 setPersistence(auth, browserLocalPersistence).catch(() => {});
@@ -77,7 +87,16 @@ async function isAdmin(uid) {
   }
 }
 
+/* 快速連結的分類定義（members.html 與 publish.html 共用一份）。
+   要新增分類：在這裡加一筆，並同步更新 firestore.rules 的
+   d.category in [...] 名單。 */
+const CATS = [
+  { id: 'work',  label: { 'zh-TW': '工作相關', en: 'Work',  ko: '업무 관련' } },
+  { id: 'staff', label: { 'zh-TW': '員工相關', en: 'Staff', ko: '직원 관련' } }
+];
+
 export {
+  CATS,
   auth,
   signInWithEmailAndPassword,
   signOut,
@@ -88,8 +107,10 @@ export {
   doc,
   getDoc,
   getDocs,
+  getDocsFromCache,
   addDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   serverTimestamp,

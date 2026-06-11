@@ -3,29 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Members Area · 成員專區 — INTRVL Studio</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2KGVEM7L5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z2KGVEM7L5');
+</script>
+
+<title>成員專區 — INTRVL Studio</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="alternate icon" type="image/png" href="assets/icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Jua&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-@font-face {
-  font-family: "Bauhaus 93";
-  src: url("assets/fonts/BAUHS93.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
 :root {
   --bg: #FBF6EE; --bg-alt: #F4ECDD;
   --ink: #1F1814; --ink-soft: #4F4239; --ink-mute: #8E7C6E;
   --rule: #D9CFBE; --rule-soft: #EAE0CE;
   --peach: #F2A776; --pink: #E69BB6; --mauve: #B581A3;
   --gradient: linear-gradient(95deg, #F2B689 0%, #ECA4A8 30%, #DC97B9 60%, #B581A3 100%);
-  --display: "Bauhaus 93", "Huninn", "Noto Sans TC", sans-serif;
-  --body: "Manrope", "Huninn", "Noto Sans TC", -apple-system, sans-serif;
+  --body: "Huninn", "Noto Sans TC", -apple-system, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -33,22 +37,22 @@ body {
   font-family: var(--body); background: var(--bg); color: var(--ink);
   -webkit-font-smoothing: antialiased; line-height: 1.6;
 }
-html[lang="zh-TW"] body { font-family: "Huninn", "Noto Sans TC", sans-serif; }
-html[lang="ko"] body { font-family: "Noto Sans KR", sans-serif; }
 img { display: block; max-width: 100%; }
-a { color: inherit; }
-
-html[lang="zh-TW"] .lang-en, html[lang="zh-TW"] .lang-ko { display: none !important; }
-html[lang="en"] .lang-zh, html[lang="en"] .lang-ko { display: none !important; }
-html[lang="ko"] .lang-zh, html[lang="ko"] .lang-en { display: none !important; }
+a { color: inherit; text-decoration: none; }
 
 /* 驗證完成前先全部隱藏，避免內容閃現 */
 #gate { display: none; }
 body.ready #gate { display: block; }
 body.checking::after {
-  content: ""; position: fixed; inset: 0; background: var(--bg);
-  display: grid; place-items: center;
+  content: ""; position: fixed; inset: 0; z-index: 1; background: var(--bg);
 }
+body.checking::before {
+  content: ""; position: fixed; z-index: 2; left: 50%; top: 50%;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 3px solid var(--rule-soft); border-top-color: var(--mauve);
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .nav {
   position: sticky; top: 0; z-index: 10;
@@ -58,16 +62,30 @@ body.checking::after {
   border-bottom: 1px solid var(--rule-soft);
 }
 .nav .logo { height: 24px; }
-.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
 .user-email { font-size: 13px; color: var(--ink-mute); max-width: 200px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* nav 按鈕（圖示 + 文字；手機只留圖示） */
+.btn-out, .btn-pub {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 15px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 700; border-radius: 10px;
+  transition: background .15s, filter .15s;
+}
 .btn-out {
-  padding: 8px 16px; cursor: pointer; font-family: inherit;
-  font-size: 13px; font-weight: 600; color: var(--ink-soft);
-  background: #fff; border: 1px solid var(--rule); border-radius: 10px;
-  transition: background .15s;
+  color: var(--ink-soft); background: #fff; border: 1px solid var(--rule); font-weight: 600;
 }
 .btn-out:hover { background: var(--bg-alt); }
+.btn-pub {
+  color: #fff; background: var(--gradient); border: none;
+}
+.btn-pub:hover { filter: brightness(1.04); }
+.btn-out .ico, .btn-pub .ico { width: 16px; height: 16px; flex: none; }
+
+/* 管理員專用元素（如「發佈」按鈕），非管理員隱藏 */
+.admin-only { display: none; }
+body.is-admin .admin-only { display: inline-flex; }
 
 .wrap { max-width: 860px; margin: 0 auto; padding: 56px 28px 90px; }
 .eyebrow {
@@ -95,6 +113,22 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
 .tile:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -22px rgba(31,24,20,0.25); }
 .tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; word-break: break-word; }
 .tile p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
+.tile .cat {
+  display: inline-block; margin-bottom: 9px; padding: 2px 9px;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  color: var(--mauve); background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); border-radius: 999px;
+}
+
+/* 分類篩選下拉 */
+.cat-filter {
+  padding: 8px 13px; font-family: inherit; font-size: 14px;
+  color: var(--ink); background: #fff; border: 1px solid var(--rule);
+  border-radius: 10px; outline: none; cursor: pointer;
+}
+.cat-filter:focus {
+  border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
+}
 
 /* 專案傳送門 — 帶編號徽章的卡片 */
 .portal { padding-right: 46px; }
@@ -148,8 +182,8 @@ h1 { font-size: 34px; font-weight: 700; margin-bottom: 10px; }
 }
 .empty { color: var(--ink-mute); font-size: 14px; padding: 4px 2px; }
 
-/* 刪除鈕（管理員才看得到） */
-.del {
+/* 管理員動作按鈕（編輯 / 刪除，管理員才看得到） */
+.actions {
   position: absolute; top: 10px; right: 10px;
   width: 26px; height: 26px; cursor: pointer; line-height: 1;
   font-size: 15px; color: var(--ink-mute);
@@ -182,16 +216,17 @@ body.is-admin .admin-only { display: block; }
   font-size: 14px; font-weight: 700; color: #fff;
   background: var(--gradient); border: none; border-radius: 10px;
 }
-.editor button:disabled { opacity: .6; cursor: not-allowed; }
-.editor .hint { font-size: 12px; color: var(--ink-mute); margin-bottom: 12px; }
+.act svg { width: 15px; height: 15px; }
+.act.edit:hover  { color: var(--mauve); border-color: var(--mauve); background: #fff; }
+.act.del:hover   { color: #B23B36; border-color: #E7B8B5; background: #fff; }
 
-.lang-toggle { display: flex; align-items: center; gap: 4px; }
-.lang-toggle button {
-  padding: 3px 8px; cursor: pointer; background: none; border: none;
-  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink-mute);
-  border-radius: 6px;
+/* 手機版：登出 / 發佈按鈕只留圖示 */
+@media (max-width: 600px) {
+  .nav { padding: 14px 18px; }
+  .btn-out .btn-label, .btn-pub .btn-label { display: none; }
+  .btn-out, .btn-pub { padding: 9px; }
+  .user-email { display: none; }
 }
-.lang-toggle button.active { color: var(--ink); background: var(--bg-alt); }
 </style>
 </head>
 <body class="checking">
@@ -200,36 +235,22 @@ body.is-admin .admin-only { display: block; }
   <nav class="nav">
     <a href="index.html"><img class="logo" src="assets/logo_en.svg" alt="INTRVL Studio"></a>
     <div class="nav-right">
-      <div class="lang-toggle" id="langToggle">
-        <button data-lang="zh-TW" class="active">中</button>
-        <button data-lang="en">EN</button>
-        <button data-lang="ko">한</button>
-      </div>
+      <a class="btn-pub admin-only" href="publish.html" aria-label="發佈" title="發佈">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span class="btn-label">發佈</span>
+      </a>
       <span class="user-email" id="userEmail"></span>
-      <button class="btn-out" id="logoutBtn">
-        <span class="lang-en">Sign out</span>
-        <span class="lang-zh">登出</span>
-        <span class="lang-ko">로그아웃</span>
+      <button class="btn-out" id="logoutBtn" aria-label="登出" title="登出">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        <span class="btn-label">登出</span>
       </button>
     </div>
   </nav>
 
   <main class="wrap">
-    <p class="eyebrow">
-      <span class="lang-en">Members Only</span>
-      <span class="lang-zh">成員專區</span>
-      <span class="lang-ko">멤버 전용</span>
-    </p>
-    <h1>
-      <span class="lang-en">Welcome back</span>
-      <span class="lang-zh">歡迎回來</span>
-      <span class="lang-ko">다시 오신 걸 환영합니다</span>
-    </h1>
-    <p class="lede">
-      <span class="lang-en">Internal resources and announcements for INTRVL Studio members.</span>
-      <span class="lang-zh">INTRVL Studio 成員的內部資源與公告。</span>
-      <span class="lang-ko">INTRVL Studio 멤버를 위한 내부 자료 및 공지입니다.</span>
-    </p>
+    <p class="eyebrow">成員專區</p>
+    <h1>歡迎回來</h1>
+    <p class="lede">INTRVL Studio 成員的內部資源與公告。</p>
 
     <!-- ============ 專案傳送門 ============ -->
     <div class="section-head">
@@ -296,51 +317,21 @@ body.is-admin .admin-only { display: block; }
 
     <!-- ============ ANNOUNCEMENTS ============ -->
     <div class="section-head">
-      <span class="section-title">
-        <span class="lang-en">Announcements</span>
-        <span class="lang-zh">公告</span>
-        <span class="lang-ko">공지</span>
-      </span>
+      <span class="section-title">公告</span>
     </div>
     <div id="annList"></div>
 
-    <!-- 管理員：新增公告 -->
-    <div class="admin-only">
-      <form class="editor" id="annForm">
-        <p class="hint">
-          <span class="lang-en">Admin · post an announcement</span>
-          <span class="lang-zh">管理員 · 張貼公告</span>
-          <span class="lang-ko">관리자 · 공지 작성</span>
-        </p>
-        <div class="row">
-          <input id="annTitle" placeholder="Title / 標題" required>
-        </div>
-        <div class="row">
-          <textarea id="annBody" placeholder="Message / 內容" required></textarea>
-        </div>
-        <div class="row">
-          <button type="submit">
-            <span class="lang-en">Post</span>
-            <span class="lang-zh">張貼</span>
-            <span class="lang-ko">게시</span>
-          </button>
-        </div>
-      </form>
-    </div>
-
     <div class="note" id="loadError" style="display:none; margin-top:28px;">
-      <span class="lang-en">Couldn't load content. Make sure Firestore is enabled and the security rules are published (see MEMBERS_SETUP.md).</span>
-      <span class="lang-zh">無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。</span>
-      <span class="lang-ko">콘텐츠를 불러오지 못했습니다. Firestore가 활성화되고 보안 규칙이 게시되었는지 확인하세요.</span>
+      無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。
     </div>
   </main>
 </div>
 
 <script type="module">
 import {
-  auth, signOut, onAuthStateChanged, isAdmin,
-  db, collection, doc, getDocs, addDoc, deleteDoc,
-  query, orderBy, serverTimestamp
+  auth, signOut, onAuthStateChanged, isAdmin, CATS,
+  db, collection, doc, getDocs, getDocsFromCache, deleteDoc,
+  query, orderBy
 } from "./assets/auth.js";
 
 const lang = () => document.documentElement.lang;
@@ -374,6 +365,15 @@ const delBtn = (id) =>
 /* ---------- 載入連結，依分類分桶渲染 ---------- */
 async function loadLinks() {
   const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
+  // 先用本機快取即時顯示（重複造訪幾乎瞬間出現）
+  try {
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) {
+      allLinks = cached.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderLinks();
+    }
+  } catch (e) { /* 無快取則略過 */ }
+  // 再向伺服器取最新資料並更新畫面
   const snap = await getDocs(q);
 
   const buckets = { project: [], schedule: [], general: [] };
@@ -443,22 +443,39 @@ function renderGeneral(items) {
   });
 }
 
+/* 切換篩選 → 重新渲染（不需重新查詢資料庫） */
+catFilter.addEventListener('change', renderLinks);
+
 /* ---------- 載入公告 ---------- */
+let allAnns = [];
 async function loadAnnouncements() {
   const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+  // 先用本機快取即時顯示
+  try {
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) {
+      allAnns = cached.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAnns();
+    }
+  } catch (e) { /* 無快取則略過 */ }
+  // 再向伺服器取最新資料並更新畫面
   const snap = await getDocs(q);
-  if (snap.empty) {
-    annList.innerHTML = `<p class="empty">${t('noAnn')}</p>`;
+  allAnns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderAnns();
+}
+
+function renderAnns() {
+  if (!allAnns.length) {
+    annList.innerHTML = `<p class="empty">尚無公告。</p>`;
     return;
   }
   annList.innerHTML = '';
-  snap.forEach(d => {
-    const v = d.data();
-    const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString() : '';
+  allAnns.forEach(v => {
+    const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString('zh-TW') : '';
     const el = document.createElement('div');
     el.className = 'ann';
     el.innerHTML =
-      `<button class="del" data-col="announcements" data-id="${d.id}" title="delete">✕</button>
+      `${actions('announcements', v.id)}
        <h3>${esc(v.title)}</h3>
        <time>${esc(date)}</time>
        <p>${esc(v.body)}</p>`;
@@ -475,9 +492,10 @@ async function loadAll() {
   }
 }
 
-/* ---------- 刪除（事件委派，僅管理員可成功，後端規則再把關） ---------- */
+/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ----------
+   編輯導向發佈頁 publish.html（帶 type 與 id），刪除則就地處理。 */
 document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.del');
+  const btn = e.target.closest('.act');
   if (!btn) return;
   e.preventDefault();
   if (!confirm(t('confirmDel'))) return;
@@ -522,14 +540,16 @@ document.getElementById('annForm').addEventListener('submit', async (e) => {
 });
 
 /* ---------- 驗證守門 ---------- */
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
   document.getElementById('userEmail').textContent = user.email || '';
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
 
-  if (await isAdmin(user.uid)) document.body.classList.add('is-admin');
-  loadAll();
+  loadAll();   // 立即載入內容，不等管理員檢查完成
+  isAdmin(user.uid).then(ok => {   // 並行檢查，完成後才顯示管理員介面
+    if (ok) document.body.classList.add('is-admin');
+  });
 });
 
 /* ---------- 登出 ---------- */
@@ -538,18 +558,8 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   window.location.replace('login.html');
 });
 
-/* ---------- 語言切換 ---------- */
-const buttons = document.querySelectorAll('#langToggle button');
-function setLanguage(l) {
-  document.documentElement.lang = l;
-  buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === l));
-  try { localStorage.setItem('intrvl_lang', l); } catch(e) {}
-}
-buttons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
-try {
-  const saved = localStorage.getItem('intrvl_lang');
-  if (['en','zh-TW','ko'].includes(saved)) setLanguage(saved);
-} catch(e) {}
+/* 初始化分類篩選下拉 */
+populateCatControls();
 </script>
 </body>
 </html>
