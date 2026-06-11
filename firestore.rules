@@ -37,7 +37,7 @@ service cloud.firestore {
         && d.url.size() <= 2000
         && d.url.matches('https?://.*')
         && (!('desc' in d) || (d.desc is string && d.desc.size() <= 300))
-        && (!('category' in d) || (d.category in ['work', 'staff']))
+        && (!('category' in d) || (d.category in ['project', 'schedule', 'general']))
         && d.createdAt == request.time;
     }
 
