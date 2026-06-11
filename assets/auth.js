@@ -91,8 +91,9 @@ async function isAdmin(uid) {
    要新增分類：在這裡加一筆，並同步更新 firestore.rules 的
    d.category in [...] 名單。 */
 const CATS = [
-  { id: 'work',  label: { 'zh-TW': '工作相關', en: 'Work',  ko: '업무 관련' } },
-  { id: 'staff', label: { 'zh-TW': '員工相關', en: 'Staff', ko: '직원 관련' } }
+  { id: 'project',  label: { 'zh-TW': '專案傳送門', en: 'Project Portals', ko: '프로젝트 포털' } },
+  { id: 'schedule', label: { 'zh-TW': '工作排程',   en: 'Schedule',        ko: '일정' } },
+  { id: 'general',  label: { 'zh-TW': '其他連結',   en: 'Other Links',     ko: '기타 링크' } }
 ];
 
 export {
