@@ -674,8 +674,8 @@ html[lang="zh-TW"] .about-pullquote-cite {
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
 }
 
 .member {
@@ -722,6 +722,16 @@ html[lang="zh-TW"] .about-pullquote-cite {
 .member-m3 .member-mascot {
   background: #7B8E72;
 }
+
+/* 成員頭像圖檔尚未放入 assets/ 時的文字後備（避免顯示破圖） */
+.mascot-text {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+html[lang="zh-TW"] .mascot-text { font-family: var(--display-zh); font-weight: 900; }
 
 .member-role {
   font-size: 10px;
@@ -813,7 +823,10 @@ html[lang="zh-TW"] .member-bio {
   line-height: 1.85;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
+  .team-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+}
+@media (max-width: 600px) {
   .team-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 
@@ -1603,6 +1616,7 @@ html[lang="zh-TW"] .scroll-top-label {
 .reveal.delay-1 { transition-delay: 0.1s; }
 .reveal.delay-2 { transition-delay: 0.2s; }
 .reveal.delay-3 { transition-delay: 0.3s; }
+.reveal.delay-4 { transition-delay: 0.4s; }
 
 /* Hero entrance */
 @keyframes riseIn {
@@ -1769,9 +1783,9 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-ko">팀 소개</span>
       </div>
       <h2 class="section-title">
-        <span class="lang-en">Three people, <em>three trades</em>.</span>
-        <span class="lang-zh">三個人,<em>三種本業</em>。</span>
-        <span class="lang-ko">세 사람, <em>세 가지 본업</em>.</span>
+        <span class="lang-en">One team, <em>many trades</em>.</span>
+        <span class="lang-zh">一個團隊,<em>各有本業</em>。</span>
+        <span class="lang-ko">하나의 팀, <em>저마다의 본업</em>.</span>
       </h2>
       <p style="margin-top: 28px; font-size: 17px; line-height: 1.7; color: var(--ink-soft); max-width: 600px;">
         <span class="lang-en">All of us hold full-time careers outside the studio — in software, marketing, and small business. We believe that grounding in everyday working life is precisely what gives our stories their texture.</span>
@@ -1915,6 +1929,52 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-en">Specializes in line art — clean, refined, and structurally elegant. Easygoing and flexible, he keeps the team running smoothly.</span>
         <span class="lang-zh">專精於線稿處理,其線條乾淨、精緻且結構優雅。</br>個性隨和且具彈性,讓團隊的運作保持順暢。</span>
         <span class="lang-ko">선화 작업을 전문으로 합니다. 깔끔하고 정교하며 구조적으로 우아한 선이 특기입니다.<br>느긋하고 유연한 성격으로 팀의 흐름을 부드럽게 유지합니다.</span>
+      </p>
+    </article>
+
+    <!-- MEGA -->
+    <article class="member member-mega reveal delay-4">
+      <!-- 頭像：請把貓咪小巫師圖(去背 PNG 為佳)存成 assets/mascot_mega.png;
+           檔案到位前會自動顯示「MEGA」文字後備。 -->
+      <div class="member-mascot"><img src="assets/mascot_mega.png" alt="MEGA" onerror="this.outerHTML='<span class=&quot;mascot-text&quot;>MEGA</span>'"></div>
+      <div class="member-role">
+        <span class="lang-en">Art Assistant</span>
+        <span class="lang-zh">美術助手</span>
+        <span class="lang-ko">아트 어시스턴트</span>
+      </div>
+      <h3 class="member-name">MEGA</h3>
+      <div class="member-name-sub">MG</div>
+      <div class="member-divider"></div>
+      <div class="member-meta">
+        <div class="member-meta-row">
+          <span class="member-meta-key">
+            <span class="lang-en">Based</span>
+            <span class="lang-zh">所在地</span>
+            <span class="lang-ko">거주지</span>
+          </span>
+          <span class="member-meta-val">
+            <span class="lang-en">Taiwan</span>
+            <span class="lang-zh">台灣</span>
+            <span class="lang-ko">대만</span>
+          </span>
+        </div>
+        <div class="member-meta-row">
+          <span class="member-meta-key">
+            <span class="lang-en">Role</span>
+            <span class="lang-zh">職位</span>
+            <span class="lang-ko">역할</span>
+          </span>
+          <span class="member-meta-val">
+            <span class="lang-en">Art Assistant</span>
+            <span class="lang-zh">美術助手</span>
+            <span class="lang-ko">아트 어시스턴트</span>
+          </span>
+        </div>
+      </div>
+      <p class="member-bio">
+        <span class="lang-en">The team's cheerful, lovable youngest — a line-art little superhero who brings energy to every project.</span>
+        <span class="lang-zh">團隊裡歡樂可愛的忙內,線稿專長的小超人,為每個專案注入活力。</span>
+        <span class="lang-ko">밝고 사랑스러운 팀의 막내 — 선화에 강한 작은 슈퍼맨으로, 모든 프로젝트에 활력을 불어넣습니다.</span>
       </p>
     </article>
   </div>
