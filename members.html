@@ -409,21 +409,21 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
 
 /* APP 內文相簿（1:1，可左右一張張瀏覽） */
 .gallery { margin: 22px 0; }
-.gallery-stage { position: relative; width: 100%; max-width: 460px; margin: 0 auto; }
+.gallery-stage {
+  position: relative; width: 100%; max-width: 460px; margin: 0 auto;
+  cursor: pointer; touch-action: pan-y; user-select: none; -webkit-user-select: none;
+}
+.gallery-stage.single { cursor: default; }
 .gallery-img {
   width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;
   border-radius: 16px; border: 1px solid var(--rule-soft); background: var(--bg-alt);
+  pointer-events: none; -webkit-user-drag: none;
 }
-.gallery-nav {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  width: 40px; height: 40px; display: grid; place-items: center; cursor: pointer;
-  color: var(--ink); background: rgba(255,255,255,0.92); border: 1px solid var(--rule);
-  border-radius: 50%; box-shadow: 0 6px 16px -8px rgba(31,24,20,0.4);
-}
-.gallery-nav:hover { background: #fff; }
-.gallery-nav.prev { left: 10px; }
-.gallery-nav.next { right: 10px; }
-.gallery-nav svg { width: 20px; height: 20px; }
+/* 透明觸控區（無可見按鈕）：左 40% 上一張、右 60% 下一張 */
+.gallery-zone { position: absolute; top: 0; bottom: 0; }
+.gallery-zone.prev { left: 0; width: 40%; cursor: w-resize; }
+.gallery-zone.next { right: 0; width: 60%; cursor: e-resize; }
+.gallery-stage.single .gallery-zone { display: none; }
 .gallery-counter { text-align: center; margin-top: 10px; font-family: var(--num); font-size: 13px; color: var(--ink-mute); }
 
 /* APP 表單：內文相簿縮圖編輯 */
@@ -852,10 +852,10 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
         </div>
       </div>
       <div class="gallery" id="appGallery" hidden>
-        <div class="gallery-stage">
-          <button class="gallery-nav prev" id="galPrev" type="button" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="gallery-stage" id="galStage">
           <img class="gallery-img" id="galImg" alt="">
-          <button class="gallery-nav next" id="galNext" type="button" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="gallery-zone prev" id="galZonePrev" role="button" aria-label="上一張"></div>
+          <div class="gallery-zone next" id="galZoneNext" role="button" aria-label="下一張"></div>
         </div>
         <div class="gallery-counter" id="galCounter"></div>
       </div>
@@ -1635,16 +1635,37 @@ function renderGallery() {
   galIdx = Math.max(0, Math.min(galIdx, galImgs.length - 1));
   $('galImg').src = galImgs[galIdx];
   const multi = galImgs.length > 1;
-  $('galPrev').style.display = multi ? '' : 'none';
-  $('galNext').style.display = multi ? '' : 'none';
+  $('galStage').classList.toggle('single', !multi);
   $('galCounter').textContent = multi ? `${galIdx + 1} / ${galImgs.length}` : '';
 }
-$('galPrev').addEventListener('click', () => { if (galImgs.length) { galIdx = (galIdx - 1 + galImgs.length) % galImgs.length; renderGallery(); } });
-$('galNext').addEventListener('click', () => { if (galImgs.length) { galIdx = (galIdx + 1) % galImgs.length; renderGallery(); } });
+/* 換頁：dir = +1 下一張 / -1 上一張（頭尾環繞） */
+function galStep(dir) {
+  if (galImgs.length < 2) return;
+  galIdx = (galIdx + dir + galImgs.length) % galImgs.length;
+  renderGallery();
+}
+/* 點圖片左右區域換頁（無可見按鈕）；galSwiped 防止滑動後又觸發點擊造成連跳兩張 */
+let galSwiped = false;
+$('galZonePrev').addEventListener('click', () => { if (galSwiped) return; galStep(-1); });
+$('galZoneNext').addEventListener('click', () => { if (galSwiped) return; galStep(1); });
+/* 手機左右滑動換頁：左滑→下一張、右滑→上一張 */
+let galTouchX = null, galTouchY = null;
+const galStage = $('galStage');
+galStage.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; galTouchX = t.clientX; galTouchY = t.clientY; galSwiped = false; }, { passive: true });
+galStage.addEventListener('touchend', (e) => {
+  if (galTouchX === null) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - galTouchX, dy = t.clientY - galTouchY;
+  galTouchX = galTouchY = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+    galSwiped = true; galStep(dx < 0 ? 1 : -1); setTimeout(() => { galSwiped = false; }, 500);
+  }
+}, { passive: true });
+/* 鍵盤左右鍵 */
 document.addEventListener('keydown', (e) => {
   if (!$('view-app-detail').classList.contains('active') || $('appGallery').hidden) return;
-  if (e.key === 'ArrowLeft') $('galPrev').click();
-  else if (e.key === 'ArrowRight') $('galNext').click();
+  if (e.key === 'ArrowLeft') galStep(-1);
+  else if (e.key === 'ArrowRight') galStep(1);
 });
 
 /* APP 彈窗 */
