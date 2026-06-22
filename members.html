@@ -165,28 +165,112 @@ body.is-admin .admin-only { display: inline-flex; }
 .card-link svg { width: 13px; height: 13px; }
 
 /* 員工資料卡 */
-.profile { display: flex; align-items: center; gap: 16px; }
-.profile .avatar {
-  width: 60px; height: 60px; flex: none; border-radius: 18px;
+.profile { display: flex; align-items: flex-start; gap: 18px; }
+.avatar {
+  position: relative; width: 76px; height: 76px; flex: none; border-radius: 50%;
   display: grid; place-items: center; color: #fff; font-weight: 800;
-  font-size: 26px; background: var(--gradient); text-transform: uppercase;
+  font-size: 30px; background: var(--gradient); text-transform: uppercase;
+  overflow: hidden; box-shadow: inset 0 0 0 1px rgba(31,24,20,0.08);
 }
-.profile-meta { min-width: 0; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-meta { min-width: 0; flex: 1; }
+.profile-top { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
 .profile-name {
-  font-size: 18px; font-weight: 700; color: var(--ink);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 19px; font-weight: 700; color: var(--ink); line-height: 1.2;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.profile-email {
-  font-size: 13px; color: var(--ink-mute); margin-top: 2px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+/* 帳號等級 tag（縮小） */
 .role-pill {
-  display: inline-block; margin-top: 9px; padding: 3px 11px;
-  font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
+  display: inline-block; padding: 1px 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: .04em;
   color: var(--mauve); background: var(--bg-alt);
   border: 1px solid var(--rule-soft); border-radius: 999px;
 }
 body.is-admin .role-pill { color: #fff; background: var(--gradient); border-color: transparent; }
+.profile-alias { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+.profile-rows { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.profile-row { display: flex; gap: 10px; font-size: 12.5px; min-width: 0; }
+.profile-row .pk { flex: none; width: 64px; color: var(--ink-mute); font-weight: 600; }
+.profile-row .pv { color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 卡片右上角編輯按鈕 */
+.card-edit {
+  display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+  padding: 5px 11px; font-family: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--ink-soft); background: #fff; border: 1px solid var(--rule);
+  border-radius: 9px; transition: background .15s, color .15s, border-color .15s;
+}
+.card-edit:hover { color: var(--mauve); border-color: var(--mauve); background: var(--bg-alt); }
+.card-edit svg { width: 13px; height: 13px; }
+
+/* ============ 編輯彈窗 ============ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+  padding: 20px; background: rgba(31,24,20,0.42); backdrop-filter: blur(3px);
+}
+.modal-overlay[hidden] { display: none; }
+.modal {
+  width: 100%; max-width: 420px; max-height: calc(100vh - 40px); overflow-y: auto;
+  background: #fff; border: 1px solid var(--rule); border-radius: 20px;
+  box-shadow: 0 30px 70px -30px rgba(31,24,20,0.5);
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 14px;
+}
+.modal-title { font-size: 17px; font-weight: 700; }
+.modal-close {
+  width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer;
+  font-size: 20px; line-height: 1; color: var(--ink-mute);
+  background: var(--bg); border: 1px solid var(--rule-soft); border-radius: 9px;
+}
+.modal-close:hover { color: var(--ink); }
+.modal-body { padding: 6px 24px 8px; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 24px 22px; }
+.btn-ghost, .btn-solid {
+  padding: 10px 18px; cursor: pointer; font-family: inherit;
+  font-size: 14px; font-weight: 700; border-radius: 11px; transition: filter .15s, background .15s;
+}
+.btn-ghost { color: var(--ink-soft); background: #fff; border: 1px solid var(--rule); }
+.btn-ghost:hover { background: var(--bg-alt); }
+.btn-solid { color: #fff; background: var(--gradient); border: none; }
+.btn-solid:hover { filter: brightness(1.04); }
+
+/* 圓形裁切器 */
+.crop-section { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 4px; }
+.cropper {
+  position: relative; width: 220px; height: 220px; flex: none;
+  border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab;
+  background: var(--bg-alt); border: 1px solid var(--rule-soft);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.7);
+}
+.cropper.dragging { cursor: grabbing; }
+.cropper img { position: absolute; top: 0; left: 0; max-width: none; -webkit-user-drag: none; user-select: none; }
+.crop-empty {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 13px; color: var(--ink-mute); pointer-events: none; text-align: center; padding: 0 24px;
+}
+.crop-empty[hidden] { display: none; }
+.crop-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.crop-controls input[type=range] { width: 150px; accent-color: var(--mauve); }
+.crop-controls input[type=range]:disabled { opacity: .4; }
+.file-btn {
+  cursor: pointer; padding: 8px 14px; font-size: 13px; font-weight: 700;
+  color: #fff; background: var(--gradient); border-radius: 10px;
+}
+.link-btn {
+  cursor: pointer; font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink-mute);
+  background: none; border: none; text-decoration: underline; text-underline-offset: 3px;
+}
+.link-btn:hover { color: #B23B36; }
+.crop-hint { font-size: 11.5px; color: var(--ink-mute); text-align: center; max-width: 280px; }
+.field { display: block; margin-top: 14px; }
+.field > span { display: block; font-size: 13px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
+.field input {
+  width: 100%; padding: 11px 13px; font-family: inherit; font-size: 14px; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 11px; outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus { border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15); }
 
 /* 內部常用 APP 格狀清單 */
 .app-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -449,13 +533,23 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
           <div class="card">
             <div class="card-head">
               <span class="card-title">員工資料卡</span>
+              <button class="card-edit" id="profileEditBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                編輯
+              </button>
             </div>
             <div class="profile">
               <div class="avatar" id="dashAvatar">·</div>
               <div class="profile-meta">
-                <div class="profile-name" id="dashName"></div>
-                <div class="profile-email" id="dashEmail"></div>
-                <span class="role-pill" id="dashRole">成員</span>
+                <div class="profile-top">
+                  <span class="profile-name" id="dashName">員工姓名</span>
+                  <span class="role-pill" id="dashRole">成員</span>
+                </div>
+                <div class="profile-alias" id="dashAlias">代稱 · —</div>
+                <div class="profile-rows">
+                  <div class="profile-row"><span class="pk">員工編號</span><span class="pv" id="dashEmpNo">—</span></div>
+                  <div class="profile-row"><span class="pk">電子郵件</span><span class="pv" id="dashEmail">—</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -574,6 +668,42 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
       無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。
     </div>
   </main>
+
+  <!-- ============ 編輯員工資料 彈窗 ============ -->
+  <div class="modal-overlay" id="profileModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="編輯員工資料">
+      <div class="modal-head">
+        <span class="modal-title">編輯員工資料</span>
+        <button class="modal-close" id="modalClose" type="button" aria-label="關閉">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="crop-section">
+          <div class="cropper" id="cropper">
+            <img id="cropImg" alt="" hidden>
+            <div class="crop-empty" id="cropEmpty">尚未選擇照片</div>
+          </div>
+          <div class="crop-controls">
+            <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1" aria-label="縮放" disabled>
+            <label class="file-btn">選擇照片
+              <input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp" hidden>
+            </label>
+            <button type="button" class="link-btn" id="avatarRemove" hidden>移除照片</button>
+          </div>
+          <p class="crop-hint">支援 JPG / PNG / WebP，檔案上限 8MB。可拖曳照片並用滑桿縮放，系統會圓形裁切。</p>
+        </div>
+        <label class="field"><span>姓名</span>
+          <input type="text" id="editName" maxlength="20" placeholder="輸入姓名">
+        </label>
+        <label class="field"><span>代稱</span>
+          <input type="text" id="editAlias" maxlength="20" placeholder="輸入代稱">
+        </label>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" id="modalCancel" type="button">取消</button>
+        <button class="btn-solid" id="modalSave" type="button">儲存</button>
+      </div>
+    </div>
+  </div>
 
 </div>
 </div>
@@ -805,21 +935,181 @@ document.addEventListener('click', async (e) => {
   }
 });
 
+/* ===========================================================
+   員工資料卡：姓名 / 代稱 / 大頭照 由員工自行編輯。
+   後端（Firestore）目前沒有對應欄位，先存在本機瀏覽器
+   （localStorage）；其餘欄位（員工編號等）暫以假資料代位。
+   =========================================================== */
+let currentEmail = '';
+const FAKE = { name: '林其間', alias: 'Lin' };   // 尚未編輯前的假資料
+let profile = { name: '', alias: '', avatar: '' };
+const profileKey = (email) => 'intrvl_profile_' + email.toLowerCase();
+
+function loadProfile(email) {
+  try { profile = JSON.parse(localStorage.getItem(profileKey(email))) || {}; }
+  catch (e) { profile = {}; }
+  profile = Object.assign({ name: '', alias: '', avatar: '' }, profile);
+}
+function persistProfile() {
+  try { localStorage.setItem(profileKey(currentEmail), JSON.stringify(profile)); } catch (e) {}
+}
+
+/* 由 email 產生一組穩定的假員工編號 */
+function fakeEmpNo(email) {
+  let h = 0;
+  for (let i = 0; i < email.length; i++) h = (h * 31 + email.charCodeAt(i)) >>> 0;
+  return 'INTRVL-' + String(1000 + (h % 9000));
+}
+
+function renderProfile() {
+  const name = profile.name || FAKE.name;
+  const alias = profile.alias || FAKE.alias;
+  const avatarEl = $('dashAvatar');
+  if (profile.avatar) avatarEl.innerHTML = `<img src="${profile.avatar}" alt="">`;
+  else avatarEl.textContent = (name.trim()[0] || currentEmail.trim()[0] || '·').toUpperCase();
+  $('dashName').textContent = name;
+  $('dashAlias').textContent = '代稱 · ' + alias;
+  $('dashEmpNo').textContent = fakeEmpNo(currentEmail);
+  $('dashEmail').textContent = currentEmail;
+}
+
+/* ---------- 編輯彈窗 + 圓形裁切 ---------- */
+const modal = $('profileModal');
+const cropper = $('cropper');
+const cropImg = $('cropImg');
+const cropEmpty = $('cropEmpty');
+const cropZoom = $('cropZoom');
+const avatarFile = $('avatarFile');
+const avatarRemove = $('avatarRemove');
+
+const CROP_VIEW = 220;            // 裁切視窗直徑（與 CSS 一致）
+const CROP_OUT = 256;             // 輸出尺寸（壓縮後存入 localStorage）
+const MAX_FILE = 8 * 1024 * 1024; // 檔案上限 8MB
+
+let crop = { img: null, base: 1, zoom: 1, scale: 1, ox: 0, oy: 0, drag: false, px: 0, py: 0 };
+
+function clampCrop() {
+  const dw = crop.img.naturalWidth * crop.scale;
+  const dh = crop.img.naturalHeight * crop.scale;
+  crop.ox = Math.min(0, Math.max(CROP_VIEW - dw, crop.ox));
+  crop.oy = Math.min(0, Math.max(CROP_VIEW - dh, crop.oy));
+}
+function applyCrop() {
+  cropImg.style.width = crop.img.naturalWidth * crop.scale + 'px';
+  cropImg.style.height = crop.img.naturalHeight * crop.scale + 'px';
+  cropImg.style.left = crop.ox + 'px';
+  cropImg.style.top = crop.oy + 'px';
+}
+function setCropImage(src) {
+  const img = new Image();
+  img.onload = () => {
+    crop.img = img;
+    crop.base = Math.max(CROP_VIEW / img.naturalWidth, CROP_VIEW / img.naturalHeight);
+    crop.zoom = 1; crop.scale = crop.base;
+    crop.ox = (CROP_VIEW - img.naturalWidth * crop.scale) / 2;
+    crop.oy = (CROP_VIEW - img.naturalHeight * crop.scale) / 2;
+    cropImg.src = src; cropImg.hidden = false; cropEmpty.hidden = true;
+    cropZoom.disabled = false; cropZoom.value = '1'; avatarRemove.hidden = false;
+    applyCrop();
+  };
+  img.src = src;
+}
+function clearCropImage() {
+  crop.img = null; cropImg.hidden = true; cropImg.removeAttribute('src');
+  cropEmpty.hidden = false; cropZoom.disabled = true; cropZoom.value = '1';
+  avatarRemove.hidden = true;
+}
+
+/* 拖曳照片 */
+cropper.addEventListener('pointerdown', (e) => {
+  if (!crop.img) return;
+  crop.drag = true; crop.px = e.clientX; crop.py = e.clientY;
+  cropper.classList.add('dragging'); cropper.setPointerCapture(e.pointerId);
+});
+cropper.addEventListener('pointermove', (e) => {
+  if (!crop.drag) return;
+  crop.ox += e.clientX - crop.px; crop.oy += e.clientY - crop.py;
+  crop.px = e.clientX; crop.py = e.clientY;
+  clampCrop(); applyCrop();
+});
+const endDrag = () => { crop.drag = false; cropper.classList.remove('dragging'); };
+cropper.addEventListener('pointerup', endDrag);
+cropper.addEventListener('pointercancel', endDrag);
+
+/* 縮放（以視窗中心為基準） */
+cropZoom.addEventListener('input', () => {
+  if (!crop.img) return;
+  const old = crop.scale;
+  crop.zoom = parseFloat(cropZoom.value);
+  crop.scale = crop.base * crop.zoom;
+  const cx = (CROP_VIEW / 2 - crop.ox) / old;
+  const cy = (CROP_VIEW / 2 - crop.oy) / old;
+  crop.ox = CROP_VIEW / 2 - cx * crop.scale;
+  crop.oy = CROP_VIEW / 2 - cy * crop.scale;
+  clampCrop(); applyCrop();
+});
+
+/* 選擇檔案：限制類型與大小 */
+avatarFile.addEventListener('change', () => {
+  const file = avatarFile.files && avatarFile.files[0];
+  if (!file) return;
+  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) { alert('請選擇 JPG / PNG / WebP 圖片。'); avatarFile.value = ''; return; }
+  if (file.size > MAX_FILE) { alert('檔案過大，請選擇 8MB 以內的圖片。'); avatarFile.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = () => setCropImage(reader.result);
+  reader.readAsDataURL(file);
+  avatarFile.value = '';
+});
+avatarRemove.addEventListener('click', clearCropImage);
+
+/* 把目前裁切結果輸出（存方形 dataURL，顯示時以 CSS 圓形呈現） */
+function renderCroppedAvatar() {
+  if (!crop.img) return '';
+  const canvas = document.createElement('canvas');
+  canvas.width = CROP_OUT; canvas.height = CROP_OUT;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff';                 // 透明 PNG 轉 JPEG 時補白底，避免變黑
+  ctx.fillRect(0, 0, CROP_OUT, CROP_OUT);
+  const srcW = CROP_VIEW / crop.scale, srcH = CROP_VIEW / crop.scale;
+  ctx.drawImage(crop.img, -crop.ox / crop.scale, -crop.oy / crop.scale, srcW, srcH, 0, 0, CROP_OUT, CROP_OUT);
+  return canvas.toDataURL('image/jpeg', 0.85);
+}
+
+function openModal() {
+  $('editName').value = profile.name || '';
+  $('editAlias').value = profile.alias || '';
+  if (profile.avatar) setCropImage(profile.avatar); else clearCropImage();
+  modal.hidden = false;
+}
+function closeModal() { modal.hidden = true; }
+
+$('profileEditBtn').addEventListener('click', openModal);
+$('modalClose').addEventListener('click', closeModal);
+$('modalCancel').addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+$('modalSave').addEventListener('click', () => {
+  profile.name = $('editName').value.trim();
+  profile.alias = $('editAlias').value.trim();
+  profile.avatar = crop.img ? renderCroppedAvatar() : '';
+  persistProfile();
+  renderProfile();
+  closeModal();
+});
+
 /* ---------- 驗證守門 ---------- */
 onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
-  const email = user.email || '';
-  const initial = (email.trim()[0] || '·').toUpperCase();
-  const name = email.split('@')[0] || '成員';
-
-  $('dashAvatar').textContent = initial;
-  $('dashName').textContent = name;
-  $('dashEmail').textContent = email;
-  $('setEmail').textContent = email;
+  currentEmail = user.email || '';
+  $('setEmail').textContent = currentEmail;
   $('setRole').textContent = '成員';
 
+  loadProfile(currentEmail);
+  renderProfile();
+
   // PIANN 專屬選單
-  if (PIANN_EMAILS.map(s => s.toLowerCase()).includes(email.toLowerCase())) {
+  if (PIANN_EMAILS.map(s => s.toLowerCase()).includes(currentEmail.toLowerCase())) {
     document.body.classList.add('is-piann');
   }
 
