@@ -63,12 +63,54 @@ service cloud.firestore {
         && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 700000));
     }
 
-    // 公告寫入驗證
+    // 公告寫入驗證（最新消息）：標題 / 內容 / 類型 / 圖片(1:1, base64) / 日期。
+    // 圖片統一壓縮以加快傳輸，長度設上限避免超過單筆 1MiB。
     function validAnnouncement() {
       let d = request.resource.data;
-      return d.keys().hasOnly(['title', 'body', 'createdAt'])
+      return d.keys().hasOnly(['title', 'body', 'type', 'image', 'date', 'createdAt'])
         && validStr(d.title, 150)
-        && validStr(d.body, 5000)
+        && (!('body' in d) || (d.body is string && d.body.size() <= 8000))
+        && (!('type' in d) || (d.type in ['share', 'project', 'hr', 'event', 'system', 'important']))
+        && (!('image' in d) || (d.image is string && d.image.size() <= 800000))
+        && (!('date' in d) || (d.date is string && d.date.size() <= 10))
+        && d.createdAt == request.time;
+    }
+
+    // 專案內容寫入驗證：標題 / 簡述 / 連結 / 縮圖(小, base64) /
+    // 作品類型(BL,BG) / 製作狀態 / 年份。
+    function validProject() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['title', 'desc', 'url', 'thumb', 'kind', 'status', 'year', 'createdAt'])
+        && validStr(d.title, 100)
+        && (!('desc' in d) || (d.desc is string && d.desc.size() <= 500))
+        && (!('url' in d) || (d.url is string && d.url.size() <= 2000 && (d.url.size() == 0 || d.url.matches('https?://.*'))))
+        && (!('thumb' in d) || (d.thumb is string && d.thumb.size() <= 200000))
+        && (!('kind' in d) || (d.kind in ['BL', 'BG', '']))
+        && (!('status' in d) || (d.status in ['planning', 'producing', 'done']))
+        && (!('year' in d) || (d.year is string && d.year.size() <= 10))
+        && d.createdAt == request.time;
+    }
+
+    // 文件下載寫入驗證：文件類型 / 標題 / 內容說明 / 連結。
+    function validDocument() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['docType', 'title', 'desc', 'url', 'createdAt'])
+        && validStr(d.title, 150)
+        && (!('docType' in d) || (d.docType is string && d.docType.size() <= 30))
+        && (!('desc' in d) || (d.desc is string && d.desc.size() <= 2000))
+        && (!('url' in d) || (d.url is string && d.url.size() <= 2000 && (d.url.size() == 0 || d.url.matches('https?://.*'))))
+        && d.createdAt == request.time;
+    }
+
+    // APP 寫入驗證：icon(小, base64) / 名稱 / 簡述 / 使用說明 / 下載連結。
+    function validApp() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['icon', 'name', 'desc', 'usage', 'downloadUrl', 'createdAt'])
+        && validStr(d.name, 80)
+        && (!('icon' in d) || (d.icon is string && d.icon.size() <= 200000))
+        && (!('desc' in d) || (d.desc is string && d.desc.size() <= 500))
+        && (!('usage' in d) || (d.usage is string && d.usage.size() <= 8000))
+        && (!('downloadUrl' in d) || (d.downloadUrl is string && d.downloadUrl.size() <= 2000 && (d.downloadUrl.size() == 0 || d.downloadUrl.matches('https?://.*'))))
         && d.createdAt == request.time;
     }
 
@@ -79,10 +121,31 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // 快速連結：登入成員可讀；只有管理員可寫（須通過內容驗證）
+    // 快速連結（舊版，保留相容）：登入成員可讀；只有管理員可寫
     match /links/{id} {
       allow read:           if isSignedIn();
       allow create:         if isAdmin() && validLink();
+      allow update, delete: if isAdmin();
+    }
+
+    // 專案內容：登入成員可讀；只有管理員可寫（須通過內容驗證）
+    match /projects/{id} {
+      allow read:           if isSignedIn();
+      allow create:         if isAdmin() && validProject();
+      allow update, delete: if isAdmin();
+    }
+
+    // 文件下載：登入成員可讀；只有管理員可寫（須通過內容驗證）
+    match /documents/{id} {
+      allow read:           if isSignedIn();
+      allow create:         if isAdmin() && validDocument();
+      allow update, delete: if isAdmin();
+    }
+
+    // APP：登入成員可讀；只有管理員可寫（須通過內容驗證）
+    match /apps/{id} {
+      allow read:           if isSignedIn();
+      allow create:         if isAdmin() && validApp();
       allow update, delete: if isAdmin();
     }
 

@@ -13,7 +13,7 @@
   gtag('config', 'G-Z2KGVEM7L5');
 </script>
 
-<title>INTRVL 內部專區 — INTRVL Studio</title>
+<title>INTRVL 內部空間 — INTRVL Studio</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="alternate icon" type="image/png" href="assets/icon.png">
@@ -41,6 +41,7 @@ body {
 }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
 
 /* 驗證完成前先全部隱藏，避免內容閃現 */
 #gate { display: none; }
@@ -59,22 +60,18 @@ body.checking::before {
 /* ============ 整體版面：側邊欄 + 主內容 ============ */
 .shell { display: grid; grid-template-columns: var(--sidebar-w) 1fr; min-height: 100vh; }
 
-/* ---------- 側邊欄 ---------- */
+/* ---------- 側邊欄（全程常駐） ---------- */
 .sidebar {
   position: sticky; top: 0; align-self: start; height: 100vh;
   display: flex; flex-direction: column;
   background: #fff; border-right: 1px solid var(--rule-soft);
   padding: 22px 16px;
 }
-.sidebar-logo { padding: 6px 10px 22px; }
+.sidebar-logo { padding: 6px 10px 22px; display: flex; align-items: center; justify-content: space-between; }
 .sidebar-logo img { height: 24px; }
 
 .nav-scroll { flex: 1; overflow-y: auto; }
 .nav-group { margin-bottom: 8px; }
-.nav-group-title {
-  padding: 14px 12px 8px; font-size: 11px; font-weight: 700;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-mute);
-}
 .nav-item {
   display: flex; align-items: center; gap: 11px; width: 100%;
   padding: 9px 12px; margin-bottom: 2px; cursor: pointer;
@@ -107,10 +104,12 @@ body.checking::before {
 .btn-out:hover { background: var(--bg-alt); }
 .btn-out .ico { width: 16px; height: 16px; flex: none; }
 
-/* 管理員專用元素（如「發佈」按鈕 / 員工資料後台入口），非管理員隱藏 */
-.admin-only { display: none; }
-body.is-admin .admin-only { display: inline-flex; }
-body.is-admin .nav-item.admin-only { display: flex; }
+/* 管理員專用元素，非管理員隱藏 */
+.admin-only { display: none !important; }
+body.is-admin .admin-only { display: inline-flex !important; }
+body.is-admin .nav-item.admin-only { display: flex !important; }
+body.is-admin tr.admin-only { display: table-row !important; }
+body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !important; }
 
 /* ---------- 主內容 ---------- */
 .main { padding: 30px 40px 80px; max-width: 1180px; }
@@ -119,7 +118,7 @@ body.is-admin .nav-item.admin-only { display: flex; }
 .view { display: none; }
 .view.active { display: block; }
 
-/* ============ 第一列：Headbanner（INTRVL 內部空間 + 日期 + 標記） ============ */
+/* ============ Headbanner（INTRVL 內部空間 + 日期 + 標記） ============ */
 .topbar {
   position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
@@ -130,7 +129,6 @@ body.is-admin .nav-item.admin-only { display: flex; }
   font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
   color: rgba(255,255,255,0.92); margin-bottom: 10px;
 }
-/* 左側日期：YYYY（小）+ MM／DD（大），同列基線對齊 */
 .topbar-date { display: flex; align-items: baseline; gap: 10px; line-height: 1; }
 .topbar-date .year {
   font-family: var(--num); font-size: 18px; font-weight: 700;
@@ -139,31 +137,26 @@ body.is-admin .nav-item.admin-only { display: flex; }
 .topbar-date .md {
   font-family: var(--num); font-size: 44px; font-weight: 800; letter-spacing: .01em;
 }
-/* 右側標記圖示：顯示 75×75 */
 .topbar-mark { width: 75px; height: 75px; flex: none; }
 
-/* ============ 第二列：左右兩欄 ============ */
+/* ============ 主控版第二列：左右兩欄 ============ */
 .dash-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
 .dash-col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 
 /* 卡片容器 */
-.card {
-  background: #fff; border: 1px solid var(--rule); border-radius: 18px;
-  padding: 22px 24px;
-}
+.card { background: #fff; border: 1px solid var(--rule); border-radius: 18px; padding: 22px 24px; }
 .card-head {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; margin-bottom: 16px;
 }
 .card-title { font-size: 16px; font-weight: 700; color: var(--ink); }
-.card-sub { font-size: 12.5px; color: var(--ink-mute); }
 .card-link {
   font-size: 12.5px; font-weight: 700; color: var(--mauve);
   display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
 }
 .card-link svg { width: 13px; height: 13px; }
 
-/* 員工資料卡：圓型頭貼 | 姓名／代稱／職稱／Email（逐行） */
+/* 員工資料卡：圓型頭貼 | 姓名／代稱／職稱／Email */
 .profile { display: flex; align-items: center; gap: 18px; }
 .avatar {
   position: relative; width: 76px; height: 76px; flex: none; border-radius: 50%;
@@ -184,10 +177,10 @@ body.is-admin .nav-item.admin-only { display: flex; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-/* 內部常用 APP 格狀清單 */
+/* 主控版常用 APP 小卡 */
 .app-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 .app-tile {
-  position: relative; display: flex; flex-direction: column; gap: 4px;
+  display: flex; flex-direction: column; gap: 4px; cursor: pointer;
   padding: 15px 16px; background: var(--bg); border: 1px solid var(--rule-soft);
   border-radius: 14px; transition: transform .12s, border-color .15s, box-shadow .15s;
 }
@@ -195,22 +188,23 @@ body.is-admin .nav-item.admin-only { display: flex; }
   transform: translateY(-2px); border-color: var(--rule);
   box-shadow: 0 14px 30px -22px rgba(31,24,20,0.35);
 }
-.app-ico {
-  width: 34px; height: 34px; margin-bottom: 6px; display: grid; place-items: center;
-  color: var(--mauve); background: #fff;
-  border: 1px solid var(--rule-soft); border-radius: 10px;
+.app-tile-ico {
+  width: 38px; height: 38px; margin-bottom: 6px; border-radius: 10px; overflow: hidden;
+  display: grid; place-items: center; color: var(--mauve);
+  background: #fff; border: 1px solid var(--rule-soft);
 }
-.app-ico svg { width: 18px; height: 18px; }
-.app-name { font-size: 14px; font-weight: 700; color: var(--ink); word-break: break-word; }
-.app-desc {
+.app-tile-ico img { width: 100%; height: 100%; object-fit: cover; }
+.app-tile-ico svg { width: 18px; height: 18px; }
+.app-tile-name { font-size: 14px; font-weight: 700; color: var(--ink); word-break: break-word; }
+.app-tile-desc {
   font-size: 12px; color: var(--ink-mute); word-break: break-word;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
-/* 最新公告：左日期 + 右標題/類型 */
+/* 主控版最新公告 feed */
 .feed { display: flex; flex-direction: column; }
 .feed-item {
-  position: relative; display: flex; gap: 16px; align-items: stretch;
+  display: flex; gap: 16px; align-items: stretch; cursor: pointer;
   padding: 14px 4px; border-top: 1px solid var(--rule-soft);
 }
 .feed-item:first-child { border-top: none; }
@@ -234,63 +228,186 @@ body.is-admin .nav-item.admin-only { display: flex; }
   border: 1px solid var(--rule-soft); border-radius: 999px;
 }
 
-/* 區段標題（其他視圖共用） */
+/* ============ 區段標題列（各分頁共用） ============ */
 .section-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 12px; margin: 0 0 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin: 0 0 18px; flex-wrap: wrap;
 }
+.section-head .titles { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .section-title { font-size: 22px; font-weight: 700; color: var(--ink); }
 .section-sub { font-size: 13px; color: var(--ink-mute); }
+.btn-add {
+  display: inline-flex; align-items: center; gap: 7px; padding: 10px 16px; cursor: pointer;
+  font-size: 13.5px; font-weight: 700; color: #fff;
+  background: var(--gradient); border: none; border-radius: 11px;
+  transition: filter .15s;
+}
+.btn-add:hover { filter: brightness(1.04); }
+.btn-add svg { width: 15px; height: 15px; }
 
-/* 快速連結 / 專案 / APP 卡片 */
-.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-.tile {
-  position: relative; display: flex; flex-direction: column; padding: 20px;
-  background: #fff; border: 1px solid var(--rule); border-radius: 16px;
-  transition: transform .12s, box-shadow .15s, border-color .15s;
+/* ============ 資料表格（專案 / 文件 / 員工共用） ============ */
+.table-card { background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+.data-table th {
+  text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-mute);
+  padding: 14px 16px; border-bottom: 1px solid var(--rule-soft); white-space: nowrap;
 }
-.tile:hover {
-  transform: translateY(-3px); border-color: var(--rule);
-  box-shadow: 0 16px 36px -22px rgba(31,24,20,0.3);
+.data-table td { padding: 13px 16px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tbody tr.clickable { cursor: pointer; transition: background .12s; }
+.data-table tbody tr.clickable:hover { background: var(--bg); }
+.muted { color: var(--ink-mute); }
+.col-thumb { width: 44px; }
+.thumb-box {
+  width: 30px; height: 30px; border-radius: 7px; overflow: hidden; flex: none;
+  display: grid; place-items: center; background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); color: var(--ink-mute);
 }
-.tile h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; word-break: break-word; }
-.tile p { font-size: 13.5px; color: var(--ink-mute); word-break: break-word; }
-.tile .cat {
-  align-self: flex-start; margin-bottom: 11px; padding: 3px 10px;
-  font-size: 11px; font-weight: 700; letter-spacing: .04em;
-  color: var(--mauve); background: var(--bg-alt);
-  border: 1px solid var(--rule-soft); border-radius: 999px;
-}
-.tile .go {
-  position: absolute; top: 18px; right: 18px; width: 16px; height: 16px;
-  color: var(--ink-mute); opacity: 0; transition: opacity .15s, transform .15s;
-}
-.tile:hover .go { opacity: 1; transform: translate(2px, -2px); }
+.thumb-box img { width: 100%; height: 100%; object-fit: cover; }
+.cell-name { display: flex; align-items: center; gap: 10px; }
+.t-title { font-weight: 700; color: var(--ink); }
+.t-desc { color: var(--ink-mute); font-size: 13px; max-width: 360px;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* 公告（最新消息完整列表） */
-.ann {
-  position: relative; padding: 20px 22px 20px 26px; background: #fff;
-  border: 1px solid var(--rule); border-radius: 16px; margin-bottom: 14px;
+/* 標籤膠囊 */
+.badge {
+  display: inline-block; font-size: 11.5px; font-weight: 700;
+  padding: 3px 11px; border-radius: 999px; white-space: nowrap;
 }
-.ann::before {
-  content: ""; position: absolute; left: 0; top: 14px; bottom: 14px;
-  width: 4px; border-radius: 4px; background: var(--gradient);
-}
-.ann h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-.ann time { font-size: 12px; color: var(--ink-mute); }
-.ann p { margin-top: 8px; color: var(--ink-soft); white-space: pre-wrap; }
-
-.note {
-  padding: 18px 20px; background: var(--bg-alt);
-  border: 1px solid var(--rule-soft); border-radius: 14px;
-  font-size: 14px; color: var(--ink-soft);
-}
-.empty {
-  color: var(--ink-mute); font-size: 14px; padding: 22px;
-  background: #fff; border: 1px dashed var(--rule); border-radius: 16px; text-align: center;
+.badge-kind { color: var(--mauve); background: var(--bg-alt); border: 1px solid var(--rule-soft); }
+.st-producing { color: #2F7D5B; background: #E4F2E9; border: 1px solid #BFE0CD; }
+.st-planning  { color: #B5762E; background: #FBEBD9; border: 1px solid #F0D6B4; }
+.st-done      { color: #8E7C6E; background: var(--bg-alt); border: 1px solid var(--rule-soft); }
+.st-active    { color: #2F7D5B; background: #E4F2E9; border: 1px solid #BFE0CD; }
+.st-left      { color: #8E7C6E; background: var(--bg-alt); border: 1px solid var(--rule-soft); }
+.st-contract  { color: #B5762E; background: #FBEBD9; border: 1px solid #F0D6B4; }
+.doctype-tag {
+  display: inline-block; font-size: 11.5px; font-weight: 700; color: var(--mauve);
+  padding: 3px 11px; border-radius: 999px; background: var(--bg-alt); border: 1px solid var(--rule-soft);
 }
 
-/* 預留版位（尚未有內容的區塊） */
+/* 表格內小按鈕 */
+.row-actions { display: inline-flex; gap: 6px; }
+.act {
+  width: 30px; height: 30px; padding: 0; cursor: pointer;
+  display: grid; place-items: center; color: var(--ink-mute);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.act svg { width: 15px; height: 15px; }
+.act.edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
+.act.del:hover  { color: #B23B36; border-color: #E7B8B5; background: #fff; }
+.btn-edit {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--ink-soft);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 9px;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.btn-edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
+.btn-edit svg { width: 14px; height: 14px; }
+
+/* ============ 篩選列（專案） ============ */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-field { display: flex; flex-direction: column; gap: 4px; }
+.filter-field label { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--ink-mute); padding-left: 2px; }
+.filter-field select {
+  padding: 9px 32px 9px 12px; font-family: inherit; font-size: 13.5px; color: var(--ink);
+  background: #fff; border: 1px solid var(--rule); border-radius: 10px; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E7C6E' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 14px;
+}
+.filter-field select:focus { outline: none; border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15); }
+
+/* ============ 最新消息卡片 + 分頁 ============ */
+.news-list { display: flex; flex-direction: column; gap: 16px; }
+.news-card {
+  position: relative; padding: 20px 22px; background: #fff;
+  border: 1px solid var(--rule); border-radius: 16px;
+}
+.news-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.news-type {
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; color: #fff;
+  padding: 3px 11px; border-radius: 999px; background: var(--gradient);
+}
+.news-date { font-family: var(--num); font-size: 12.5px; color: var(--ink-mute); }
+.news-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.news-img {
+  width: 100%; max-width: 360px; aspect-ratio: 1/1; object-fit: cover;
+  border-radius: 12px; margin: 12px 0; border: 1px solid var(--rule-soft); background: var(--bg-alt);
+}
+.news-body { color: var(--ink-soft); white-space: pre-wrap; word-break: break-word; }
+.news-card .row-actions { position: absolute; top: 16px; right: 16px; display: none; }
+body.is-admin .news-card .row-actions { display: inline-flex; }
+
+.pager { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 22px; }
+.pager button {
+  display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; cursor: pointer;
+  font-size: 13.5px; font-weight: 600; color: var(--ink-soft);
+  background: #fff; border: 1px solid var(--rule); border-radius: 10px;
+}
+.pager button:hover:not(:disabled) { background: var(--bg-alt); }
+.pager button:disabled { opacity: .45; cursor: not-allowed; }
+.pager .pageinfo { font-size: 13px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+
+/* ============ APP（App Store 樣式列表 + 內頁） ============ */
+.app-list { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; }
+.app-row {
+  display: flex; align-items: center; gap: 16px; padding: 16px 20px; cursor: pointer;
+  border-top: 1px solid var(--rule-soft); transition: background .12s;
+}
+.app-row:first-child { border-top: none; }
+.app-row:hover { background: var(--bg); }
+.app-row-ico {
+  width: 56px; height: 56px; flex: none; border-radius: 14px; overflow: hidden;
+  display: grid; place-items: center; color: var(--mauve);
+  background: var(--bg-alt); border: 1px solid var(--rule-soft);
+}
+.app-row-ico img { width: 100%; height: 100%; object-fit: cover; }
+.app-row-ico svg { width: 26px; height: 26px; }
+.app-row-meta { flex: 1; min-width: 0; }
+.app-row-name { font-size: 16px; font-weight: 700; color: var(--ink); }
+.app-row-desc { font-size: 13px; color: var(--ink-mute);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.app-row-go { flex: none; color: var(--ink-mute); }
+.app-row-go svg { width: 18px; height: 18px; }
+.app-row .row-actions { flex: none; display: none; }
+body.is-admin .app-row .row-actions { display: inline-flex; }
+
+/* APP 內頁 */
+.app-detail-head { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
+.app-detail-ico {
+  width: 84px; height: 84px; flex: none; border-radius: 20px; overflow: hidden;
+  display: grid; place-items: center; color: var(--mauve);
+  background: var(--bg-alt); border: 1px solid var(--rule-soft);
+}
+.app-detail-ico img { width: 100%; height: 100%; object-fit: cover; }
+.app-detail-ico svg { width: 38px; height: 38px; }
+.app-detail-name { font-size: 24px; font-weight: 700; }
+.app-detail-desc { color: var(--ink-mute); font-size: 14px; margin-top: 4px; }
+.app-usage {
+  margin: 22px 0; padding: 22px 24px; background: #fff;
+  border: 1px solid var(--rule); border-radius: 16px;
+  color: var(--ink-soft); white-space: pre-wrap; word-break: break-word;
+}
+.app-usage h4 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 10px; }
+.btn-back {
+  display: inline-flex; align-items: center; gap: 7px; margin-bottom: 18px; padding: 8px 14px;
+  cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--ink-soft);
+  background: #fff; border: 1px solid var(--rule); border-radius: 10px;
+}
+.btn-back:hover { background: var(--bg-alt); }
+.btn-back svg { width: 15px; height: 15px; }
+.btn-download {
+  display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; cursor: pointer;
+  font-size: 15px; font-weight: 700; color: #fff; background: var(--gradient);
+  border: none; border-radius: 12px; transition: filter .15s;
+}
+.btn-download:hover { filter: brightness(1.04); }
+.btn-download svg { width: 18px; height: 18px; }
+
+/* ============ 預留版位 / 空狀態 / 提示 ============ */
 .placeholder {
   display: flex; flex-direction: column; align-items: center; text-align: center;
   gap: 5px; padding: 48px 24px; color: var(--ink-mute);
@@ -298,12 +415,16 @@ body.is-admin .nav-item.admin-only { display: flex; }
 }
 .ph-ico {
   width: 50px; height: 50px; display: grid; place-items: center; margin-bottom: 6px;
-  color: var(--mauve); background: var(--bg-alt);
-  border: 1px solid var(--rule-soft); border-radius: 14px;
+  color: var(--mauve); background: var(--bg-alt); border: 1px solid var(--rule-soft); border-radius: 14px;
 }
 .ph-ico svg { width: 24px; height: 24px; }
 .ph-title { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
 .ph-sub { font-size: 13px; color: var(--ink-mute); }
+.empty { color: var(--ink-mute); font-size: 14px; padding: 30px; text-align: center; }
+.note {
+  padding: 18px 20px; background: var(--bg-alt); border: 1px solid var(--rule-soft);
+  border-radius: 14px; font-size: 14px; color: var(--ink-soft);
+}
 
 /* 設定列表 */
 .set-list { display: flex; flex-direction: column; }
@@ -315,36 +436,132 @@ body.is-admin .nav-item.admin-only { display: flex; }
 .set-key { font-size: 14px; font-weight: 700; color: var(--ink); }
 .set-val { font-size: 13.5px; color: var(--ink-mute); text-align: right; word-break: break-all; }
 
-/* 管理員動作按鈕（編輯 / 刪除） */
-.actions { position: absolute; top: 12px; right: 12px; display: none; gap: 6px; }
-body.is-admin .ann .actions,
-body.is-admin .tile .actions { display: flex; }
-.tile:hover .go { opacity: 0; }
-body:not(.is-admin) .tile:hover .go { opacity: 1; }
-.act {
-  width: 28px; height: 28px; padding: 0; cursor: pointer;
-  display: grid; place-items: center; color: var(--ink-mute);
-  background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
-  transition: color .15s, border-color .15s, background .15s;
+/* ============ 彈窗（頁面內新增 / 編輯） ============ */
+.modal {
+  position: fixed; inset: 0; z-index: 60; display: none;
+  align-items: flex-start; justify-content: center; padding: 40px 16px;
+  background: rgba(31,24,20,0.45); overflow-y: auto;
 }
-.act svg { width: 15px; height: 15px; }
-.act.edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
-.act.del:hover  { color: #B23B36; border-color: #E7B8B5; background: #fff; }
+.modal.open { display: flex; }
+.modal-card {
+  width: 100%; max-width: 640px; background: #fff;
+  border: 1px solid var(--rule); border-radius: 20px; overflow: hidden;
+}
+.modal-card.wide { max-width: 780px; }
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 20px 24px; border-bottom: 1px solid var(--rule-soft);
+}
+.modal-head h2 { font-size: 18px; font-weight: 700; }
+.modal-close {
+  width: 34px; height: 34px; flex: none; cursor: pointer; display: grid; place-items: center;
+  color: var(--ink-mute); background: var(--bg); border: 1px solid var(--rule); border-radius: 9px;
+}
+.modal-close:hover { color: var(--ink); }
+.modal-close svg { width: 17px; height: 17px; }
+.modal-body { padding: 22px 24px; max-height: 70vh; overflow-y: auto; }
+.modal-foot {
+  display: flex; align-items: center; gap: 10px; padding: 16px 24px;
+  border-top: 1px solid var(--rule-soft); flex-wrap: wrap;
+}
+.modal-foot .spacer { flex: 1; }
 
-/* ---------- 手機版：側邊欄收成頂部橫向列 ---------- */
-.menu-toggle { display: none; }
-@media (max-width: 900px) {
-  .dash-grid { grid-template-columns: 1fr; }
+/* 表單欄位 */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.field { margin-bottom: 16px; }
+.field.full { grid-column: 1 / -1; }
+.field label {
+  display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em;
+  color: var(--ink-mute); margin: 0 2px 6px;
 }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 11px 13px; font-family: inherit; font-size: 14.5px;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 10px; outline: none; resize: vertical;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15);
+}
+.field input:read-only { background: var(--bg-alt); color: var(--ink-mute); cursor: not-allowed; }
+.field textarea { min-height: 110px; }
+.field select { cursor: pointer; }
+.field .sub { font-size: 11px; color: var(--ink-mute); margin: 5px 2px 0; }
+
+.pw-wrap { position: relative; }
+.pw-toggle {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--ink-mute);
+  padding: 6px; display: grid; place-items: center;
+}
+.pw-toggle svg { width: 18px; height: 18px; }
+.inwork-row { display: flex; align-items: center; gap: 8px; margin: 0 2px 8px; }
+.inwork-row input { width: auto; }
+.inwork-row label { margin: 0; font-size: 13px; color: var(--ink-soft); font-weight: 600; letter-spacing: 0; }
+
+/* 圖片上傳區（裁切 1:1 / 縮放小圖工具） */
+.img-block { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+.img-preview {
+  flex: none; border-radius: 14px; overflow: hidden; display: grid; place-items: center;
+  color: #fff; background: var(--gradient); border: 1px solid var(--rule-soft);
+}
+.img-preview.sq84 { width: 84px; height: 84px; }
+.img-preview.sq64 { width: 64px; height: 64px; }
+.img-preview img { width: 100%; height: 100%; object-fit: cover; }
+.img-preview .ph { color: rgba(255,255,255,0.9); font-size: 11px; text-align: center; padding: 4px; }
+.img-act { display: flex; flex-direction: column; gap: 6px; }
+.file-btn {
+  display: inline-flex; align-items: center; gap: 7px; align-self: flex-start;
+  padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--ink-soft);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 10px;
+}
+.file-btn:hover { background: var(--bg-alt); }
+.file-btn svg { width: 15px; height: 15px; }
+.file-clear { font-size: 12px; color: var(--ink-mute); background: none; border: none; cursor: pointer; text-decoration: underline; align-self: flex-start; padding: 2px; }
+.img-hint { font-size: 11.5px; color: var(--ink-mute); }
+
+.lock-note {
+  display: flex; gap: 9px; align-items: flex-start;
+  margin: 4px 0 4px; padding: 12px 14px; font-size: 12.5px; color: var(--ink-soft);
+  background: var(--bg-alt); border: 1px solid var(--rule-soft); border-radius: 11px;
+}
+.lock-note svg { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--mauve); }
+
+.btn-primary {
+  padding: 12px 24px; cursor: pointer; font-size: 15px; font-weight: 700; color: #fff;
+  background: var(--gradient); border: none; border-radius: 11px;
+}
+.btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+.btn-cancel {
+  padding: 12px 22px; cursor: pointer; font-size: 14px; font-weight: 600;
+  background: #fff; color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 11px;
+}
+.btn-cancel:hover { background: var(--bg-alt); }
+.btn-delete {
+  padding: 10px 16px; cursor: pointer; font-size: 13px; font-weight: 600;
+  color: #B23B36; background: #fff; border: 1px solid #E7B8B5; border-radius: 10px;
+}
+.btn-delete:hover { background: #FBEEED; }
+
+/* Toast */
+.toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(10px);
+  background: var(--ink); color: #fff; font-size: 13.5px; font-weight: 600;
+  padding: 11px 18px; border-radius: 999px; opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s; z-index: 80;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- 手機版 ---------- */
+.menu-toggle { display: none; }
+@media (max-width: 900px) { .dash-grid { grid-template-columns: 1fr; } }
 @media (max-width: 820px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar {
-    position: sticky; top: 0; z-index: 20; height: auto;
+    position: sticky; top: 0; z-index: 30; height: auto;
     border-right: none; border-bottom: 1px solid var(--rule-soft);
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+    padding: 12px 16px; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
   }
-  .sidebar-logo { padding: 4px 4px 0; display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-logo { padding: 4px 4px 0; }
   .menu-toggle {
     display: inline-grid; place-items: center; width: 40px; height: 40px;
     background: var(--bg); border: 1px solid var(--rule); border-radius: 10px;
@@ -354,11 +571,11 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
   .sidebar .nav-scroll, .sidebar .side-foot { display: none; }
   .sidebar.open .nav-scroll { display: block; padding-top: 10px; }
   .sidebar.open .side-foot { display: block; margin-top: 10px; }
-  .nav-group-title { padding-top: 10px; }
   .main { padding: 22px 18px 70px; }
   .topbar { padding: 22px 20px; }
   .topbar-date .md { font-size: 34px; }
   .topbar-mark { width: 56px; height: 56px; }
+  .grid2 { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -398,6 +615,7 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
         <button class="nav-item" data-view="docs">
           <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 18v-7M9 14l3 3 3-3"/></svg></span>
           <span class="nav-label">文件下載</span>
+          <span class="nav-count" id="docCount"></span>
         </button>
 
         <button class="nav-item" data-view="apps">
@@ -406,8 +624,8 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
           <span class="nav-count" id="appCount"></span>
         </button>
 
-        <!-- 員工資料：管理員專屬，導向員工資料後台 staff.html -->
-        <button class="nav-item admin-only" data-href="staff.html">
+        <!-- 員工資料：管理員專屬，已整合為主控版分頁 -->
+        <button class="nav-item admin-only" data-view="staff">
           <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M5.5 16a3.5 3.5 0 0 1 7 0"/><path d="M15 9h4M15 13h4"/></svg></span>
           <span class="nav-label">員工資料</span>
         </button>
@@ -430,7 +648,7 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
   <!-- ============ 主內容 ============ -->
   <main class="main">
 
-    <!-- 第一列：Headbanner（INTRVL 內部空間 + 日期 + 標記） -->
+    <!-- Headbanner -->
     <header class="topbar">
       <div class="topbar-text">
         <p class="eyebrow">INTRVL 內部空間</p>
@@ -445,13 +663,9 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
     <!-- ============ 主控版 ============ -->
     <section class="view active" id="view-dashboard">
       <div class="dash-grid">
-
-        <!-- 左欄：員工資料卡 + 內部常用 APP -->
         <div class="dash-col">
           <div class="card">
-            <div class="card-head">
-              <span class="card-title">員工資料卡</span>
-            </div>
+            <div class="card-head"><span class="card-title">員工資料卡</span></div>
             <div class="profile">
               <div class="avatar" id="dashAvatar">·</div>
               <div class="profile-meta">
@@ -474,7 +688,6 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
           </div>
         </div>
 
-        <!-- 右欄：最新前 5 則公告 -->
         <div class="dash-col">
           <div class="card">
             <div class="card-head">
@@ -486,78 +699,168 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
             <div class="feed" id="dashFeed"></div>
           </div>
         </div>
-
       </div>
     </section>
 
     <!-- ============ 最新消息 ============ -->
     <section class="view" id="view-news">
       <div class="section-head">
-        <span class="section-title">最新消息</span>
-        <span class="section-sub" id="newsSub"></span>
+        <div class="titles"><span class="section-title">最新消息</span><span class="section-sub" id="newsSub"></span></div>
+        <button class="btn-add admin-only" data-add="ann">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          新增公告
+        </button>
       </div>
-      <div id="annList"></div>
+      <div class="news-list" id="newsList"></div>
+      <div class="pager" id="newsPager" style="display:none;">
+        <button id="newsPrev" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>上一頁</button>
+        <span class="pageinfo" id="newsPageInfo"></span>
+        <button id="newsNext" type="button">下一頁<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
     </section>
 
     <!-- ============ 專案內容 ============ -->
     <section class="view" id="view-projects">
       <div class="section-head">
-        <span class="section-title">專案內容</span>
-        <span class="section-sub" id="projSub"></span>
+        <div class="titles"><span class="section-title">專案內容</span><span class="section-sub" id="projSub"></span></div>
+        <button class="btn-add admin-only" data-add="proj">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          新增專案
+        </button>
       </div>
-      <div class="grid" id="projGrid"></div>
+
+      <div class="filters">
+        <div class="filter-field">
+          <label>作品類型</label>
+          <select id="fProjKind"><option value="">全部</option><option value="BL">BL</option><option value="BG">BG</option></select>
+        </div>
+        <div class="filter-field">
+          <label>製作狀態</label>
+          <select id="fProjStatus">
+            <option value="">全部</option>
+            <option value="producing">進行中</option>
+            <option value="planning">籌備中</option>
+            <option value="done">已完成</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label>年份</label>
+          <select id="fProjYear"><option value="">全部</option></select>
+        </div>
+        <div class="filter-field">
+          <label>排序</label>
+          <select id="fProjSort">
+            <option value="status">製作狀態（預設）</option>
+            <option value="stroke">作品名稱筆劃</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="col-thumb">縮圖</th>
+              <th>作品名稱</th>
+              <th>類型</th>
+              <th>狀態</th>
+              <th>年份</th>
+              <th>連結</th>
+              <th class="admin-only" style="text-align:right">編輯</th>
+            </tr>
+          </thead>
+          <tbody id="projBody"><tr><td colspan="7" class="empty">載入中…</td></tr></tbody>
+        </table>
+      </div>
     </section>
 
     <!-- ============ 文件下載 ============ -->
     <section class="view" id="view-docs">
       <div class="section-head">
-        <span class="section-title">文件下載</span>
+        <div class="titles"><span class="section-title">文件下載</span><span class="section-sub" id="docSub"></span></div>
+        <button class="btn-add admin-only" data-add="doc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          新增文件
+        </button>
       </div>
-      <div class="placeholder">
-        <span class="ph-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 18v-7M9 14l3 3 3-3"/></svg></span>
-        <p class="ph-title">文件下載</p>
-        <p class="ph-sub">此版位預留給文件與資源下載，內容之後補上。</p>
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>文件類型</th>
+              <th>標題</th>
+              <th>內容說明</th>
+              <th class="admin-only" style="text-align:right">編輯</th>
+            </tr>
+          </thead>
+          <tbody id="docBody"><tr><td colspan="4" class="empty">載入中…</td></tr></tbody>
+        </table>
       </div>
     </section>
 
     <!-- ============ APP ============ -->
     <section class="view" id="view-apps">
       <div class="section-head">
-        <span class="section-title">內部常用 APP</span>
-        <span class="section-sub" id="appSub"></span>
+        <div class="titles"><span class="section-title">APP</span><span class="section-sub" id="appSub"></span></div>
+        <button class="btn-add admin-only" data-add="app">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          新增 APP
+        </button>
       </div>
-      <div class="grid" id="appGrid"></div>
+      <div id="appListWrap"></div>
+    </section>
+
+    <!-- APP 內頁（說明 + 下載） -->
+    <section class="view" id="view-app-detail">
+      <button class="btn-back" id="appBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>返回 APP 列表</button>
+      <div class="app-detail-head">
+        <div class="app-detail-ico" id="appDetIco"></div>
+        <div>
+          <div class="app-detail-name" id="appDetName"></div>
+          <div class="app-detail-desc" id="appDetDesc"></div>
+        </div>
+      </div>
+      <div class="app-usage">
+        <h4>使用說明</h4>
+        <div id="appDetUsage"></div>
+      </div>
+      <div id="appDetDownloadWrap"></div>
+    </section>
+
+    <!-- ============ 員工資料（管理員，整合分頁） ============ -->
+    <section class="view" id="view-staff">
+      <div class="section-head">
+        <div class="titles"><span class="section-title">員工資料</span><span class="section-sub" id="staffSub">管理工作室成員的完整檔案</span></div>
+        <button class="btn-add" data-add="staff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          新增員工
+        </button>
+      </div>
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>員工編號</th>
+              <th>姓名</th>
+              <th>代稱</th>
+              <th>電子郵件</th>
+              <th>僱員狀態</th>
+              <th style="text-align:right">編輯</th>
+            </tr>
+          </thead>
+          <tbody id="staffBody"><tr><td colspan="6" class="empty">載入中…</td></tr></tbody>
+        </table>
+      </div>
     </section>
 
     <!-- ============ 設定 ============ -->
     <section class="view" id="view-settings">
-      <div class="section-head">
-        <span class="section-title">設定</span>
-      </div>
+      <div class="section-head"><div class="titles"><span class="section-title">設定</span></div></div>
       <div class="card">
         <div class="set-list">
-          <div class="set-row">
-            <span class="set-key">登入帳號</span>
-            <span class="set-val" id="setEmail"></span>
-          </div>
-          <div class="set-row">
-            <span class="set-key">身分</span>
-            <span class="set-val" id="setRole"></span>
-          </div>
-          <div class="set-row admin-only" style="display:none;">
-            <span class="set-key">員工資料後台</span>
-            <a class="card-link" href="staff.html">前往管理
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="set-row admin-only" style="display:none;">
-            <span class="set-key">發佈內容</span>
-            <a class="card-link" href="publish.html">前往發佈頁
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="set-row">
-            <span class="set-key">回到官網</span>
+          <div class="set-row"><span class="set-key">登入帳號</span><span class="set-val" id="setEmail"></span></div>
+          <div class="set-row"><span class="set-key">身分</span><span class="set-val" id="setRole"></span></div>
+          <div class="set-row"><span class="set-key">回到官網</span>
             <a class="card-link" href="index.html">INTRVL Studio
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
             </a>
@@ -567,302 +870,985 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
     </section>
 
     <div class="note" id="loadError" style="display:none; margin-top:24px;">
-      無法載入內容。請確認已啟用 Firestore 並發布安全規則（見 MEMBERS_SETUP.md）。
+      無法載入內容。請確認已啟用 Firestore 並發布最新安全規則。
     </div>
   </main>
 
 </div>
 </div>
 
+<!-- ============ 彈窗：公告 ============ -->
+<div class="modal" id="modal-ann">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="annModalTitle">新增公告</h2><button class="modal-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <form id="annForm">
+      <div class="modal-body">
+        <div class="img-block">
+          <div class="img-preview sq84" id="annImgPrev"><span class="ph">1:1 圖片</span></div>
+          <div class="img-act">
+            <label class="file-btn" for="annImgFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>上傳圖片</label>
+            <input type="file" id="annImgFile" accept="image/*" hidden>
+            <button type="button" class="file-clear" id="annImgClear" hidden>移除圖片</button>
+            <span class="img-hint">自動裁切成 1:1、壓縮以加快載入</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>公告類型</label>
+            <select id="annType">
+              <option value="share">分享</option>
+              <option value="project">專案</option>
+              <option value="hr">人事</option>
+              <option value="event">活動</option>
+              <option value="system">系統</option>
+              <option value="important">重要</option>
+            </select>
+          </div>
+          <div class="field"><label>時間</label><input id="annDate" type="date"></div>
+          <div class="field full"><label>標題</label><input id="annTitle" maxlength="150" required></div>
+          <div class="field full"><label>內容</label><textarea id="annBody" maxlength="8000"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-delete" id="annDelete" hidden>刪除</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn-cancel" data-close>取消</button>
+        <button type="submit" class="btn-primary" id="annSubmit">發佈</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ 彈窗：專案 ============ -->
+<div class="modal" id="modal-proj">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="projModalTitle">新增專案</h2><button class="modal-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <form id="projForm">
+      <div class="modal-body">
+        <div class="img-block">
+          <div class="img-preview sq64" id="projImgPrev"><span class="ph">25×25</span></div>
+          <div class="img-act">
+            <label class="file-btn" for="projImgFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>上傳縮圖</label>
+            <input type="file" id="projImgFile" accept="image/*" hidden>
+            <button type="button" class="file-clear" id="projImgClear" hidden>移除縮圖</button>
+            <span class="img-hint">自動縮成 25×25 正方形小圖</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field full"><label>標題（作品名稱）</label><input id="projTitle" maxlength="100" required></div>
+          <div class="field"><label>作品類型</label>
+            <select id="projKind"><option value="">未分類</option><option value="BL">BL</option><option value="BG">BG</option></select>
+          </div>
+          <div class="field"><label>製作狀態</label>
+            <select id="projStatus"><option value="producing">進行中</option><option value="planning">籌備中</option><option value="done">已完成</option></select>
+          </div>
+          <div class="field"><label>年份</label><input id="projYear" maxlength="10" placeholder="例：2026"></div>
+          <div class="field full"><label>簡述</label><textarea id="projDesc" maxlength="500"></textarea></div>
+          <div class="field full"><label>連結</label><input id="projUrl" type="url" maxlength="2000" placeholder="https://..."></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-delete" id="projDelete" hidden>刪除</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn-cancel" data-close>取消</button>
+        <button type="submit" class="btn-primary" id="projSubmit">新增</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ 彈窗：文件 ============ -->
+<div class="modal" id="modal-doc">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="docModalTitle">新增文件</h2><button class="modal-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <form id="docForm">
+      <div class="modal-body">
+        <div class="grid2">
+          <div class="field"><label>文件類型</label><input id="docType" maxlength="30" placeholder="例：合約、表單、簡報"></div>
+          <div class="field"><label>連結</label><input id="docUrl" type="url" maxlength="2000" placeholder="https://..."></div>
+          <div class="field full"><label>標題</label><input id="docTitle" maxlength="150" required></div>
+          <div class="field full"><label>內容說明</label><textarea id="docDesc" maxlength="2000"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-delete" id="docDelete" hidden>刪除</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn-cancel" data-close>取消</button>
+        <button type="submit" class="btn-primary" id="docSubmit">新增</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ 彈窗：文件檢視（員工點開看內容） ============ -->
+<div class="modal" id="modal-doc-view">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="docvTitle">文件</h2><button class="modal-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-body">
+      <p><span class="doctype-tag" id="docvType"></span></p>
+      <p class="news-body" id="docvDesc" style="margin-top:14px;"></p>
+    </div>
+    <div class="modal-foot">
+      <span class="spacer"></span>
+      <button type="button" class="btn-cancel" data-close>關閉</button>
+      <a class="btn-primary" id="docvLink" target="_blank" rel="noopener" style="display:none; text-decoration:none;">開啟連結</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 彈窗：APP ============ -->
+<div class="modal" id="modal-app">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="appModalTitle">新增 APP</h2><button class="modal-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <form id="appForm">
+      <div class="modal-body">
+        <div class="img-block">
+          <div class="img-preview sq84" id="appImgPrev"><span class="ph">App icon</span></div>
+          <div class="img-act">
+            <label class="file-btn" for="appImgFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>上傳 icon</label>
+            <input type="file" id="appImgFile" accept="image/*" hidden>
+            <button type="button" class="file-clear" id="appImgClear" hidden>移除 icon</button>
+            <span class="img-hint">自動裁切成 1:1 方形圖示</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field full"><label>App 名稱</label><input id="appName" maxlength="80" required></div>
+          <div class="field full"><label>簡述</label><input id="appDesc" maxlength="500"></div>
+          <div class="field full"><label>使用說明（內頁顯示）</label><textarea id="appUsage" maxlength="8000"></textarea></div>
+          <div class="field full"><label>下載連結</label><input id="appUrl" type="url" maxlength="2000" placeholder="https://..."></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-delete" id="appDelete" hidden>刪除</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn-cancel" data-close>取消</button>
+        <button type="submit" class="btn-primary" id="appSubmit">新增</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ 彈窗：員工資料 ============ -->
+<div class="modal" id="modal-staff">
+  <div class="modal-card wide">
+    <div class="modal-head"><h2 id="staffModalTitle">編輯員工資料</h2><button class="modal-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <form id="staffForm">
+      <div class="modal-body">
+        <div class="img-block">
+          <div class="img-preview sq84" id="stAvPrev">·</div>
+          <div class="img-act">
+            <label class="file-btn" for="stAvFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>上傳大頭照</label>
+            <input type="file" id="stAvFile" accept="image/*" hidden>
+            <button type="button" class="file-clear" id="stAvClear" hidden>移除照片</button>
+            <span class="img-hint">自動裁切成正方形，存檔上限約 5MB</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>員工編號</label><input id="f_empNo" maxlength="20" placeholder="例：001"></div>
+          <div class="field"><label>僱員狀態</label>
+            <select id="f_status"><option value="active">在職</option><option value="left">離職</option><option value="contract">短期合作</option></select>
+          </div>
+          <div class="field"><label>姓名（與資料卡同步）</label><input id="f_name" maxlength="60" placeholder="本名"></div>
+          <div class="field"><label>代稱（與資料卡同步）</label><input id="f_alias" maxlength="60" placeholder="暱稱／英文名"></div>
+          <div class="field full"><label>電子郵件（登入帳號，建立後不可變更）</label><input id="f_email" type="email" maxlength="120" placeholder="name@gmail.com"><p class="sub" id="emailSub"></p></div>
+          <div class="field"><label>職稱</label><input id="f_jobTitle" maxlength="60" placeholder="例：美術助手"></div>
+          <div class="field"><label>登入後台密碼（僅管理員可見）</label>
+            <div class="pw-wrap"><input id="f_loginPassword" type="password" maxlength="120" autocomplete="off">
+              <button type="button" class="pw-toggle" id="pwToggle" aria-label="顯示密碼"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+          </div>
+          <div class="field"><label>行動電話</label><input id="f_mobile" maxlength="30" placeholder="09xx-xxx-xxx"></div>
+          <div class="field"><label>LINE ID</label><input id="f_lineId" maxlength="60"></div>
+          <div class="field full"><label>聯絡地址</label><input id="f_address" maxlength="200"></div>
+          <div class="field"><label>出生日期</label><input id="f_birthday" type="date"></div>
+          <div class="field"><label>身分證字號</label><input id="f_nationalId" maxlength="20"></div>
+          <div class="field"><label>護照號碼</label><input id="f_passport" maxlength="30"></div>
+          <div class="field"><label>入職日期</label><input id="f_hireDate" type="date"></div>
+          <div class="field"><label>離職日期</label>
+            <div class="inwork-row"><input type="checkbox" id="f_inWork"><label for="f_inWork">仍在職（無離職日）</label></div>
+            <input id="f_leaveDate" type="date">
+          </div>
+          <div class="field full"><label>備註</label><textarea id="f_note" maxlength="3000" placeholder="僅管理員可見"></textarea></div>
+        </div>
+        <div class="lock-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>員工本人登入只會同步看到「姓名／代稱／大頭照／職稱」；身分證、護照、備註、登入密碼等欄位只有管理員看得到。修改「登入後台密碼」僅更新此處紀錄，員工實際登入密碼需另在 Firebase Console 變更。</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-delete" id="staffDelete" hidden>刪除此員工</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn-cancel" data-close>取消</button>
+        <button type="submit" class="btn-primary" id="staffSubmit">儲存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script type="module">
 import {
-  auth, signOut, onAuthStateChanged, isAdmin, CATS,
-  db, collection, doc, getDoc, getDocs, getDocsFromCache, deleteDoc,
-  query, orderBy
+  auth, signOut, onAuthStateChanged, isAdmin,
+  db, collection, doc, getDoc, getDocs, getDocsFromCache,
+  addDoc, setDoc, deleteDoc, updateDoc, query, orderBy, serverTimestamp
 } from "./assets/auth.js";
 
+/* ===================== 共用小工具 ===================== */
+const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
   ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const safeUrl = (u) => /^https?:\/\//i.test(String(u ?? '').trim()) ? String(u).trim() : '';
+const emailId = (e) => String(e ?? '').trim().toLowerCase();
+const val = (id) => $(id).value.trim();
 
-/* 只允許 http/https 連結，擋掉 javascript: 等危險協定 */
-const safeUrl = (u) => /^https?:\/\//i.test(String(u ?? '').trim()) ? String(u).trim() : '#';
+let toastTimer;
+function toast(msg) {
+  let t = $('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
 
-/* 管理員動作按鈕的圖示（鉛筆 / 垃圾桶） */
 const ICON_EDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
 const ICON_TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
-const ICON_GO = `<svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
 const ICON_APP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>`;
-const actions = (col, id) =>
-  `<div class="actions">
-     <button type="button" class="act edit" data-action="edit" data-col="${col}" data-id="${id}" title="編輯">${ICON_EDIT}</button>
-     <button type="button" class="act del" data-action="delete" data-col="${col}" data-id="${id}" title="刪除">${ICON_TRASH}</button>
-   </div>`;
+const rowActions = (kind, id) =>
+  `<span class="row-actions">
+     <button type="button" class="act edit" data-edit="${kind}" data-id="${id}" title="編輯">${ICON_EDIT}</button>
+     <button type="button" class="act del" data-del="${kind}" data-id="${id}" title="刪除">${ICON_TRASH}</button>
+   </span>`;
 
-/* 分類定義由 assets/auth.js 共用匯入 */
-const catLabel = (id) => {
-  const c = CATS.find(c => c.id === id);
-  return c ? c.label['zh-TW'] : '';
-};
+/* 公告類型對照 */
+const ANN_TYPE = { share:'分享', project:'專案', hr:'人事', event:'活動', system:'系統', important:'重要' };
+/* 製作狀態對照與排序權重（進行中 > 籌備中 > 已完成） */
+const PROJ_STATUS = { producing:'進行中', planning:'籌備中', done:'已完成' };
+const PROJ_STATUS_CLASS = { producing:'st-producing', planning:'st-planning', done:'st-done' };
+const PROJ_STATUS_ORDER = { producing:0, planning:1, done:2 };
+const STAFF_STATUS = { active:'在職', left:'離職', contract:'短期合作' };
+const STAFF_STATUS_CLASS = { active:'st-active', left:'st-left', contract:'st-contract' };
 
-/* ---------- DOM 參照 ---------- */
-const $ = (id) => document.getElementById(id);
-const projGrid = $('projGrid');
-const appGrid  = $('appGrid');
-const annList  = $('annList');
-const dashApps = $('dashApps');
-const dashFeed = $('dashFeed');
-const loadError = $('loadError');
+/* 筆劃排序（中文照筆劃，失敗時退回一般比較） */
+let strokeCollator;
+try { strokeCollator = new Intl.Collator('zh-Hant', { collation: 'stroke', numeric: true }); }
+catch (e) { strokeCollator = new Intl.Collator('zh-Hant', { numeric: true }); }
 
-/* ---------- 視圖切換 ---------- */
+/* ===================== 圖片工具：裁切 1:1 / 縮放小圖 ===================== */
+/* 讀檔 → 置中裁成正方形 → 縮到 target 邊長 → JPEG data URL。
+   這就是「內部改變圖片大小的方便工具」：傳不同 target 即可產生不同尺寸。 */
+function processSquareImage(file, target, quality) {
+  return new Promise((resolve, reject) => {
+    if (!file) return resolve('');
+    if (!file.type.startsWith('image/')) return reject(new Error('請選擇圖片檔'));
+    if (file.size > 8 * 1024 * 1024) return reject(new Error('原始圖片請小於 8MB'));
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const side = Math.min(img.naturalWidth, img.naturalHeight);
+      const sx = (img.naturalWidth - side) / 2;
+      const sy = (img.naturalHeight - side) / 2;
+      const cv = document.createElement('canvas');
+      cv.width = target; cv.height = target;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, target, target);
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, target, target);
+      resolve(cv.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('圖片讀取失敗')); };
+    img.src = url;
+  });
+}
+
+/* ===================== 彈窗開關 ===================== */
+function openModal(id) { $(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal(id) { $(id).classList.remove('open'); document.body.style.overflow = ''; }
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) closeModal(m.id); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => closeModal(m.id));
+});
+
+/* ===================== 視圖切換 ===================== */
 const sidebar = $('sidebar');
 function closeMobileMenu() { sidebar.classList.remove('open'); }
 function showView(name) {
-  document.querySelectorAll('.view').forEach(v =>
-    v.classList.toggle('active', v.id === 'view-' + name));
-  document.querySelectorAll('#mainNav .nav-item').forEach(b =>
-    b.classList.toggle('active', b.dataset.view === name));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  document.querySelectorAll('#mainNav .nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === name));
   window.scrollTo({ top: 0, behavior: 'smooth' });
   closeMobileMenu();
 }
 $('mainNav').addEventListener('click', (e) => {
   const btn = e.target.closest('.nav-item');
   if (!btn) return;
-  if (btn.dataset.href) { location.href = btn.dataset.href; return; }   // 導向其他頁面（如員工資料後台）
   showView(btn.dataset.view);
 });
-/* 主控版的「全部」捷徑 */
-document.querySelectorAll('[data-goto]').forEach(el =>
-  el.addEventListener('click', () => showView(el.dataset.goto)));
+document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => showView(el.dataset.goto)));
+$('menuToggle').addEventListener('click', () => sidebar.classList.toggle('open'));
 
-/* ---------- 載入快速連結（專案 / APP 共用 links 集合） ---------- */
-let allLinks = [];
-async function loadLinks() {
-  const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
-  try {
-    const cached = await getDocsFromCache(q);
-    if (!cached.empty) {
-      allLinks = cached.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderLinks();
-    }
-  } catch (e) { /* 無快取則略過 */ }
-  const snap = await getDocs(q);
-  allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderLinks();
+/* 新增按鈕 → 開對應彈窗（新增模式） */
+document.querySelectorAll('[data-add]').forEach(btn =>
+  btn.addEventListener('click', () => openAdd(btn.dataset.add)));
+function openAdd(kind) {
+  if (kind === 'ann') openAnnModal(null);
+  else if (kind === 'proj') openProjModal(null);
+  else if (kind === 'doc') openDocModal(null);
+  else if (kind === 'app') openAppModal(null);
+  else if (kind === 'staff') openStaffModal(null);
 }
 
-/* 連結卡片（專案內容 / APP 視圖共用） */
-function linkTile(v) {
-  const a = document.createElement('a');
-  a.className = 'tile';
-  a.href = safeUrl(v.url);
-  a.target = '_blank'; a.rel = 'noopener';
-  const label = catLabel(v.category);
-  const tag = label ? `<span class="cat">${esc(label)}</span>` : '';
-  a.innerHTML =
-    `${actions('links', v.id)}${ICON_GO}
-     ${tag}<h3>${esc(v.title)}</h3>
-     <p>${esc(v.desc || '')}</p>`;
-  return a;
-}
-
-/* 主控版的 APP 小卡 */
-function appTile(v) {
-  const a = document.createElement('a');
-  a.className = 'app-tile';
-  a.href = safeUrl(v.url);
-  a.target = '_blank'; a.rel = 'noopener';
-  a.innerHTML =
-    `<span class="app-ico">${ICON_APP}</span>
-     <span class="app-name">${esc(v.title)}</span>
-     <span class="app-desc">${esc(v.desc || '')}</span>`;
-  return a;
-}
-
-function renderLinks() {
-  const projects = allLinks.filter(v => (v.category || '') === 'project');
-  // 專案內容
-  $('projCount').textContent = projects.length;
-  $('projSub').textContent = projects.length ? `共 ${projects.length} 個專案` : '';
-  projGrid.innerHTML = '';
-  if (!projects.length) projGrid.innerHTML = `<p class="empty">尚無專案連結。</p>`;
-  else projects.forEach(v => projGrid.appendChild(linkTile(v)));
-
-  // APP（用全部連結）
-  $('appCount').textContent = allLinks.length;
-  $('appSub').textContent = allLinks.length ? `共 ${allLinks.length} 個 APP` : '';
-  appGrid.innerHTML = '';
-  if (!allLinks.length) appGrid.innerHTML = `<p class="empty">尚無連結。</p>`;
-  else allLinks.forEach(v => appGrid.appendChild(linkTile(v)));
-
-  // 主控版：內部常用 APP（取前 6 個）
-  dashApps.innerHTML = '';
-  if (!allLinks.length) dashApps.innerHTML = `<p class="empty" style="grid-column:1/-1;">尚無 APP。</p>`;
-  else allLinks.slice(0, 6).forEach(v => dashApps.appendChild(appTile(v)));
-}
-
-/* ---------- 載入公告 ---------- */
+/* ===================== 最新消息（公告） ===================== */
 let allAnns = [];
+let newsPage = 1;
+const NEWS_PER_PAGE = 10;
+
 async function loadAnnouncements() {
   const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
   try {
     const cached = await getDocsFromCache(q);
-    if (!cached.empty) {
-      allAnns = cached.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderAnns();
-    }
-  } catch (e) { /* 無快取則略過 */ }
+    if (!cached.empty) { allAnns = cached.docs.map(d => ({ id: d.id, ...d.data() })); renderAnns(); }
+  } catch (e) {}
   const snap = await getDocs(q);
   allAnns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderAnns();
 }
 
+/* 取得公告顯示用日期（優先用填寫的時間，否則用建立時間） */
+function annDate(v) {
+  if (v.date) { const d = new Date(v.date + 'T00:00:00'); if (!isNaN(d)) return d; }
+  return v.createdAt?.toDate ? v.createdAt.toDate() : null;
+}
+
 function renderAnns() {
   $('newsCount').textContent = allAnns.length;
-  $('newsSub').textContent = allAnns.length ? `共 ${allAnns.length} 則公告` : '';
+  $('newsSub').textContent = allAnns.length ? `共 ${allAnns.length} 則` : '';
 
-  // 最新消息完整列表
-  annList.innerHTML = '';
-  if (!allAnns.length) {
-    annList.innerHTML = `<p class="empty">尚無公告。</p>`;
-  } else {
-    allAnns.forEach(v => {
-      const date = v.createdAt?.toDate ? v.createdAt.toDate().toLocaleDateString('zh-TW') : '';
-      const el = document.createElement('div');
-      el.className = 'ann';
-      el.innerHTML =
-        `${actions('announcements', v.id)}
-         <h3>${esc(v.title)}</h3>
-         <time>${esc(date)}</time>
-         <p>${esc(v.body)}</p>`;
-      annList.appendChild(el);
-    });
-  }
+  // 主控版 feed：最新 5 則
+  const feed = $('dashFeed');
+  feed.innerHTML = '';
+  if (!allAnns.length) feed.innerHTML = `<p class="empty">尚無公告。</p>`;
+  else allAnns.slice(0, 5).forEach(v => {
+    const d = annDate(v);
+    const el = document.createElement('div');
+    el.className = 'feed-item';
+    el.innerHTML =
+      `<div class="feed-date">
+         <span class="feed-day">${d ? d.getDate() : '–'}</span>
+         <span class="feed-month">${d ? (d.getMonth()+1)+'月' : ''}</span>
+       </div>
+       <div class="feed-body">
+         <span class="feed-title">${esc(v.title)}</span>
+         <span class="feed-type">${esc(ANN_TYPE[v.type] || '公告')}</span>
+       </div>`;
+    el.addEventListener('click', () => showView('news'));
+    feed.appendChild(el);
+  });
 
-  // 主控版：最新前 5 則（左日期 + 右標題/類型）
-  dashFeed.innerHTML = '';
-  if (!allAnns.length) {
-    dashFeed.innerHTML = `<p class="empty">尚無公告。</p>`;
-  } else {
-    allAnns.slice(0, 5).forEach(v => {
-      const d = v.createdAt?.toDate ? v.createdAt.toDate() : null;
-      const day = d ? d.getDate() : '–';
-      const month = d ? `${d.getMonth() + 1}月` : '';
-      const el = document.createElement('div');
-      el.className = 'feed-item';
-      el.innerHTML =
-        `<div class="feed-date">
-           <span class="feed-day">${esc(day)}</span>
-           <span class="feed-month">${esc(month)}</span>
-         </div>
-         <div class="feed-body">
-           <span class="feed-title">${esc(v.title)}</span>
-           <span class="feed-type">公告</span>
-         </div>`;
-      el.style.cursor = 'pointer';
-      el.addEventListener('click', () => showView('news'));
-      dashFeed.appendChild(el);
-    });
-  }
+  renderNewsPage();
 }
 
-async function loadAll() {
-  loadError.style.display = 'none';
-  try {
-    await Promise.all([loadLinks(), loadAnnouncements()]);
-  } catch (e) {
-    loadError.style.display = 'block';
-  }
-}
-
-/* ---------- 手機版選單收合 ---------- */
-$('menuToggle').addEventListener('click', () => sidebar.classList.toggle('open'));
-
-/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ---------- */
-document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.act');
-  if (!btn) return;
-  e.preventDefault();
-  const { action, col, id } = btn.dataset;
-  if (action === 'edit') {
-    const type = col === 'links' ? 'link' : 'ann';
-    location.href = `publish.html?type=${type}&id=${encodeURIComponent(id)}`;
+function renderNewsPage() {
+  const list = $('newsList');
+  const pager = $('newsPager');
+  if (!allAnns.length) {
+    list.innerHTML = `<p class="empty">尚無公告。</p>`;
+    pager.style.display = 'none';
     return;
   }
-  if (action === 'delete') {
-    if (!confirm('確定要刪除嗎？')) return;
-    try {
-      await deleteDoc(doc(db, col, id));
-      await loadAll();
-    } catch (err) { alert(err.message); }
+  const totalPages = Math.ceil(allAnns.length / NEWS_PER_PAGE);
+  if (newsPage > totalPages) newsPage = totalPages;
+  const start = (newsPage - 1) * NEWS_PER_PAGE;
+  const pageItems = allAnns.slice(start, start + NEWS_PER_PAGE);
+
+  list.innerHTML = '';
+  pageItems.forEach(v => {
+    const d = annDate(v);
+    const dateStr = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
+    const img = v.image ? `<img class="news-img" src="${esc(v.image)}" alt="" loading="lazy">` : '';
+    const el = document.createElement('div');
+    el.className = 'news-card';
+    el.innerHTML =
+      `${rowActions('ann', v.id)}
+       <div class="news-card-top">
+         <span class="news-type">${esc(ANN_TYPE[v.type] || '公告')}</span>
+         <span class="news-date">${esc(dateStr)}</span>
+       </div>
+       <h3>${esc(v.title)}</h3>
+       ${img}
+       <div class="news-body">${esc(v.body || '')}</div>`;
+    list.appendChild(el);
+  });
+
+  // 分頁列：超過 10 則才顯示
+  if (totalPages > 1) {
+    pager.style.display = 'flex';
+    $('newsPageInfo').textContent = `第 ${newsPage} / ${totalPages} 頁`;
+    $('newsPrev').disabled = newsPage <= 1;
+    $('newsNext').disabled = newsPage >= totalPages;
+  } else {
+    pager.style.display = 'none';
   }
+}
+$('newsPrev').addEventListener('click', () => { if (newsPage > 1) { newsPage--; renderNewsPage(); window.scrollTo({top:0,behavior:'smooth'}); } });
+$('newsNext').addEventListener('click', () => { newsPage++; renderNewsPage(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+/* 公告彈窗 */
+let annImg = '', annEditId = null;
+function renderAnnImg() {
+  const p = $('annImgPrev');
+  if (annImg) { p.innerHTML = `<img src="${esc(annImg)}" alt="">`; $('annImgClear').hidden = false; }
+  else { p.innerHTML = `<span class="ph">1:1 圖片</span>`; $('annImgClear').hidden = true; }
+}
+$('annImgFile').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try { annImg = await processSquareImage(f, 900, 0.72); renderAnnImg(); } catch (err) { alert(err.message); }
+  e.target.value = '';
+});
+$('annImgClear').addEventListener('click', () => { annImg = ''; renderAnnImg(); });
+
+function openAnnModal(v) {
+  annEditId = v ? v.id : null;
+  annImg = v?.image || '';
+  $('annModalTitle').textContent = v ? '編輯公告' : '新增公告';
+  $('annSubmit').textContent = v ? '儲存變更' : '發佈';
+  $('annType').value = v?.type || 'share';
+  $('annTitle').value = v?.title || '';
+  $('annBody').value = v?.body || '';
+  const d = v ? annDate(v) : new Date();
+  $('annDate').value = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
+  $('annDelete').hidden = !v;
+  renderAnnImg();
+  openModal('modal-ann');
+}
+$('annDelete').addEventListener('click', () => del('announcements', annEditId, () => closeModal('modal-ann')));
+$('annForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('annSubmit'); btn.disabled = true;
+  const data = { title: val('annTitle'), body: val('annBody'), type: $('annType').value, image: annImg, date: $('annDate').value };
+  try {
+    if (annEditId) await updateDoc(doc(db, 'announcements', annEditId), data);
+    else await addDoc(collection(db, 'announcements'), { ...data, createdAt: serverTimestamp() });
+    closeModal('modal-ann'); toast('已儲存'); await loadAnnouncements();
+  } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
 });
 
-/* ===========================================================
-   員工資料卡（唯讀）：姓名 / 代稱 / 職稱 / 大頭照由管理員在員工資料
-   後台（staff.html）統一維護，寫入 profiles/{email}。員工本人只讀
-   得到自己那一筆（見 firestore.rules），敏感欄位留在 staff 集合。
-   =========================================================== */
-let currentEmail = '';
-let profile = { name: '', alias: '', avatar: '', jobTitle: '' };
-
-async function loadProfile(email) {
-  profile = { name: '', alias: '', avatar: '', jobTitle: '' };
-  if (!email) return;
+/* ===================== 專案內容 ===================== */
+let allProjects = [];
+async function loadProjects() {
+  const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
   try {
-    const snap = await getDoc(doc(db, 'profiles', email.toLowerCase()));
-    if (snap.exists()) profile = Object.assign(profile, snap.data());
-  } catch (e) { /* 沒有 profile 或讀取失敗就維持空白預設 */ }
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) { allProjects = cached.docs.map(d => ({ id: d.id, ...d.data() })); renderProjects(); }
+  } catch (e) {}
+  const snap = await getDocs(q);
+  allProjects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  buildYearFilter();
+  renderProjects();
+}
+async function seedProjects() {
+  const seeds = ['扒進你心裡', '夜來香', '外送夥伴即將抵達', '窺 2026'];
+  for (const title of seeds) {
+    await addDoc(collection(db, 'projects'), {
+      title, desc: '', url: '', thumb: '', kind: '', status: 'producing', year: '', createdAt: serverTimestamp()
+    });
+  }
+}
+function buildYearFilter() {
+  const years = [...new Set(allProjects.map(p => p.year).filter(Boolean))].sort().reverse();
+  const sel = $('fProjYear'); const cur = sel.value;
+  sel.innerHTML = `<option value="">全部</option>` + years.map(y => `<option value="${esc(y)}">${esc(y)}</option>`).join('');
+  sel.value = cur;
+}
+function renderProjects() {
+  const kind = $('fProjKind').value, status = $('fProjStatus').value, year = $('fProjYear').value, sort = $('fProjSort').value;
+  let rows = allProjects.filter(p =>
+    (!kind || p.kind === kind) && (!status || p.status === status) && (!year || p.year === year));
+
+  if (sort === 'stroke') rows.sort((a, b) => strokeCollator.compare(a.title || '', b.title || ''));
+  else rows.sort((a, b) => {
+    const oa = PROJ_STATUS_ORDER[a.status] ?? 9, ob = PROJ_STATUS_ORDER[b.status] ?? 9;
+    if (oa !== ob) return oa - ob;
+    return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+  });
+
+  $('projCount').textContent = allProjects.length;
+  $('projSub').textContent = allProjects.length ? `共 ${allProjects.length} 部作品` : '';
+
+  const body = $('projBody');
+  body.innerHTML = '';
+  if (!rows.length) { body.innerHTML = `<tr><td colspan="7" class="empty">${allProjects.length ? '沒有符合篩選的作品。' : '尚無專案。'}</td></tr>`; return; }
+  rows.forEach(v => {
+    const url = safeUrl(v.url);
+    const thumb = v.thumb ? `<span class="thumb-box"><img src="${esc(v.thumb)}" alt=""></span>`
+      : `<span class="thumb-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/></svg></span>`;
+    const kindTag = v.kind ? `<span class="badge badge-kind">${esc(v.kind)}</span>` : '<span class="muted">—</span>';
+    const st = `<span class="badge ${PROJ_STATUS_CLASS[v.status] || ''}">${esc(PROJ_STATUS[v.status] || '—')}</span>`;
+    const link = url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="card-link">開啟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>` : '<span class="muted">—</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td>${thumb}</td>
+       <td><div class="cell-name"><span class="t-title">${esc(v.title)}</span></div>${v.desc ? `<div class="t-desc">${esc(v.desc)}</div>` : ''}</td>
+       <td>${kindTag}</td>
+       <td>${st}</td>
+       <td>${v.year ? esc(v.year) : '<span class="muted">—</span>'}</td>
+       <td>${link}</td>
+       <td class="admin-only" style="text-align:right"><button type="button" class="btn-edit" data-edit="proj" data-id="${esc(v.id)}">${ICON_EDIT}編輯</button></td>`;
+    body.appendChild(tr);
+  });
+}
+['fProjKind','fProjStatus','fProjYear','fProjSort'].forEach(id => $(id).addEventListener('change', renderProjects));
+
+/* 專案彈窗 */
+let projImg = '', projEditId = null;
+function renderProjImg() {
+  const p = $('projImgPrev');
+  if (projImg) { p.innerHTML = `<img src="${esc(projImg)}" alt="">`; $('projImgClear').hidden = false; }
+  else { p.innerHTML = `<span class="ph">25×25</span>`; $('projImgClear').hidden = true; }
+}
+$('projImgFile').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  // 縮圖限制 25×25：存 50×50（2 倍解析度，顯示更清晰），檔案極小
+  try { projImg = await processSquareImage(f, 50, 0.85); renderProjImg(); } catch (err) { alert(err.message); }
+  e.target.value = '';
+});
+$('projImgClear').addEventListener('click', () => { projImg = ''; renderProjImg(); });
+
+function openProjModal(v) {
+  projEditId = v ? v.id : null;
+  projImg = v?.thumb || '';
+  $('projModalTitle').textContent = v ? '編輯專案' : '新增專案';
+  $('projSubmit').textContent = v ? '儲存變更' : '新增';
+  $('projTitle').value = v?.title || '';
+  $('projKind').value = v?.kind || '';
+  $('projStatus').value = v?.status || 'producing';
+  $('projYear').value = v?.year || '';
+  $('projDesc').value = v?.desc || '';
+  $('projUrl').value = v?.url || '';
+  $('projDelete').hidden = !v;
+  renderProjImg();
+  openModal('modal-proj');
+}
+$('projDelete').addEventListener('click', () => del('projects', projEditId, () => closeModal('modal-proj')));
+$('projForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('projSubmit'); btn.disabled = true;
+  const data = { title: val('projTitle'), desc: val('projDesc'), url: val('projUrl'),
+    thumb: projImg, kind: $('projKind').value, status: $('projStatus').value, year: val('projYear') };
+  try {
+    if (projEditId) await updateDoc(doc(db, 'projects', projEditId), data);
+    else await addDoc(collection(db, 'projects'), { ...data, createdAt: serverTimestamp() });
+    closeModal('modal-proj'); toast('已儲存'); await loadProjects();
+  } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
+});
+
+/* ===================== 文件下載 ===================== */
+let allDocs = [];
+async function loadDocuments() {
+  const q = query(collection(db, 'documents'), orderBy('createdAt', 'desc'));
+  try {
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) { allDocs = cached.docs.map(d => ({ id: d.id, ...d.data() })); renderDocuments(); }
+  } catch (e) {}
+  const snap = await getDocs(q);
+  allDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderDocuments();
+}
+function renderDocuments() {
+  $('docCount').textContent = allDocs.length;
+  $('docSub').textContent = allDocs.length ? `共 ${allDocs.length} 份文件` : '';
+  const body = $('docBody');
+  body.innerHTML = '';
+  if (!allDocs.length) { body.innerHTML = `<tr><td colspan="4" class="empty">尚無文件。</td></tr>`; return; }
+  allDocs.forEach(v => {
+    const tr = document.createElement('tr');
+    tr.className = 'clickable';
+    tr.dataset.docId = v.id;
+    tr.innerHTML =
+      `<td>${v.docType ? `<span class="doctype-tag">${esc(v.docType)}</span>` : '<span class="muted">—</span>'}</td>
+       <td><span class="t-title">${esc(v.title)}</span></td>
+       <td>${v.desc ? `<span class="t-desc">${esc(v.desc)}</span>` : '<span class="muted">—</span>'}</td>
+       <td class="admin-only" style="text-align:right"><button type="button" class="btn-edit" data-edit="doc" data-id="${esc(v.id)}">${ICON_EDIT}編輯</button></td>`;
+    body.appendChild(tr);
+  });
+}
+/* 點列開啟文件檢視（員工看內容） */
+$('docBody').addEventListener('click', (e) => {
+  if (e.target.closest('[data-edit]')) return;          // 編輯鈕另行處理
+  const tr = e.target.closest('tr.clickable'); if (!tr) return;
+  const v = allDocs.find(d => d.id === tr.dataset.docId); if (!v) return;
+  $('docvTitle').textContent = v.title || '文件';
+  $('docvType').textContent = v.docType || '文件';
+  $('docvDesc').textContent = v.desc || '（無內容說明）';
+  const url = safeUrl(v.url);
+  const link = $('docvLink');
+  if (url) { link.href = url; link.style.display = 'inline-block'; } else { link.style.display = 'none'; }
+  openModal('modal-doc-view');
+});
+
+/* 文件彈窗 */
+let docEditId = null;
+function openDocModal(v) {
+  docEditId = v ? v.id : null;
+  $('docModalTitle').textContent = v ? '編輯文件' : '新增文件';
+  $('docSubmit').textContent = v ? '儲存變更' : '新增';
+  $('docType').value = v?.docType || '';
+  $('docTitle').value = v?.title || '';
+  $('docDesc').value = v?.desc || '';
+  $('docUrl').value = v?.url || '';
+  $('docDelete').hidden = !v;
+  openModal('modal-doc');
+}
+$('docDelete').addEventListener('click', () => del('documents', docEditId, () => closeModal('modal-doc')));
+$('docForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('docSubmit'); btn.disabled = true;
+  const data = { docType: val('docType'), title: val('docTitle'), desc: val('docDesc'), url: val('docUrl') };
+  try {
+    if (docEditId) await updateDoc(doc(db, 'documents', docEditId), data);
+    else await addDoc(collection(db, 'documents'), { ...data, createdAt: serverTimestamp() });
+    closeModal('modal-doc'); toast('已儲存'); await loadDocuments();
+  } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
+});
+
+/* ===================== APP（App Store 樣式 + 內頁） ===================== */
+let allApps = [];
+async function loadApps() {
+  const q = query(collection(db, 'apps'), orderBy('createdAt', 'desc'));
+  try {
+    const cached = await getDocsFromCache(q);
+    if (!cached.empty) { allApps = cached.docs.map(d => ({ id: d.id, ...d.data() })); renderApps(); }
+  } catch (e) {}
+  const snap = await getDocs(q);
+  allApps = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderApps();
+}
+function appIcoHTML(v, cls) {
+  return v.icon ? `<span class="${cls}"><img src="${esc(v.icon)}" alt=""></span>` : `<span class="${cls}">${ICON_APP}</span>`;
+}
+function renderApps() {
+  $('appCount').textContent = allApps.length;
+  $('appSub').textContent = allApps.length ? `共 ${allApps.length} 個 APP` : '';
+
+  // 主控版常用 APP（前 6）
+  const dash = $('dashApps');
+  dash.innerHTML = '';
+  if (!allApps.length) dash.innerHTML = `<p class="empty" style="grid-column:1/-1;padding:18px;">尚無 APP。</p>`;
+  else allApps.slice(0, 6).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'app-tile';
+    el.innerHTML = `${appIcoHTML(v, 'app-tile-ico')}<span class="app-tile-name">${esc(v.name)}</span><span class="app-tile-desc">${esc(v.desc || '')}</span>`;
+    el.addEventListener('click', () => openAppDetail(v.id));
+    dash.appendChild(el);
+  });
+
+  // APP 列表
+  const wrap = $('appListWrap');
+  if (!allApps.length) {
+    wrap.innerHTML =
+      `<div class="placeholder">
+         <span class="ph-ico">${ICON_APP}</span>
+         <p class="ph-title">APP 區尚未上架</p>
+         <p class="ph-sub">此區已備妥 App Store 樣式列表與內頁，待你準備好 App 資料後，用右上角「新增 APP」即可上架。</p>
+       </div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="app-list" id="appList"></div>`;
+  const list = $('appList');
+  allApps.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'app-row';
+    el.innerHTML =
+      `${appIcoHTML(v, 'app-row-ico')}
+       <div class="app-row-meta"><div class="app-row-name">${esc(v.name)}</div><div class="app-row-desc">${esc(v.desc || '')}</div></div>
+       ${rowActions('app', v.id)}
+       <span class="app-row-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>`;
+    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions')) return; openAppDetail(v.id); });
+    list.appendChild(el);
+  });
+}
+function openAppDetail(id) {
+  const v = allApps.find(a => a.id === id); if (!v) return;
+  $('appDetIco').innerHTML = v.icon ? `<img src="${esc(v.icon)}" alt="">` : ICON_APP;
+  $('appDetName').textContent = v.name || '';
+  $('appDetDesc').textContent = v.desc || '';
+  $('appDetUsage').textContent = v.usage || '（尚未填寫使用說明）';
+  const url = safeUrl(v.downloadUrl);
+  $('appDetDownloadWrap').innerHTML = url
+    ? `<a class="btn-download" href="${esc(url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>下載 / 開啟</a>`
+    : `<p class="note">尚未提供下載連結。</p>`;
+  showView('app-detail');
+}
+$('appBack').addEventListener('click', () => showView('apps'));
+
+/* APP 彈窗 */
+let appImg = '', appEditId = null;
+function renderAppImg() {
+  const p = $('appImgPrev');
+  if (appImg) { p.innerHTML = `<img src="${esc(appImg)}" alt="">`; $('appImgClear').hidden = false; }
+  else { p.innerHTML = `<span class="ph">App icon</span>`; $('appImgClear').hidden = true; }
+}
+$('appImgFile').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try { appImg = await processSquareImage(f, 128, 0.85); renderAppImg(); } catch (err) { alert(err.message); }
+  e.target.value = '';
+});
+$('appImgClear').addEventListener('click', () => { appImg = ''; renderAppImg(); });
+
+function openAppModal(v) {
+  appEditId = v ? v.id : null;
+  appImg = v?.icon || '';
+  $('appModalTitle').textContent = v ? '編輯 APP' : '新增 APP';
+  $('appSubmit').textContent = v ? '儲存變更' : '新增';
+  $('appName').value = v?.name || '';
+  $('appDesc').value = v?.desc || '';
+  $('appUsage').value = v?.usage || '';
+  $('appUrl').value = v?.downloadUrl || '';
+  $('appDelete').hidden = !v;
+  renderAppImg();
+  openModal('modal-app');
+}
+$('appDelete').addEventListener('click', () => del('apps', appEditId, () => { closeModal('modal-app'); showView('apps'); }));
+$('appForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('appSubmit'); btn.disabled = true;
+  const data = { icon: appImg, name: val('appName'), desc: val('appDesc'), usage: val('appUsage'), downloadUrl: val('appUrl') };
+  try {
+    if (appEditId) await updateDoc(doc(db, 'apps', appEditId), data);
+    else await addDoc(collection(db, 'apps'), { ...data, createdAt: serverTimestamp() });
+    closeModal('modal-app'); toast('已儲存'); await loadApps();
+  } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
+});
+
+/* ===================== 員工資料（整合分頁） ===================== */
+const STAFF_SEED = [
+  { email: 'sweetlove814@gmail.com',      empNo: '001', loginPassword: 'intrvlmem_001@', status: 'active', name: '', alias: '', jobTitle: '' },
+  { email: 'page.art.official@gmail.com', empNo: '002', loginPassword: 'intrvlmem_002@', status: 'active', name: 'PAGE', alias: '', jobTitle: '' },
+  { email: 'mega890302@gmail.com',        empNo: '003', loginPassword: 'intrvlmem_003@', status: 'active', name: 'MEGA', alias: '', jobTitle: '美術助手' },
+  { email: 'zqartworkofficial@gmail.com', empNo: '000', loginPassword: 'admin_000@',     status: 'active', name: '', alias: '', jobTitle: '' }
+];
+const STAFF_FIELDS = ['empNo','name','alias','email','status','address','mobile','lineId','jobTitle','loginPassword','birthday','passport','nationalId','note','hireDate','leaveDate','avatar'];
+
+let allStaff = [];
+async function loadStaff() {
+  let snap;
+  try { snap = await getDocs(collection(db, 'staff')); }
+  catch (e) { $('staffBody').innerHTML = `<tr><td colspan="6" class="empty">無法載入員工資料。</td></tr>`; return; }
+  if (snap.empty) {
+    try { await seedStaff(); snap = await getDocs(collection(db, 'staff')); toast('已建立初始員工資料'); }
+    catch (e) { $('staffBody').innerHTML = `<tr><td colspan="6" class="empty">無法載入員工資料。</td></tr>`; return; }
+  }
+  allStaff = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => String(a.empNo || '').localeCompare(String(b.empNo || ''), 'zh-Hant', { numeric: true }));
+  renderStaff();
+}
+async function seedStaff() {
+  for (const s of STAFF_SEED) {
+    const id = emailId(s.email);
+    const ref = doc(db, 'staff', id);
+    if ((await getDoc(ref)).exists()) continue;
+    const data = {};
+    STAFF_FIELDS.forEach(k => data[k] = (k === 'status' ? (s.status || 'active') : (s[k] ?? '')));
+    data.email = id; data.updatedAt = serverTimestamp();
+    await setDoc(ref, data);
+    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, updatedAt: serverTimestamp() });
+  }
+}
+function renderStaff() {
+  $('staffSub').textContent = allStaff.length ? `共 ${allStaff.length} 位` : '管理工作室成員的完整檔案';
+  const body = $('staffBody');
+  body.innerHTML = '';
+  if (!allStaff.length) { body.innerHTML = `<tr><td colspan="6" class="empty">尚無員工資料。</td></tr>`; return; }
+  allStaff.forEach(v => {
+    const initial = (String(v.name || v.alias || v.email || '·').trim()[0] || '·').toUpperCase();
+    const av = v.avatar ? `<span class="thumb-box" style="border-radius:50%"><img src="${esc(v.avatar)}" alt=""></span>`
+      : `<span class="thumb-box" style="border-radius:50%;background:var(--gradient);color:#fff;font-weight:800">${esc(initial)}</span>`;
+    const st = v.status || 'active';
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td class="muted" style="font-variant-numeric:tabular-nums">${esc(v.empNo || '—')}</td>
+       <td><div class="cell-name">${av}<span class="t-title">${esc(v.name || '—')}</span></div></td>
+       <td>${v.alias ? esc(v.alias) : '<span class="muted">—</span>'}</td>
+       <td>${esc(v.email || v.id)}</td>
+       <td><span class="badge ${STAFF_STATUS_CLASS[st] || ''}">${esc(STAFF_STATUS[st] || st)}</span></td>
+       <td style="text-align:right"><button type="button" class="btn-edit" data-edit="staff" data-id="${esc(v.id)}">${ICON_EDIT}編輯</button></td>`;
+    body.appendChild(tr);
+  });
 }
 
+/* 員工大頭照 */
+let stAvatar = '';
+function renderStAvatar() {
+  const p = $('stAvPrev');
+  if (stAvatar) { p.innerHTML = `<img src="${esc(stAvatar)}" alt="">`; $('stAvClear').hidden = false; }
+  else { p.textContent = (val('f_name') || val('f_alias') || val('f_email') || '·').trim()[0]?.toUpperCase() || '·'; $('stAvClear').hidden = true; }
+}
+$('stAvFile').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try { stAvatar = await processSquareImage(f, 400, 0.85); renderStAvatar(); } catch (err) { alert(err.message); }
+  e.target.value = '';
+});
+$('stAvClear').addEventListener('click', () => { stAvatar = ''; renderStAvatar(); });
+$('pwToggle').addEventListener('click', () => { const i = $('f_loginPassword'); i.type = i.type === 'password' ? 'text' : 'password'; });
+const inWork = $('f_inWork'), leaveDate = $('f_leaveDate');
+inWork.addEventListener('change', () => { leaveDate.disabled = inWork.checked; if (inWork.checked) leaveDate.value = ''; });
+['f_name','f_alias','f_email'].forEach(id => $(id).addEventListener('input', () => { if (!stAvatar) renderStAvatar(); }));
+
+let staffEditId = null;
+function openStaffModal(v) {
+  staffEditId = v ? v.id : null;
+  stAvatar = v?.avatar || '';
+  $('staffModalTitle').textContent = v ? '編輯員工資料' : '新增員工';
+  $('f_empNo').value = v?.empNo || '';
+  $('f_status').value = v?.status || 'active';
+  $('f_name').value = v?.name || '';
+  $('f_alias').value = v?.alias || '';
+  $('f_email').value = v?.email || v?.id || '';
+  $('f_jobTitle').value = v?.jobTitle || '';
+  $('f_loginPassword').value = v?.loginPassword || '';
+  $('f_mobile').value = v?.mobile || '';
+  $('f_lineId').value = v?.lineId || '';
+  $('f_address').value = v?.address || '';
+  $('f_birthday').value = v?.birthday || '';
+  $('f_nationalId').value = v?.nationalId || '';
+  $('f_passport').value = v?.passport || '';
+  $('f_hireDate').value = v?.hireDate || '';
+  $('f_leaveDate').value = v?.leaveDate || '';
+  $('f_note').value = v?.note || '';
+  inWork.checked = !(v?.leaveDate); leaveDate.disabled = inWork.checked;
+  const emailEl = $('f_email');
+  if (v) { emailEl.readOnly = true; $('emailSub').textContent = '電子郵件為登入帳號與資料鍵，無法在此變更。'; $('staffDelete').hidden = false; }
+  else { emailEl.readOnly = false; $('emailSub').textContent = '需與 Firebase Authentication 的登入帳號一致，員工才能對應到自己的資料卡。'; $('staffDelete').hidden = true; }
+  renderStAvatar();
+  openModal('modal-staff');
+}
+$('staffDelete').addEventListener('click', async () => {
+  if (!staffEditId) return;
+  if (!confirm('確定要刪除這位員工的資料嗎？此動作無法復原。')) return;
+  try {
+    await deleteDoc(doc(db, 'staff', staffEditId));
+    try { await deleteDoc(doc(db, 'profiles', staffEditId)); } catch (e) {}
+    closeModal('modal-staff'); toast('已刪除'); await loadStaff();
+  } catch (err) { alert('刪除失敗：' + err.message); }
+});
+$('staffForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('staffSubmit');
+  const email = emailId(val('f_email'));
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('請輸入有效的電子郵件'); return; }
+  const id = staffEditId || email;
+  const data = {
+    empNo: val('f_empNo'), name: val('f_name'), alias: val('f_alias'), email,
+    status: $('f_status').value, address: val('f_address'), mobile: val('f_mobile'),
+    lineId: val('f_lineId'), jobTitle: val('f_jobTitle'), loginPassword: $('f_loginPassword').value,
+    birthday: val('f_birthday'), passport: val('f_passport'), nationalId: val('f_nationalId'),
+    note: val('f_note'), hireDate: val('f_hireDate'),
+    leaveDate: inWork.checked ? '' : val('f_leaveDate'), avatar: stAvatar || '', updatedAt: serverTimestamp()
+  };
+  btn.disabled = true;
+  try {
+    if (!staffEditId) {
+      if ((await getDoc(doc(db, 'staff', id))).exists()) { alert('此電子郵件已有員工資料，請改用編輯。'); btn.disabled = false; return; }
+    }
+    await setDoc(doc(db, 'staff', id), data);
+    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, updatedAt: serverTimestamp() });
+    closeModal('modal-staff'); toast('已儲存'); await loadStaff();
+  } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
+});
+
+/* ===================== 編輯 / 刪除事件委派 ===================== */
+document.addEventListener('click', (e) => {
+  const editBtn = e.target.closest('[data-edit]');
+  if (editBtn) {
+    e.preventDefault(); e.stopPropagation();
+    const { edit, id } = editBtn.dataset;
+    if (edit === 'ann')  openAnnModal(allAnns.find(x => x.id === id));
+    if (edit === 'proj') openProjModal(allProjects.find(x => x.id === id));
+    if (edit === 'doc')  openDocModal(allDocs.find(x => x.id === id));
+    if (edit === 'app')  openAppModal(allApps.find(x => x.id === id));
+    if (edit === 'staff') openStaffModal(allStaff.find(x => x.id === id));
+    return;
+  }
+  const delBtn = e.target.closest('[data-del]');
+  if (delBtn) {
+    e.preventDefault(); e.stopPropagation();
+    const map = { ann:'announcements', proj:'projects', doc:'documents', app:'apps' };
+    const col = map[delBtn.dataset.del];
+    const reload = { announcements:loadAnnouncements, projects:loadProjects, documents:loadDocuments, apps:loadApps };
+    del(col, delBtn.dataset.id, null, reload[col]);
+  }
+});
+async function del(col, id, after, reload) {
+  if (!id) return;
+  if (!confirm('確定要刪除嗎？')) return;
+  try {
+    await deleteDoc(doc(db, col, id));
+    if (after) after();
+    toast('已刪除');
+    const fn = reload || { announcements:loadAnnouncements, projects:loadProjects, documents:loadDocuments, apps:loadApps }[col];
+    if (fn) await fn();
+  } catch (err) { alert('刪除失敗：' + err.message); }
+}
+
+/* ===================== 員工資料卡（主控版唯讀） ===================== */
+let currentEmail = '';
+let profile = { name:'', alias:'', avatar:'', jobTitle:'' };
+async function loadProfile(email) {
+  profile = { name:'', alias:'', avatar:'', jobTitle:'' };
+  if (!email) return;
+  try { const snap = await getDoc(doc(db, 'profiles', email.toLowerCase())); if (snap.exists()) profile = Object.assign(profile, snap.data()); }
+  catch (e) {}
+}
 function renderProfile() {
   const name = (profile.name || profile.alias || currentEmail.split('@')[0] || '成員').trim();
-  const avatarEl = $('dashAvatar');
-  if (profile.avatar) avatarEl.innerHTML = `<img src="${esc(profile.avatar)}" alt="">`;
-  else avatarEl.textContent = (name[0] || currentEmail.trim()[0] || '·').toUpperCase();
+  const a = $('dashAvatar');
+  if (profile.avatar) a.innerHTML = `<img src="${esc(profile.avatar)}" alt="">`;
+  else a.textContent = (name[0] || currentEmail.trim()[0] || '·').toUpperCase();
   $('dashName').textContent = name;
-
-  // 代稱／職稱有值才顯示，空值就整行隱藏
-  const aliasEl = $('dashAlias');
-  if (profile.alias) { aliasEl.textContent = profile.alias; aliasEl.style.display = ''; }
-  else aliasEl.style.display = 'none';
-
-  const titleEl = $('dashTitle');
-  if (profile.jobTitle) { titleEl.textContent = profile.jobTitle; titleEl.style.display = ''; }
-  else titleEl.style.display = 'none';
-
+  const al = $('dashAlias');
+  if (profile.alias) { al.textContent = profile.alias; al.style.display = ''; } else al.style.display = 'none';
+  const ti = $('dashTitle');
+  if (profile.jobTitle) { ti.textContent = profile.jobTitle; ti.style.display = ''; } else ti.style.display = 'none';
   $('dashEmail').textContent = currentEmail;
 }
 
-/* ---------- 驗證守門 ---------- */
+/* ===================== 載入全部公開內容 ===================== */
+async function loadPublic() {
+  $('loadError').style.display = 'none';
+  try { await Promise.all([loadAnnouncements(), loadProjects(), loadDocuments(), loadApps()]); }
+  catch (e) { $('loadError').style.display = 'block'; }
+}
+
+/* ===================== 驗證守門 ===================== */
 onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
   currentEmail = user.email || '';
   $('setEmail').textContent = currentEmail;
   $('setRole').textContent = '成員';
 
-  renderProfile();                                 // 先用預設即時顯示
-  loadProfile(currentEmail).then(renderProfile);   // 再帶入 profiles 後端資料
+  renderProfile();
+  loadProfile(currentEmail).then(renderProfile);
 
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
 
-  loadAll();
-  isAdmin(user.uid).then(ok => {
+  loadPublic();
+
+  isAdmin(user.uid).then(async (ok) => {
     if (ok) {
       document.body.classList.add('is-admin');
       $('setRole').textContent = '管理員';
-      document.querySelectorAll('.set-row.admin-only').forEach(el => el.style.display = 'flex');
+      loadStaff();                 // 員工資料分頁（僅管理員）
+      // 專案集合為空時，管理員首次進入自動建立四部作品種子（只在此處建立一次，避免重複）
+      try {
+        const snap = await getDocs(collection(db, 'projects'));
+        if (snap.empty) { await seedProjects(); await loadProjects(); }
+      } catch (e) {}
     }
   });
 });
 
-/* ---------- 登出 ---------- */
-$('logoutBtn').addEventListener('click', async () => {
-  await signOut(auth);
-  window.location.replace('login.html');
-});
+/* 登出 */
+$('logoutBtn').addEventListener('click', async () => { await signOut(auth); window.location.replace('login.html'); });
 
-/* ---------- 初始化日期（YYYY 小字 + MM／DD 大字） ---------- */
+/* 日期（YYYY 小 + MM／DD 大） */
 const now = new Date();
 const pad = (n) => String(n).padStart(2, '0');
 $('dateYear').textContent = now.getFullYear();
