@@ -41,6 +41,18 @@ service cloud.firestore {
         && d.createdAt == request.time;
     }
 
+    // 員工個人資料寫入驗證：只允許這些欄位，並限制長度
+    // （avatar 為 256px 壓縮後的 JPEG data URL，上限約 400KB，
+    //   遠低於 Firestore 單份文件 1MB 限制）
+    function validProfile() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'alias', 'avatar', 'updatedAt'])
+        && (!('name' in d)   || (d.name   is string && d.name.size()   <= 40))
+        && (!('alias' in d)  || (d.alias  is string && d.alias.size()  <= 40))
+        && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 400000))
+        && d.updatedAt == request.time;
+    }
+
     // 公告寫入驗證
     function validAnnouncement() {
       let d = request.resource.data;
@@ -62,6 +74,15 @@ service cloud.firestore {
       allow read:           if isSignedIn();
       allow create:         if isAdmin() && validLink();
       allow update, delete: if isAdmin();
+    }
+
+    // 員工個人資料（頭像 / 姓名 / 代稱）：文件 ID = 該員工的 UID。
+    // 登入成員皆可讀（卡片資訊非機密、未來同事卡片可互看）；
+    // 只有本人能新增 / 修改自己的那一筆，且須通過內容驗證。
+    match /profiles/{uid} {
+      allow read:           if isSignedIn();
+      allow create, update: if isSignedIn() && request.auth.uid == uid && validProfile();
+      allow delete:         if isSignedIn() && request.auth.uid == uid;
     }
 
     // 管理員名單：登入成員可讀（前端用來判斷要不要顯示編輯介面）；
