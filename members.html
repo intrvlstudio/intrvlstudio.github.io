@@ -112,7 +112,8 @@ body.is-admin tr.admin-only { display: table-row !important; }
 body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !important; }
 
 /* ---------- 主內容 ---------- */
-.main { padding: 30px 40px 80px; max-width: 1180px; }
+/* 桌面版內容（含所有表格／條列）寬度上限 1100px */
+.main { padding: 30px 40px 80px; max-width: 1100px; }
 
 /* 視圖切換：預設隱藏，.active 才顯示 */
 .view { display: none; }
@@ -248,8 +249,12 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 .btn-add svg { width: 15px; height: 15px; }
 
 /* ============ 資料表格（專案 / 文件 / 員工共用） ============ */
-.table-card { background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow-x: auto; }
+/* 桌面寬度上限 1100；窄螢幕內部可橫向捲動，不會撐破頁面 */
+.table-card { background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow-x: auto; max-width: 1100px; }
 .data-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+/* 名稱欄下方的次要資訊（類型／年份／編號等）：桌面隱藏，手機才顯示 */
+.t-meta { display: none; font-size: 12px; color: var(--ink-mute); margin-top: 4px;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .data-table th {
   text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em;
   text-transform: uppercase; color: var(--ink-mute);
@@ -293,21 +298,13 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 .row-actions { display: inline-flex; gap: 6px; }
 .act {
   width: 30px; height: 30px; padding: 0; cursor: pointer;
-  display: grid; place-items: center; color: var(--ink-mute);
+  display: inline-grid; place-items: center; color: var(--ink-mute);
   background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
   transition: color .15s, border-color .15s, background .15s;
 }
 .act svg { width: 15px; height: 15px; }
 .act.edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
 .act.del:hover  { color: #B23B36; border-color: #E7B8B5; background: #fff; }
-.btn-edit {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 13px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--ink-soft);
-  background: var(--bg); border: 1px solid var(--rule); border-radius: 9px;
-  transition: color .15s, border-color .15s, background .15s;
-}
-.btn-edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
-.btn-edit svg { width: 14px; height: 14px; }
 
 /* ============ 篩選列（專案） ============ */
 .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -322,32 +319,58 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 }
 .filter-field select:focus { outline: none; border-color: var(--mauve); box-shadow: 0 0 0 3px rgba(181,129,163,0.15); }
 
-/* ============ 最新消息卡片 + 分頁 ============ */
-/* 佈告欄寬度上限 550px，圖片才能滿版不留兩側空白 */
-#view-news { max-width: 550px; }
-.news-list { display: flex; flex-direction: column; gap: 16px; }
-.news-card {
-  position: relative; padding: 20px 22px; background: #fff;
-  border: 1px solid var(--rule); border-radius: 16px;
-}
-.news-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+/* ============ 最新消息：論壇／Dcard 樣式條列 + 分頁 ============ */
 .news-type {
   font-size: 11px; font-weight: 700; letter-spacing: .04em; color: #fff;
-  padding: 3px 11px; border-radius: 999px; background: var(--gradient);
+  padding: 3px 11px; border-radius: 999px; background: var(--gradient); white-space: nowrap;
 }
-.news-date { font-family: var(--num); font-size: 12.5px; color: var(--ink-mute); }
-.news-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.news-date { font-family: var(--num); font-size: 12.5px; color: var(--ink-mute); white-space: nowrap; }
 .news-gallery-host:empty { display: none; }
 .news-body { color: var(--ink-soft); white-space: pre-wrap; word-break: break-word; }
-.news-card .row-actions { position: absolute; top: 16px; right: 16px; display: none; }
-body.is-admin .news-card .row-actions { display: inline-flex; }
+
+/* 條列容器：與 APP 列表相同的卡片化清單 */
+.news-list { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; max-width: 1100px; }
+.news-list .empty { padding: 30px; }
+.news-row {
+  display: flex; align-items: center; gap: 14px; padding: 15px 20px; cursor: pointer;
+  border-top: 1px solid var(--rule-soft); transition: background .12s;
+}
+.news-row:first-child { border-top: none; }
+.news-row:hover { background: var(--bg); }
+.news-row-main { flex: 1; min-width: 0; }
+.news-row-top { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
+.news-row-title {
+  flex: 1; min-width: 0;
+  font-size: 15.5px; font-weight: 700; color: var(--ink); line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.news-row-snip {
+  font-size: 13px; color: var(--ink-mute);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.news-row-side { flex: none; display: flex; align-items: center; gap: 12px; }
+.news-row-go { flex: none; color: var(--ink-mute); }
+.news-row-go svg { width: 18px; height: 18px; display: block; }
+.news-row .row-actions { flex: none; display: none; }
+body.is-admin .news-row .row-actions { display: inline-flex; }
+@media (max-width: 560px) {
+  .news-row { padding: 14px 16px; }
+  .news-row-top .news-date { display: none; } /* 手機列表收起日期，點開內頁可見 */
+}
+
+/* 最新消息內頁（點開看全文 + 相簿） */
+.news-detail-head { margin-bottom: 16px; }
+.news-detail-head .news-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.news-detail-head h2 { font-size: 24px; font-weight: 700; line-height: 1.35; }
+#ndActions { display: none; margin-top: 20px; }
+body.is-admin #ndActions { display: inline-flex; }
 
 .pager { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 22px; }
 .pager button {
-  display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; cursor: pointer;
-  font-size: 13.5px; font-weight: 600; color: var(--ink-soft);
-  background: #fff; border: 1px solid var(--rule); border-radius: 10px;
+  display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; cursor: pointer;
+  color: var(--ink-soft); background: #fff; border: 1px solid var(--rule); border-radius: 10px;
 }
+.pager button svg { width: 18px; height: 18px; }
 .pager button:hover:not(:disabled) { background: var(--bg-alt); }
 .pager button:disabled { opacity: .45; cursor: not-allowed; }
 .pager .pageinfo { font-size: 13px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
@@ -626,6 +649,14 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   .topbar-mark { width: 56px; height: 56px; }
   .grid2 { grid-template-columns: 1fr; }
 }
+
+/* 手機：表格捨棄較不重要的欄位（收進名稱下方的次要資訊），避免擁擠跑版 */
+@media (max-width: 640px) {
+  .data-table { min-width: 0; }
+  .data-table th, .data-table td { padding: 12px 12px; }
+  .col-hide-sm { display: none !important; }
+  .t-meta { display: -webkit-box; }
+}
 </style>
 </head>
 <body class="checking">
@@ -762,10 +793,25 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
       </div>
       <div class="news-list" id="newsList"></div>
       <div class="pager" id="newsPager" style="display:none;">
-        <button id="newsPrev" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>上一頁</button>
+        <button id="newsPrev" type="button" title="上一頁" aria-label="上一頁"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
         <span class="pageinfo" id="newsPageInfo"></span>
-        <button id="newsNext" type="button">下一頁<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button id="newsNext" type="button" title="下一頁" aria-label="下一頁"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
+    </section>
+
+    <!-- ============ 最新消息：內頁（點開看全文） ============ -->
+    <section class="view" id="view-news-detail">
+      <button class="btn-back" id="newsBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>返回最新消息</button>
+      <div class="news-detail-head">
+        <div class="news-card-top">
+          <span class="news-type" id="ndType"></span>
+          <span class="news-date" id="ndDate"></span>
+        </div>
+        <h2 id="ndTitle"></h2>
+      </div>
+      <div class="news-gallery-host" id="ndGalleryHost"></div>
+      <div class="news-body" id="ndBody"></div>
+      <span class="row-actions" id="ndActions"></span>
     </section>
 
     <!-- ============ 專案內容 ============ -->
@@ -811,9 +857,9 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
             <tr>
               <th class="col-thumb">縮圖</th>
               <th>作品名稱</th>
-              <th>類型</th>
+              <th class="col-hide-sm">類型</th>
               <th>狀態</th>
-              <th>年份</th>
+              <th class="col-hide-sm">年份</th>
               <th>連結</th>
               <th class="admin-only" style="text-align:right">編輯</th>
             </tr>
@@ -838,7 +884,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
             <tr>
               <th>文件類型</th>
               <th>標題</th>
-              <th>內容說明</th>
+              <th class="col-hide-sm">內容說明</th>
               <th class="admin-only" style="text-align:right">編輯</th>
             </tr>
           </thead>
@@ -890,9 +936,9 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
         <table class="data-table">
           <thead>
             <tr>
-              <th>員工編號</th>
+              <th class="col-hide-sm">員工編號</th>
               <th>姓名</th>
-              <th>代稱</th>
+              <th class="col-hide-sm">代稱</th>
               <th>電子郵件</th>
               <th>僱員狀態</th>
               <th style="text-align:right">編輯</th>
@@ -1319,19 +1365,25 @@ function renderNewsPage() {
   pageItems.forEach(v => {
     const d = annDate(v);
     const dateStr = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
+    // 內文摘要（單行）：移除換行，作為論壇列表的副標
+    const snip = (v.body || '').replace(/\s+/g, ' ').trim();
     const el = document.createElement('div');
-    el.className = 'news-card';
+    el.className = 'news-row';
+    el.dataset.annId = v.id;
     el.innerHTML =
-      `${rowActions('ann', v.id)}
-       <div class="news-card-top">
-         <span class="news-type">${esc(ANN_TYPE[v.type] || '公告')}</span>
-         <span class="news-date">${esc(dateStr)}</span>
+      `<div class="news-row-main">
+         <div class="news-row-top">
+           <span class="news-type">${esc(ANN_TYPE[v.type] || '公告')}</span>
+           <span class="news-row-title">${esc(v.title)}</span>
+           <span class="news-date">${esc(dateStr)}</span>
+         </div>
+         ${snip ? `<div class="news-row-snip">${esc(snip)}</div>` : ''}
        </div>
-       <h3>${esc(v.title)}</h3>
-       <div class="news-gallery-host"></div>
-       ${v.body ? `<div class="news-body">${esc(v.body)}</div>` : ''}`;
-    const gal = createGallery(annImages(v));
-    if (gal) el.querySelector('.news-gallery-host').appendChild(gal);
+       <div class="news-row-side">
+         ${rowActions('ann', v.id)}
+         <span class="news-row-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+       </div>`;
+    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions')) return; openNewsDetail(v.id); });
     list.appendChild(el);
   });
 
@@ -1347,6 +1399,25 @@ function renderNewsPage() {
 }
 $('newsPrev').addEventListener('click', () => { if (newsPage > 1) { newsPage--; renderNewsPage(); window.scrollTo({top:0,behavior:'smooth'}); } });
 $('newsNext').addEventListener('click', () => { newsPage++; renderNewsPage(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+/* 最新消息內頁：點列表開啟全文 + 相簿 */
+let newsDetailGallery = null;
+function openNewsDetail(id) {
+  const v = allAnns.find(a => a.id === id); if (!v) return;
+  const d = annDate(v);
+  const dateStr = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
+  $('ndType').textContent = ANN_TYPE[v.type] || '公告';
+  $('ndDate').textContent = dateStr;
+  $('ndTitle').textContent = v.title || '';
+  const host = $('ndGalleryHost'); host.innerHTML = '';
+  newsDetailGallery = createGallery(annImages(v));
+  if (newsDetailGallery) host.appendChild(newsDetailGallery);
+  const body = $('ndBody');
+  if (v.body) { body.textContent = v.body; body.style.display = ''; } else { body.textContent = ''; body.style.display = 'none'; }
+  $('ndActions').innerHTML = rowActions('ann', v.id);
+  showView('news-detail');
+}
+$('newsBack').addEventListener('click', () => showView('news'));
 
 /* 公告彈窗 */
 let annEditId = null, annGallery = [];
@@ -1449,16 +1520,18 @@ function renderProjects() {
       : `<span class="thumb-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/></svg></span>`;
     const kindTag = v.kind ? `<span class="badge badge-kind">${esc(v.kind)}</span>` : '<span class="muted">—</span>';
     const st = `<span class="badge ${PROJ_STATUS_CLASS[v.status] || ''}">${esc(PROJ_STATUS[v.status] || '—')}</span>`;
-    const link = url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="card-link">開啟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>` : '<span class="muted">—</span>';
+    const link = url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="act edit" title="開啟連結" aria-label="開啟連結"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>` : '<span class="muted">—</span>';
+    // 手機隱藏「類型／年份」欄，改收進名稱下方的次要資訊
+    const metaBits = [v.kind ? esc(v.kind) : '', v.year ? esc(v.year) : ''].filter(Boolean).join(' · ');
     const tr = document.createElement('tr');
     tr.innerHTML =
       `<td>${thumb}</td>
-       <td><div class="cell-name"><span class="t-title">${esc(v.title)}</span></div>${v.desc ? `<div class="t-desc">${esc(v.desc)}</div>` : ''}</td>
-       <td>${kindTag}</td>
+       <td><div class="cell-name"><span class="t-title">${esc(v.title)}</span></div>${v.desc ? `<div class="t-desc">${esc(v.desc)}</div>` : ''}${metaBits ? `<div class="t-meta">${metaBits}</div>` : ''}</td>
+       <td class="col-hide-sm">${kindTag}</td>
        <td>${st}</td>
-       <td>${v.year ? esc(v.year) : '<span class="muted">—</span>'}</td>
+       <td class="col-hide-sm">${v.year ? esc(v.year) : '<span class="muted">—</span>'}</td>
        <td>${link}</td>
-       <td class="admin-only" style="text-align:right"><button type="button" class="btn-edit" data-edit="proj" data-id="${esc(v.id)}">${ICON_EDIT}編輯</button></td>`;
+       <td class="admin-only" style="text-align:right"><button type="button" class="act edit" data-edit="proj" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></td>`;
     body.appendChild(tr);
   });
 }
@@ -1531,9 +1604,9 @@ function renderDocuments() {
     tr.dataset.docId = v.id;
     tr.innerHTML =
       `<td>${v.docType ? `<span class="doctype-tag">${esc(v.docType)}</span>` : '<span class="muted">—</span>'}</td>
-       <td><span class="t-title">${esc(v.title)}</span></td>
-       <td>${v.desc ? `<span class="t-desc">${esc(v.desc)}</span>` : '<span class="muted">—</span>'}</td>
-       <td class="admin-only" style="text-align:right"><button type="button" class="btn-edit" data-edit="doc" data-id="${esc(v.id)}">${ICON_EDIT}編輯</button></td>`;
+       <td><span class="t-title">${esc(v.title)}</span>${v.desc ? `<div class="t-meta">${esc(v.desc)}</div>` : ''}</td>
+       <td class="col-hide-sm">${v.desc ? `<span class="t-desc">${esc(v.desc)}</span>` : '<span class="muted">—</span>'}</td>
+       <td class="admin-only" style="text-align:right"><button type="button" class="act edit" data-edit="doc" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></td>`;
     body.appendChild(tr);
   });
 }
@@ -1807,13 +1880,15 @@ function renderStaff() {
       : `<span class="thumb-box" style="border-radius:50%;background:var(--gradient);color:#fff;font-weight:800">${esc(initial)}</span>`;
     const st = v.status || 'active';
     const tr = document.createElement('tr');
+    // 手機隱藏「員工編號／代稱」欄，改收進姓名下方的次要資訊
+    const metaBits = [v.empNo ? esc(v.empNo) : '', v.alias ? esc(v.alias) : ''].filter(Boolean).join(' · ');
     tr.innerHTML =
-      `<td class="muted" style="font-variant-numeric:tabular-nums">${esc(v.empNo || '—')}</td>
-       <td><div class="cell-name">${av}<span class="t-title">${esc(v.name || '—')}</span></div></td>
-       <td>${v.alias ? esc(v.alias) : '<span class="muted">—</span>'}</td>
+      `<td class="muted col-hide-sm" style="font-variant-numeric:tabular-nums">${esc(v.empNo || '—')}</td>
+       <td><div class="cell-name">${av}<span class="t-title">${esc(v.name || '—')}</span></div>${metaBits ? `<div class="t-meta">${metaBits}</div>` : ''}</td>
+       <td class="col-hide-sm">${v.alias ? esc(v.alias) : '<span class="muted">—</span>'}</td>
        <td>${esc(v.email || v.id)}</td>
        <td><span class="badge ${STAFF_STATUS_CLASS[st] || ''}">${esc(STAFF_STATUS[st] || st)}</span></td>
-       <td style="text-align:right"><button type="button" class="btn-edit" data-edit="staff" data-id="${esc(v.id)}">${ICON_EDIT}編輯</button></td>`;
+       <td style="text-align:right"><button type="button" class="act edit" data-edit="staff" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></td>`;
     body.appendChild(tr);
   });
 }
