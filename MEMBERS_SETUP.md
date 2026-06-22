@@ -8,10 +8,12 @@
 | 檔案 | 用途 |
 |------|------|
 | `login.html` | 成員登入頁 |
-| `members.html` | 登入後的成員專區（公告 / 連結由 Firestore 載入、可篩選、可刪除） |
-| `publish.html` | 管理員專用發佈頁：選擇「快速連結 / 公告」後填表單，新增或編輯 |
-| `assets/auth.js` | Firebase Auth + Firestore 共用程式（含分類定義 `CATS`） |
+| `members.html` | 登入後的「內部空間」工作台：主控版／最新消息／專案內容／文件下載／APP／員工資料（管理員）／設定，全部單頁切換、左側選單常駐 |
+| `publish.html` / `staff.html` | 舊的獨立發佈頁／員工後台，功能已整合進 `members.html` 的頁面內彈窗與分頁；這兩個檔案保留為轉址頁（導回 `members.html`） |
+| `assets/auth.js` | Firebase Auth + Firestore 共用程式 |
 | `firestore.rules` | Firestore 安全規則（需貼到 Console 發布） |
+
+> 管理員的「新增 / 編輯 / 刪除」內容,全部在 `members.html` 各分頁右上角的「＋ 新增」按鈕與卡片／列上的編輯鈕,以**頁面內彈窗**完成,不再另開頁面。
 
 ## 一次性設定步驟
 
@@ -46,26 +48,21 @@
 
 ### 資料結構（系統會自動建立，了解即可）
 
-`firestore.rules` 會在後端強制以下欄位與長度限制，不符合的寫入會被拒絕：
+`firestore.rules` 會在後端強制以下欄位與限制，不符合的寫入會被拒絕：
 
-| 集合 | 欄位 | 後端限制 |
+| 集合 | 用途 | 主要欄位 |
 |------|------|----------|
-| `announcements` | `title` | 必填字串，≤ 150 字 |
-| | `body` | 必填字串，≤ 5000 字 |
-| | `createdAt` | 必須等於伺服器時間（防偽造） |
-| `links` | `title` | 必填字串，≤ 100 字 |
-| | `desc` | 選填字串，≤ 300 字 |
-| | `url` | 必須是 `http://` 或 `https://` 開頭，≤ 2000 字 |
-| | `category` | 選填，限 `work`（工作相關）或 `staff`（員工相關） |
-| | `createdAt` | 必須等於伺服器時間（防偽造） |
-| `admins` | 文件 ID = 管理員的 UID | 只能在 Console 手動管理 |
-| `profiles` | 文件 ID = 員工的 UID | 只有本人能寫自己的那筆 |
-| | `name` | 選填字串，≤ 40 字（姓名） |
-| | `alias` | 選填字串，≤ 40 字（代稱） |
-| | `avatar` | 選填字串，≤ 400000 字（256px 圓形裁切後的 JPEG data URL） |
-| | `updatedAt` | 必須等於伺服器時間（防偽造） |
+| `announcements` | 最新消息 | `title`（≤150）、`body`（≤8000）、`type`（分享/專案/人事/活動/系統/重要）、`image`（1:1 壓縮圖 data URL，≤800KB）、`date`（YYYY-MM-DD）、`createdAt` |
+| `projects` | 專案內容 | `title`、`desc`（≤500）、`url`（http(s) 或空）、`thumb`（25×25 小圖 data URL）、`kind`（BL/BG/空）、`status`（producing/planning/done）、`year`、`createdAt` |
+| `documents` | 文件下載 | `docType`、`title`、`desc`（≤2000）、`url`、`createdAt` |
+| `apps` | APP | `icon`（方形圖示 data URL）、`name`、`desc`、`usage`（使用說明）、`downloadUrl`、`createdAt` |
+| `staff` | 員工完整檔案（僅管理員可讀寫） | `empNo`、`name`、`alias`、`email`、`status`、`jobTitle`、`mobile`、`address`、`birthday`、`nationalId`、`passport`、`hireDate`、`leaveDate`、`loginPassword`、`note`、`avatar`、`updatedAt` |
+| `profiles` | 員工公開小卡（資料卡同步用） | 文件 ID＝員工 email（小寫）；`name`、`alias`、`avatar`、`jobTitle`、`updatedAt`。管理員可寫，員工本人只能讀自己那筆 |
+| `admins` | 管理員名單 | 文件 ID＝管理員的 UID，只能在 Console 手動建立 |
+| `links` | （舊版快速連結，保留相容，目前介面已不使用） | — |
 
-> 規則只接受上表列出的欄位（`hasOnly`），塞入額外欄位會被拒絕。
+> 規則只接受各集合列出的欄位（`hasOnly`），塞入額外欄位會被拒絕。圖片一律壓縮成
+> base64 存進文件（沒有另接 Firebase Storage），所以有大小上限。
 
 > ⚠️ **改過 `firestore.rules` 後要重新發布**：Firebase Console → Firestore Database
 > → **Rules** 分頁 → 貼上最新的 `firestore.rules` → **Publish**。`profiles` 集合
@@ -73,18 +70,21 @@
 
 ## 日常管理
 
-- **發公告 / 加連結**：用管理員帳號登入後，點成員頁右上角的「＋ 發佈」進入 `publish.html`，
-  選擇類型（快速連結 / 公告）填表單送出。
-- **編輯 / 刪除**：在成員頁的每張卡片右上角，鉛筆圖示＝編輯（會帶你到發佈頁修改），
-  垃圾桶圖示＝刪除。
+- **新增內容**：用管理員帳號登入後，到對應分頁（最新消息 / 專案內容 / 文件下載 / APP）
+  點右上角「＋ 新增」，在跳出的彈窗填表單送出。
+- **編輯 / 刪除**：在各分頁的卡片或列上點鉛筆（編輯，開同一個彈窗）或垃圾桶（刪除）。
   （也可以在 Firebase Console → Firestore → Data 手動編輯。）
-- **新增成員**：Firebase Console → Authentication → Users → Add user。
+- **員工資料**：管理員專屬的「員工資料」分頁統一維護所有員工檔案；姓名／代稱／職稱／
+  大頭照會自動同步到該員工的「員工資料卡」（`profiles`）。員工本人登入只看得到自己的
+  資料卡，改不了。
+- **新增成員**：Firebase Console → Authentication → Users → Add user（再到「員工資料」分頁補檔案）。
 - **移除成員**：在 Users 清單刪除該帳號。
 - **重設密碼**：在 Users 清單對該帳號操作，或啟用「忘記密碼」郵件功能。
 - **增加管理員**：在 `admins` 集合再新增一份以該成員 UID 為 ID 的文件。
-- **員工個人資料（頭像 / 姓名 / 代稱）**：員工自己在成員頁的「員工資料卡」點
-  右上角「編輯」即可上傳頭像（可圓形裁切）、改姓名與代稱，存進 `profiles` 集合；
-  每位員工只能改自己的那一筆，跨裝置登入都會同步。
+
+> ⚠️ **改過 `firestore.rules` 後一定要重新發布**，而且因為線上程式與規則必須同步：
+> 若是「移除欄位」這類收緊規則的改動，請**先讓新版網頁上線**，再去 Console 發布新規則，
+> 否則線上舊程式送出的舊欄位會被擋下（出現 Missing or insufficient permissions）。
 
 ## 安全須知（重要）
 
