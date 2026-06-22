@@ -407,6 +407,37 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
 .btn-download:hover { filter: brightness(1.04); }
 .btn-download svg { width: 18px; height: 18px; }
 
+/* APP 內文相簿（1:1，可左右一張張瀏覽） */
+.gallery { margin: 22px 0; }
+.gallery-stage { position: relative; width: 100%; max-width: 460px; margin: 0 auto; }
+.gallery-img {
+  width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;
+  border-radius: 16px; border: 1px solid var(--rule-soft); background: var(--bg-alt);
+}
+.gallery-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; display: grid; place-items: center; cursor: pointer;
+  color: var(--ink); background: rgba(255,255,255,0.92); border: 1px solid var(--rule);
+  border-radius: 50%; box-shadow: 0 6px 16px -8px rgba(31,24,20,0.4);
+}
+.gallery-nav:hover { background: #fff; }
+.gallery-nav.prev { left: 10px; }
+.gallery-nav.next { right: 10px; }
+.gallery-nav svg { width: 20px; height: 20px; }
+.gallery-counter { text-align: center; margin-top: 10px; font-family: var(--num); font-size: 13px; color: var(--ink-mute); }
+
+/* APP 表單：內文相簿縮圖編輯 */
+.gallery-edit { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.gallery-edit:empty { display: none; }
+.gal-thumb { position: relative; width: 64px; height: 64px; border-radius: 10px; overflow: hidden; border: 1px solid var(--rule-soft); }
+.gal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.gal-thumb .gal-rm {
+  position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; cursor: pointer; padding: 0;
+  display: grid; place-items: center; color: #fff; background: rgba(31,24,20,0.7);
+  border: none; border-radius: 50%; font-size: 14px; line-height: 1;
+}
+.gal-thumb .gal-rm:hover { background: #B23B36; }
+
 /* ============ 預留版位 / 空狀態 / 提示 ============ */
 .placeholder {
   display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -820,6 +851,14 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <div class="app-detail-desc" id="appDetDesc"></div>
         </div>
       </div>
+      <div class="gallery" id="appGallery" hidden>
+        <div class="gallery-stage">
+          <button class="gallery-nav prev" id="galPrev" type="button" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <img class="gallery-img" id="galImg" alt="">
+          <button class="gallery-nav next" id="galNext" type="button" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="gallery-counter" id="galCounter"></div>
+      </div>
       <div class="app-usage">
         <h4>使用說明</h4>
         <div id="appDetUsage"></div>
@@ -1014,6 +1053,13 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <div class="field full"><label>App 名稱</label><input id="appName" maxlength="80" required></div>
           <div class="field full"><label>簡述</label><input id="appDesc" maxlength="500"></div>
           <div class="field full"><label>使用說明（內頁顯示）</label><textarea id="appUsage" maxlength="8000"></textarea></div>
+          <div class="field full">
+            <label>內文圖片（1:1 相簿，可多張、左右瀏覽）</label>
+            <div class="gallery-edit" id="appGalEdit"></div>
+            <label class="file-btn" for="appGalFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>加入圖片</label>
+            <input type="file" id="appGalFile" accept="image/*" multiple hidden>
+            <p class="sub">每張自動裁成 1:1 並壓縮；最多 8 張，整體上限約 1MB。</p>
+          </div>
           <div class="field full"><label>下載連結</label><input id="appUrl" type="url" maxlength="2000" placeholder="https://..."></div>
         </div>
       </div>
@@ -1570,6 +1616,8 @@ function openAppDetail(id) {
   $('appDetName').textContent = v.name || '';
   $('appDetDesc').textContent = v.desc || '';
   $('appDetUsage').textContent = v.usage || '（尚未填寫使用說明）';
+  galImgs = Array.isArray(v.images) ? v.images.slice() : [];
+  galIdx = 0; renderGallery();
   const url = safeUrl(v.downloadUrl);
   $('appDetDownloadWrap').innerHTML = url
     ? `<a class="btn-download" href="${esc(url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>下載 / 開啟</a>`
@@ -1578,8 +1626,46 @@ function openAppDetail(id) {
 }
 $('appBack').addEventListener('click', () => showView('apps'));
 
+/* APP 內文相簿：一張張左右瀏覽 */
+let galImgs = [], galIdx = 0;
+function renderGallery() {
+  const wrap = $('appGallery');
+  if (!galImgs.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  galIdx = Math.max(0, Math.min(galIdx, galImgs.length - 1));
+  $('galImg').src = galImgs[galIdx];
+  const multi = galImgs.length > 1;
+  $('galPrev').style.display = multi ? '' : 'none';
+  $('galNext').style.display = multi ? '' : 'none';
+  $('galCounter').textContent = multi ? `${galIdx + 1} / ${galImgs.length}` : '';
+}
+$('galPrev').addEventListener('click', () => { if (galImgs.length) { galIdx = (galIdx - 1 + galImgs.length) % galImgs.length; renderGallery(); } });
+$('galNext').addEventListener('click', () => { if (galImgs.length) { galIdx = (galIdx + 1) % galImgs.length; renderGallery(); } });
+document.addEventListener('keydown', (e) => {
+  if (!$('view-app-detail').classList.contains('active') || $('appGallery').hidden) return;
+  if (e.key === 'ArrowLeft') $('galPrev').click();
+  else if (e.key === 'ArrowRight') $('galNext').click();
+});
+
 /* APP 彈窗 */
-let appImg = '', appEditId = null;
+let appImg = '', appEditId = null, appGallery = [];
+/* 內文相簿縮圖編輯 */
+function renderAppGalEdit() {
+  $('appGalEdit').innerHTML = appGallery.map((src, i) =>
+    `<span class="gal-thumb"><img src="${esc(src)}" alt=""><button type="button" class="gal-rm" data-gal="${i}" aria-label="移除">×</button></span>`).join('');
+}
+$('appGalEdit').addEventListener('click', (e) => {
+  const rm = e.target.closest('[data-gal]'); if (!rm) return;
+  appGallery.splice(Number(rm.dataset.gal), 1); renderAppGalEdit();
+});
+$('appGalFile').addEventListener('change', async (e) => {
+  for (const f of [...e.target.files]) {
+    if (appGallery.length >= 8) { toast('內文圖片最多 8 張'); break; }
+    try { appGallery.push(await processSquareImage(f, 820, 0.72)); } catch (err) { alert(err.message); }
+  }
+  renderAppGalEdit();
+  e.target.value = '';
+});
 function renderAppImg() {
   const p = $('appImgPrev');
   if (appImg) { p.innerHTML = `<img src="${esc(appImg)}" alt="">`; $('appImgClear').hidden = false; }
@@ -1602,14 +1688,17 @@ function openAppModal(v) {
   $('appUsage').value = v?.usage || '';
   $('appUrl').value = v?.downloadUrl || '';
   $('appDelete').hidden = !v;
-  renderAppImg();
+  appGallery = Array.isArray(v?.images) ? v.images.slice() : [];
+  renderAppImg(); renderAppGalEdit();
   openModal('modal-app');
 }
 $('appDelete').addEventListener('click', () => del('apps', appEditId, () => { closeModal('modal-app'); showView('apps'); }));
 $('appForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const data = { icon: appImg, name: val('appName'), desc: val('appDesc'), usage: val('appUsage'), downloadUrl: val('appUrl'), images: appGallery };
+  const totalBytes = (data.icon ? data.icon.length : 0) + appGallery.reduce((s, x) => s + x.length, 0);
+  if (totalBytes > 950000) { alert(`圖片總量過大（約 ${Math.round(totalBytes / 1024)}KB，單一 APP 上限約 1MB）。請減少張數後再儲存。`); return; }
   const btn = $('appSubmit'); btn.disabled = true;
-  const data = { icon: appImg, name: val('appName'), desc: val('appDesc'), usage: val('appUsage'), downloadUrl: val('appUrl') };
   try {
     if (appEditId) await updateDoc(doc(db, 'apps', appEditId), data);
     else await addDoc(collection(db, 'apps'), { ...data, createdAt: serverTimestamp() });

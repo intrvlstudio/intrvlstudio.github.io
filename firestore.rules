@@ -102,14 +102,16 @@ service cloud.firestore {
         && d.createdAt == request.time;
     }
 
-    // APP 寫入驗證：icon(小, base64) / 名稱 / 簡述 / 使用說明 / 下載連結。
+    // APP 寫入驗證：icon(小, base64) / 名稱 / 簡述 / 使用說明 / 下載連結 /
+    // images(內文 1:1 相簿，base64 陣列；單筆文件上限 1MiB 由 Firestore 強制)。
     function validApp() {
       let d = request.resource.data;
-      return d.keys().hasOnly(['icon', 'name', 'desc', 'usage', 'downloadUrl', 'createdAt'])
+      return d.keys().hasOnly(['icon', 'name', 'desc', 'usage', 'downloadUrl', 'images', 'createdAt'])
         && validStr(d.name, 80)
         && (!('icon' in d) || (d.icon is string && d.icon.size() <= 200000))
         && (!('desc' in d) || (d.desc is string && d.desc.size() <= 500))
         && (!('usage' in d) || (d.usage is string && d.usage.size() <= 8000))
+        && (!('images' in d) || (d.images is list && d.images.size() <= 8))
         && (!('downloadUrl' in d) || (d.downloadUrl is string && d.downloadUrl.size() <= 2000 && (d.downloadUrl.size() == 0 || d.downloadUrl.matches('https?://.*'))))
         && d.createdAt == request.time;
     }
