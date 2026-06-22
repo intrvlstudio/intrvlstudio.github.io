@@ -337,10 +337,6 @@ h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; }
             <label>出生日期</label>
             <input id="f_birthday" type="date">
           </div>
-          <div class="field">
-            <label>入值日期</label>
-            <input id="f_onboardDate" type="date">
-          </div>
 
           <div class="field">
             <label>身分證字號</label>
@@ -406,7 +402,7 @@ const SEED = [
 ];
 
 /* 員工資料的所有欄位（與 firestore.rules 的 validStaff 白名單一致） */
-const FIELDS = ['empNo','name','alias','email','status','address','mobile','lineId','jobTitle','loginPassword','birthday','passport','nationalId','note','onboardDate','hireDate','leaveDate','avatar'];
+const FIELDS = ['empNo','name','alias','email','status','address','mobile','lineId','jobTitle','loginPassword','birthday','passport','nationalId','note','hireDate','leaveDate','avatar'];
 
 const STATUS_LABEL = { active: '在職', left: '離職', contract: '短期合作' };
 const STATUS_CLASS = { active: 'status-active', left: 'status-left', contract: 'status-contract' };
@@ -592,7 +588,6 @@ function fillForm(v) {
   document.getElementById('f_lineId').value   = v.lineId || '';
   document.getElementById('f_address').value  = v.address || '';
   document.getElementById('f_birthday').value = v.birthday || '';
-  document.getElementById('f_onboardDate').value = v.onboardDate || '';
   document.getElementById('f_nationalId').value  = v.nationalId || '';
   document.getElementById('f_passport').value = v.passport || '';
   document.getElementById('f_hireDate').value = v.hireDate || '';
@@ -662,7 +657,6 @@ form.addEventListener('submit', async (e) => {
     passport: val('f_passport'),
     nationalId: val('f_nationalId'),
     note: val('f_note'),
-    onboardDate: val('f_onboardDate'),
     hireDate: val('f_hireDate'),
     leaveDate: inWork.checked ? '' : val('f_leaveDate'),
     avatar: currentAvatar || '',

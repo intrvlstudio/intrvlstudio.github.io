@@ -49,7 +49,7 @@ service cloud.firestore {
           'empNo', 'name', 'alias', 'email', 'status',
           'address', 'mobile', 'lineId', 'jobTitle', 'loginPassword',
           'birthday', 'passport', 'nationalId', 'note',
-          'onboardDate', 'hireDate', 'leaveDate', 'avatar', 'updatedAt'
+          'hireDate', 'leaveDate', 'avatar', 'updatedAt'
         ])
         && (!('status' in d) || d.status in ['active', 'left', 'contract'])
         && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 700000))
