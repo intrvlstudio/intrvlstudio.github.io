@@ -711,8 +711,8 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
 <script type="module">
 import {
   auth, signOut, onAuthStateChanged, isAdmin, CATS,
-  db, collection, doc, getDocs, getDocsFromCache, deleteDoc,
-  query, orderBy
+  db, collection, doc, getDoc, getDocs, getDocsFromCache, setDoc, deleteDoc,
+  query, orderBy, serverTimestamp
 } from "./assets/auth.js";
 
 /* =========================================================
@@ -936,22 +936,29 @@ document.addEventListener('click', async (e) => {
 });
 
 /* ===========================================================
-   員工資料卡：姓名 / 代稱 / 大頭照 由員工自行編輯。
-   後端（Firestore）目前沒有對應欄位，先存在本機瀏覽器
-   （localStorage）；其餘欄位（員工編號等）暫以假資料代位。
+   員工資料卡：姓名 / 代稱 / 大頭照 由員工自行編輯，存進 Firestore
+   的 profiles 集合（文件 ID = 該員工 UID，只有本人能寫；見
+   firestore.rules）。其餘欄位（員工編號等）暫以假資料代位。
    =========================================================== */
 let currentEmail = '';
+let currentUid = '';
 const FAKE = { name: '林其間', alias: 'Lin' };   // 尚未編輯前的假資料
 let profile = { name: '', alias: '', avatar: '' };
-const profileKey = (email) => 'intrvl_profile_' + email.toLowerCase();
 
-function loadProfile(email) {
-  try { profile = JSON.parse(localStorage.getItem(profileKey(email))) || {}; }
-  catch (e) { profile = {}; }
-  profile = Object.assign({ name: '', alias: '', avatar: '' }, profile);
+async function loadProfile(uid) {
+  profile = { name: '', alias: '', avatar: '' };
+  try {
+    const snap = await getDoc(doc(db, 'profiles', uid));
+    if (snap.exists()) profile = Object.assign(profile, snap.data());
+  } catch (e) { /* 讀取失敗就維持空白預設 */ }
 }
-function persistProfile() {
-  try { localStorage.setItem(profileKey(currentEmail), JSON.stringify(profile)); } catch (e) {}
+async function persistProfile() {
+  await setDoc(doc(db, 'profiles', currentUid), {
+    name: profile.name || '',
+    alias: profile.alias || '',
+    avatar: profile.avatar || '',
+    updatedAt: serverTimestamp()
+  });
 }
 
 /* 由 email 產生一組穩定的假員工編號 */
@@ -983,7 +990,7 @@ const avatarFile = $('avatarFile');
 const avatarRemove = $('avatarRemove');
 
 const CROP_VIEW = 220;            // 裁切視窗直徑（與 CSS 一致）
-const CROP_OUT = 256;             // 輸出尺寸（壓縮後存入 localStorage）
+const CROP_OUT = 256;             // 輸出尺寸（壓縮後存入 Firestore）
 const MAX_FILE = 8 * 1024 * 1024; // 檔案上限 8MB
 
 let crop = { img: null, base: 1, zoom: 1, scale: 1, ox: 0, oy: 0, drag: false, px: 0, py: 0 };
@@ -1089,24 +1096,34 @@ $('modalCancel').addEventListener('click', closeModal);
 modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
-$('modalSave').addEventListener('click', () => {
+$('modalSave').addEventListener('click', async () => {
+  const saveBtn = $('modalSave');
   profile.name = $('editName').value.trim();
   profile.alias = $('editAlias').value.trim();
   profile.avatar = crop.img ? renderCroppedAvatar() : '';
-  persistProfile();
-  renderProfile();
-  closeModal();
+  saveBtn.disabled = true;
+  const prev = saveBtn.textContent; saveBtn.textContent = '儲存中…';
+  try {
+    await persistProfile();
+    renderProfile();
+    closeModal();
+  } catch (e) {
+    alert('儲存失敗：' + (e?.message || e));
+  } finally {
+    saveBtn.disabled = false; saveBtn.textContent = prev;
+  }
 });
 
 /* ---------- 驗證守門 ---------- */
 onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
   currentEmail = user.email || '';
+  currentUid = user.uid;
   $('setEmail').textContent = currentEmail;
   $('setRole').textContent = '成員';
 
-  loadProfile(currentEmail);
-  renderProfile();
+  renderProfile();                              // 先用空白/假資料即時顯示
+  loadProfile(currentUid).then(renderProfile);  // 再帶入後端資料
 
   // PIANN 專屬選單
   if (PIANN_EMAILS.map(s => s.toLowerCase()).includes(currentEmail.toLowerCase())) {
