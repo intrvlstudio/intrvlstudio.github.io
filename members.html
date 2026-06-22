@@ -1310,7 +1310,7 @@ function renderNewsPage() {
        </div>
        <h3>${esc(v.title)}</h3>
        <div class="news-gallery-host"></div>
-       <div class="news-body">${esc(v.body || '')}</div>`;
+       ${v.body ? `<div class="news-body">${esc(v.body)}</div>` : ''}`;
     const gal = createGallery(annImages(v));
     if (gal) el.querySelector('.news-gallery-host').appendChild(gal);
     list.appendChild(el);
@@ -1618,7 +1618,9 @@ function openAppDetail(id) {
   $('appDetIco').innerHTML = v.icon ? `<img src="${esc(v.icon)}" alt="">` : ICON_APP;
   $('appDetName').textContent = v.name || '';
   $('appDetDesc').textContent = v.desc || '';
-  $('appDetUsage').textContent = v.usage || '（尚未填寫使用說明）';
+  const usageBlock = $('appDetUsage').closest('.app-usage');
+  if (v.usage) { $('appDetUsage').textContent = v.usage; usageBlock.style.display = ''; }
+  else usageBlock.style.display = 'none';
   const host = $('appGalleryHost'); host.innerHTML = '';
   appDetailGallery = createGallery(v.images);
   if (appDetailGallery) host.appendChild(appDetailGallery);
