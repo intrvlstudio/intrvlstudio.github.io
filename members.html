@@ -104,7 +104,9 @@ body.checking::before {
   width: 38px; height: 38px; flex: none; border-radius: 50%;
   display: grid; place-items: center; color: #fff; font-weight: 800;
   font-size: 16px; background: var(--gradient); text-transform: uppercase;
+  overflow: hidden;
 }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-meta { min-width: 0; }
 .user-email {
   font-size: 12.5px; font-weight: 600; color: var(--ink);
@@ -362,11 +364,10 @@ body.is-admin .ann-mini { padding-right:74px; }
           <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><circle cx="17" cy="17" r="3.1"/></svg></span>
           <span class="nav-label">APP</span>
         </button>
-        <!-- 6. 員工資料（僅 PIANN／管理員可見） -->
-        <button class="nav-item admin-only" data-nav="staff" data-soon>
+        <!-- 6. 員工資料（Admin Only — 導向員工資料後台） -->
+        <button class="nav-item admin-only" data-nav="staff" data-href="staff.html">
           <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M5.5 16a3.5 3.5 0 0 1 7 0"/><path d="M15 9h4M15 13h4"/></svg></span>
           <span class="nav-label">員工資料</span>
-          <span class="soon-dot"></span>
         </button>
         <!-- 7. 設定 -->
         <button class="nav-item" data-nav="settings" data-soon>
@@ -425,6 +426,7 @@ body.is-admin .ann-mini { padding-right:74px; }
             </div>
           </div>
           <dl class="emp-meta">
+            <div id="empAliasRow" style="display:none;"><dt>代稱</dt><dd id="empAlias">—</dd></div>
             <div><dt>電子郵件</dt><dd id="empEmail">—</dd></div>
           </dl>
         </div>
@@ -460,7 +462,7 @@ body.is-admin .ann-mini { padding-right:74px; }
 <script type="module">
 import {
   auth, signOut, onAuthStateChanged, isAdmin, CATS,
-  db, collection, doc, getDocs, getDocsFromCache, deleteDoc,
+  db, collection, doc, getDoc, getDocs, getDocsFromCache, deleteDoc,
   query, orderBy
 } from "./assets/auth.js";
 
@@ -598,6 +600,7 @@ function toast(msg) {
 
 document.querySelectorAll('.nav-menu .nav-item').forEach(btn => {
   btn.addEventListener('click', () => {
+    if (btn.dataset.href) { location.href = btn.dataset.href; return; }   // 導向其他頁面（如員工資料後台）
     document.querySelectorAll('.nav-menu .nav-item')
       .forEach(b => b.classList.toggle('active', b === btn));
     if (btn.dataset.scroll) {
@@ -633,11 +636,40 @@ document.addEventListener('click', async (e) => {
   }
 });
 
+/* ---------- 員工資料卡同步（從 profiles 讀姓名／代稱／大頭照） ----------
+   員工本人只讀得到自己那筆 profiles（安全規則把關），敏感欄位留在 staff。 */
+function setAvatarEl(el, avatarUrl, initial) {
+  if (avatarUrl) el.innerHTML = `<img src="${avatarUrl}" alt="">`;
+  else el.textContent = initial;
+}
+async function loadProfile(email) {
+  if (!email) return;
+  try {
+    const snap = await getDoc(doc(db, 'profiles', email.toLowerCase()));
+    if (!snap.exists()) return;
+    const p = snap.data();
+    const dispName = String(p.name || p.alias || '').trim();
+    if (dispName) {
+      document.getElementById('empName').textContent = dispName;
+      document.getElementById('empNameCard').textContent = dispName;
+    }
+    if (p.alias) {
+      document.getElementById('empAlias').textContent = p.alias;
+      document.getElementById('empAliasRow').style.display = '';
+    }
+    if (p.avatar) {
+      const initial = ((dispName || email).trim()[0] || '·').toUpperCase();
+      setAvatarEl(document.getElementById('avatar'), p.avatar, initial);
+      setAvatarEl(document.getElementById('avatarBig'), p.avatar, initial);
+    }
+  } catch (e) { /* 沒有 profile 或讀取失敗則維持預設值 */ }
+}
+
 /* ---------- 驗證守門 ---------- */
 onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
   const email = user.email || '';
-  // 員工名稱：優先用帳號顯示名稱，否則取信箱 @ 前段（員工資料完成後可改為從後台帶入）
+  // 員工名稱：先用帳號顯示名稱／信箱 @ 前段作為預設，profiles 載入後再覆蓋為正式姓名
   const name = user.displayName || email.split('@')[0] || '成員';
   const initial = (name.trim()[0] || '·').toUpperCase();
 
@@ -651,6 +683,7 @@ onAuthStateChanged(auth, (user) => {
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
 
+  loadProfile(email);   // 同步資料卡的姓名／代稱／大頭照
   loadAll();   // 立即載入內容，不等管理員檢查完成
   isAdmin(user.uid).then(ok => {   // 並行檢查，完成後才顯示管理員介面（員工資料選單僅管理員/PIANN 可見）
     if (ok) {
