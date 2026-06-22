@@ -95,9 +95,27 @@ body.checking::before {
 }
 .nav-item.active .nav-count { color: var(--mauve); border-color: var(--rule); }
 
-/* 員工資料：只有 PIANN 看得到（預設隱藏，加上 body.is-piann 才顯示） */
-.piann-only { display: none; }
-body.is-piann .piann-only { display: flex; }
+/* ---------- 側邊欄底部：使用者卡片 ---------- */
+.side-foot { margin-top: auto; padding-top: 16px; }
+.user-card {
+  display: flex; align-items: center; gap: 11px; padding: 11px;
+  background: var(--bg); border: 1px solid var(--rule-soft); border-radius: 14px;
+  margin-bottom: 10px;
+}
+.avatar {
+  width: 38px; height: 38px; flex: none; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; font-weight: 800;
+  font-size: 16px; background: var(--gradient); text-transform: uppercase;
+  overflow: hidden;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.user-meta { min-width: 0; }
+.user-email {
+  font-size: 12.5px; font-weight: 600; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.user-role { font-size: 11px; color: var(--ink-mute); }
+body.is-admin .user-role { color: var(--mauve); font-weight: 700; }
 
 /* ---------- 側邊欄底部：登出 ---------- */
 .side-foot { padding-top: 16px; margin-top: 8px; border-top: 1px solid var(--rule-soft); }
@@ -419,6 +437,39 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
 .act.edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
 .act.del:hover  { color: #B23B36; border-color: #E7B8B5; background: #fff; }
 
+/* ---------- 員工專區儀表板 ---------- */
+.nav-menu { display: flex; flex-direction: column; }
+
+.dash-row { display: grid; gap: 16px; grid-template-columns: 320px 1fr; align-items: start; margin-bottom: 44px; }
+.dash-row .section { margin-bottom: 0; }
+
+/* 員工資料卡 */
+.emp-card { background:#fff; border:1px solid var(--rule); border-radius:18px; padding:22px; }
+.emp-top { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.emp-name { font-size:18px; font-weight:800; color:var(--ink); word-break:break-word; }
+.emp-role { font-size:13px; color:var(--ink-mute); }
+body.is-admin .emp-role { color:var(--mauve); font-weight:700; }
+.emp-meta { display:flex; flex-direction:column; gap:14px; border-top:1px solid var(--rule-soft); padding-top:16px; margin:0; }
+.emp-meta > div { display:flex; flex-direction:column; gap:3px; }
+.emp-meta dt { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-mute); }
+.emp-meta dd { font-size:14px; color:var(--ink); word-break:break-all; }
+
+/* 公告精簡列（日期 + 標題 + 類型） */
+.ann-mini { position:relative; display:flex; align-items:center; gap:14px; padding:14px 16px; background:#fff; border:1px solid var(--rule); border-radius:14px; margin-bottom:10px; }
+.ann-mini time { font-size:12.5px; color:var(--ink-mute); font-variant-numeric:tabular-nums; flex:none; width:92px; }
+.ann-mini .am-title { flex:1; min-width:0; font-size:14.5px; font-weight:600; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.type-badge { flex:none; font-size:11px; font-weight:700; color:var(--mauve); background:var(--bg-alt); border:1px solid var(--rule-soft); border-radius:999px; padding:3px 10px; }
+body.is-admin .ann-mini { padding-right:74px; }
+
+/* 建置中提示 toast */
+.toast { position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(10px); background:var(--ink); color:#fff; font-size:13.5px; font-weight:600; padding:11px 18px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+@media (max-width: 720px) {
+  .dash-row { grid-template-columns: 1fr; }
+  .ann-mini time { width:auto; }
+}
+
 /* ---------- 手機版：側邊欄收成頂部橫向列 ---------- */
 .menu-toggle { display: none; }
 @media (max-width: 900px) {
@@ -457,211 +508,126 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
   <!-- ============ 側邊欄 ============ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a href="index.html"><img src="assets/logo_en.svg" alt="INTRVL Studio"></a>
+      <a href="index.html"><img src="assets/logo_h_en_short.svg" alt="INTRVL"></a>
       <button class="menu-toggle" id="menuToggle" aria-label="選單">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
     </div>
 
     <div class="nav-scroll">
-      <nav class="nav-group" id="mainNav">
-        <button class="nav-item active" data-view="dashboard">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span>
+      <nav class="nav-menu">
+        <!-- 1. 主控版 -->
+        <button class="nav-item active" data-nav="dashboard">
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
           <span class="nav-label">主控版</span>
         </button>
-
-        <!-- 員工資料：只有 PIANN 看得到 -->
-        <button class="nav-item piann-only" data-view="staff">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 14.4a5.5 5.5 0 0 1 3 5.6"/></svg></span>
+        <!-- 2. 公告區 -->
+        <button class="nav-item" data-nav="announcements" data-scroll="annSection">
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+          <span class="nav-label">公告區</span>
+        </button>
+        <!-- 3. 專案 -->
+        <button class="nav-item" data-nav="projects" data-soon>
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></span>
+          <span class="nav-label">專案</span>
+          <span class="soon-dot"></span>
+        </button>
+        <!-- 4. 文件下載 -->
+        <button class="nav-item" data-nav="downloads" data-soon>
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></span>
+          <span class="nav-label">文件下載</span>
+          <span class="soon-dot"></span>
+        </button>
+        <!-- 5. APP -->
+        <button class="nav-item" data-nav="apps" data-scroll="appSection">
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><circle cx="17" cy="17" r="3.1"/></svg></span>
+          <span class="nav-label">APP</span>
+        </button>
+        <!-- 6. 員工資料（Admin Only — 導向員工資料後台） -->
+        <button class="nav-item admin-only" data-nav="staff" data-href="staff.html">
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M5.5 16a3.5 3.5 0 0 1 7 0"/><path d="M15 9h4M15 13h4"/></svg></span>
           <span class="nav-label">員工資料</span>
         </button>
-
-        <button class="nav-item" data-view="news">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
-          <span class="nav-label">最新消息</span>
-          <span class="nav-count" id="newsCount"></span>
-        </button>
-
-        <button class="nav-item" data-view="projects">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></span>
-          <span class="nav-label">專案內容</span>
-          <span class="nav-count" id="projCount"></span>
-        </button>
-
-        <button class="nav-item" data-view="docs">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 18v-7M9 14l3 3 3-3"/></svg></span>
-          <span class="nav-label">文件下載</span>
-        </button>
-
-        <button class="nav-item" data-view="apps">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-          <span class="nav-label">APP</span>
-          <span class="nav-count" id="appCount"></span>
-        </button>
-
-        <button class="nav-item" data-view="settings">
-          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <!-- 7. 設定 -->
+        <button class="nav-item" data-nav="settings" data-soon>
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
           <span class="nav-label">設定</span>
+          <span class="soon-dot"></span>
         </button>
       </nav>
     </div>
 
     <div class="side-foot">
-      <button class="btn-out" id="logoutBtn">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-        <span>登出</span>
-      </button>
+      <div class="user-card">
+        <div class="avatar" id="avatar">·</div>
+        <div class="user-meta">
+          <div class="user-email" id="userEmail"></div>
+          <div class="user-role" id="userRole">成員</div>
+        </div>
+      </div>
+      <div class="side-actions">
+        <a class="btn-pub admin-only" href="publish.html">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="btn-label">發佈內容</span>
+        </a>
+        <!-- 8. 登出 -->
+        <button class="btn-out" id="logoutBtn">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          <span class="btn-label">登出</span>
+        </button>
+      </div>
     </div>
   </aside>
 
   <!-- ============ 主內容 ============ -->
   <main class="main">
+    <!-- ============ 概覽區 ============ -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">INTRVL 內部空間</p>
+        <h1>歡迎回來，<span id="empName">成員</span></h1>
+        <p class="date" id="todayDate"></p>
+      </div>
+      <div class="hero-art"><img src="assets/icon_mark_white.svg" alt=""></div>
+    </section>
 
-    <!-- 第一列：頁首（INTRVL內部專區 + 日期） -->
-    <header class="topbar">
-      <p class="eyebrow">INTRVL 內部專區</p>
-      <div class="bigdate" id="bigDate"></div>
-      <p class="weekday" id="weekday"></p>
-    </header>
-
-    <!-- ============ 主控版 ============ -->
-    <section class="view active" id="view-dashboard">
-      <div class="dash-grid">
-
-        <!-- 左欄：員工資料卡 + 內部常用 APP -->
-        <div class="dash-col">
-          <div class="card">
-            <div class="card-head">
-              <span class="card-title">員工資料卡</span>
-              <button class="card-edit" id="profileEditBtn" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                編輯
-              </button>
-            </div>
-            <div class="profile">
-              <div class="avatar" id="dashAvatar">·</div>
-              <div class="profile-meta">
-                <div class="profile-top">
-                  <span class="profile-name" id="dashName">員工姓名</span>
-                  <span class="role-pill" id="dashRole">成員</span>
-                </div>
-                <div class="profile-alias" id="dashAlias">代稱 · —</div>
-                <div class="profile-rows">
-                  <div class="profile-row"><span class="pk">員工編號</span><span class="pv" id="dashEmpNo">—</span></div>
-                  <div class="profile-row"><span class="pk">電子郵件</span><span class="pv" id="dashEmail">—</span></div>
-                </div>
-              </div>
+    <!-- ============ 員工資料卡 + 前五則公告 ============ -->
+    <div class="dash-row">
+      <!-- 1. 員工資料卡 -->
+      <section class="section" id="empSection">
+        <div class="section-head"><span class="section-title">員工資料</span></div>
+        <div class="emp-card">
+          <div class="emp-top">
+            <div class="avatar" id="avatarBig">·</div>
+            <div>
+              <div class="emp-name" id="empNameCard">—</div>
+              <div class="emp-role" id="empRoleCard">成員</div>
             </div>
           </div>
-
-          <div class="card">
-            <div class="card-head">
-              <span class="card-title">內部常用 APP</span>
-              <span class="card-link" data-goto="apps">全部
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-              </span>
-            </div>
-            <div class="app-grid" id="dashApps"></div>
-          </div>
+          <dl class="emp-meta">
+            <div id="empAliasRow" style="display:none;"><dt>代稱</dt><dd id="empAlias">—</dd></div>
+            <div><dt>電子郵件</dt><dd id="empEmail">—</dd></div>
+          </dl>
         </div>
+      </section>
 
-        <!-- 右欄：最新前 5 則公告 -->
-        <div class="dash-col">
-          <div class="card">
-            <div class="card-head">
-              <span class="card-title">最新公告</span>
-              <span class="card-link" data-goto="news">全部
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-              </span>
-            </div>
-            <div class="feed" id="dashFeed"></div>
-          </div>
+      <!-- 2. 前五則公告（日期 + 標題 + 類型） -->
+      <section class="section" id="annSection">
+        <div class="section-head">
+          <span class="section-title">最新公告</span>
+          <span class="section-sub">前 5 則</span>
         </div>
+        <div id="annList" class="ann-mini-list"></div>
+      </section>
+    </div>
 
-      </div>
-    </section>
-
-    <!-- ============ 員工資料（PIANN 專屬） ============ -->
-    <section class="view" id="view-staff">
+    <!-- ============ 3. APP 快速連結 ============ -->
+    <section class="section" id="appSection">
       <div class="section-head">
-        <span class="section-title">員工資料</span>
-        <span class="section-sub">僅限 PIANN 檢視</span>
+        <span class="section-title">APP 快速連結</span>
+        <span class="section-sub" id="linksSub"></span>
       </div>
-      <div class="placeholder">
-        <span class="ph-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 14.4a5.5 5.5 0 0 1 3 5.6"/></svg></span>
-        <p class="ph-title">員工資料</p>
-        <p class="ph-sub">此版位預留給員工檔案與權限管理，內容之後補上。</p>
-      </div>
-    </section>
-
-    <!-- ============ 最新消息 ============ -->
-    <section class="view" id="view-news">
-      <div class="section-head">
-        <span class="section-title">最新消息</span>
-        <span class="section-sub" id="newsSub"></span>
-      </div>
-      <div id="annList"></div>
-    </section>
-
-    <!-- ============ 專案內容 ============ -->
-    <section class="view" id="view-projects">
-      <div class="section-head">
-        <span class="section-title">專案內容</span>
-        <span class="section-sub" id="projSub"></span>
-      </div>
-      <div class="grid" id="projGrid"></div>
-    </section>
-
-    <!-- ============ 文件下載 ============ -->
-    <section class="view" id="view-docs">
-      <div class="section-head">
-        <span class="section-title">文件下載</span>
-      </div>
-      <div class="placeholder">
-        <span class="ph-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 18v-7M9 14l3 3 3-3"/></svg></span>
-        <p class="ph-title">文件下載</p>
-        <p class="ph-sub">此版位預留給文件與資源下載，內容之後補上。</p>
-      </div>
-    </section>
-
-    <!-- ============ APP ============ -->
-    <section class="view" id="view-apps">
-      <div class="section-head">
-        <span class="section-title">內部常用 APP</span>
-        <span class="section-sub" id="appSub"></span>
-      </div>
-      <div class="grid" id="appGrid"></div>
-    </section>
-
-    <!-- ============ 設定 ============ -->
-    <section class="view" id="view-settings">
-      <div class="section-head">
-        <span class="section-title">設定</span>
-      </div>
-      <div class="card">
-        <div class="set-list">
-          <div class="set-row">
-            <span class="set-key">登入帳號</span>
-            <span class="set-val" id="setEmail"></span>
-          </div>
-          <div class="set-row">
-            <span class="set-key">身分</span>
-            <span class="set-val" id="setRole"></span>
-          </div>
-          <div class="set-row admin-only" style="display:none;">
-            <span class="set-key">發佈內容</span>
-            <a class="card-link" href="publish.html">前往發佈頁
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="set-row">
-            <span class="set-key">回到官網</span>
-            <a class="card-link" href="index.html">INTRVL Studio
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-        </div>
-      </div>
+      <div class="grid" id="linksGrid"></div>
     </section>
 
     <div class="note" id="loadError" style="display:none; margin-top:24px;">
@@ -711,8 +677,8 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
 <script type="module">
 import {
   auth, signOut, onAuthStateChanged, isAdmin, CATS,
-  db, collection, doc, getDoc, getDocs, getDocsFromCache, setDoc, deleteDoc,
-  query, orderBy, serverTimestamp
+  db, collection, doc, getDoc, getDocs, getDocsFromCache, deleteDoc,
+  query, orderBy
 } from "./assets/auth.js";
 
 /* =========================================================
@@ -738,41 +704,18 @@ const actions = (col, id) =>
      <button type="button" class="act del" data-action="delete" data-col="${col}" data-id="${id}" title="刪除">${ICON_TRASH}</button>
    </div>`;
 
-/* 分類定義由 assets/auth.js 共用匯入 */
+const linksGrid = document.getElementById('linksGrid');
+const annList   = document.getElementById('annList');
+const loadError = document.getElementById('loadError');
+const linksSub  = document.getElementById('linksSub');
+
+/* 分類定義由 assets/auth.js 共用匯入（與 publish.html 一致；只取中文標籤） */
 const catLabel = (id) => {
   const c = CATS.find(c => c.id === id);
   return c ? c.label['zh-TW'] : '';
 };
 
-/* ---------- DOM 參照 ---------- */
-const $ = (id) => document.getElementById(id);
-const projGrid = $('projGrid');
-const appGrid  = $('appGrid');
-const annList  = $('annList');
-const dashApps = $('dashApps');
-const dashFeed = $('dashFeed');
-const loadError = $('loadError');
-
-/* ---------- 視圖切換 ---------- */
-const sidebar = $('sidebar');
-function closeMobileMenu() { sidebar.classList.remove('open'); }
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v =>
-    v.classList.toggle('active', v.id === 'view-' + name));
-  document.querySelectorAll('#mainNav .nav-item').forEach(b =>
-    b.classList.toggle('active', b.dataset.view === name));
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  closeMobileMenu();
-}
-$('mainNav').addEventListener('click', (e) => {
-  const btn = e.target.closest('.nav-item');
-  if (btn) showView(btn.dataset.view);
-});
-/* 主控版的「全部」捷徑 */
-document.querySelectorAll('[data-goto]').forEach(el =>
-  el.addEventListener('click', () => showView(el.dataset.goto)));
-
-/* ---------- 載入快速連結（專案 / APP 共用 links 集合） ---------- */
+/* ---------- 載入 APP 快速連結 ---------- */
 let allLinks = [];
 async function loadLinks() {
   const q = query(collection(db, 'links'), orderBy('createdAt', 'desc'));
@@ -788,57 +731,29 @@ async function loadLinks() {
   renderLinks();
 }
 
-/* 連結卡片（專案內容 / APP 視圖共用） */
-function linkTile(v) {
-  const a = document.createElement('a');
-  a.className = 'tile';
-  a.href = safeUrl(v.url);
-  a.target = '_blank'; a.rel = 'noopener';
-  const label = catLabel(v.category);
-  const tag = label ? `<span class="cat">${esc(label)}</span>` : '';
-  a.innerHTML =
-    `${actions('links', v.id)}${ICON_GO}
-     ${tag}<h3>${esc(v.title)}</h3>
-     <p>${esc(v.desc || '')}</p>`;
-  return a;
-}
-
-/* 主控版的 APP 小卡 */
-function appTile(v) {
-  const a = document.createElement('a');
-  a.className = 'app-tile';
-  a.href = safeUrl(v.url);
-  a.target = '_blank'; a.rel = 'noopener';
-  a.innerHTML =
-    `<span class="app-ico">${ICON_APP}</span>
-     <span class="app-name">${esc(v.title)}</span>
-     <span class="app-desc">${esc(v.desc || '')}</span>`;
-  return a;
-}
-
 function renderLinks() {
-  const projects = allLinks.filter(v => (v.category || '') === 'project');
-  // 專案內容
-  $('projCount').textContent = projects.length;
-  $('projSub').textContent = projects.length ? `共 ${projects.length} 個專案` : '';
-  projGrid.innerHTML = '';
-  if (!projects.length) projGrid.innerHTML = `<p class="empty">尚無專案連結。</p>`;
-  else projects.forEach(v => projGrid.appendChild(linkTile(v)));
-
-  // APP（用全部連結）
-  $('appCount').textContent = allLinks.length;
-  $('appSub').textContent = allLinks.length ? `共 ${allLinks.length} 個 APP` : '';
-  appGrid.innerHTML = '';
-  if (!allLinks.length) appGrid.innerHTML = `<p class="empty">尚無連結。</p>`;
-  else allLinks.forEach(v => appGrid.appendChild(linkTile(v)));
-
-  // 主控版：內部常用 APP（取前 6 個）
-  dashApps.innerHTML = '';
-  if (!allLinks.length) dashApps.innerHTML = `<p class="empty" style="grid-column:1/-1;">尚無 APP。</p>`;
-  else allLinks.slice(0, 6).forEach(v => dashApps.appendChild(appTile(v)));
+  linksSub.textContent = allLinks.length ? `共 ${allLinks.length} 個` : '';
+  if (!allLinks.length) {
+    linksGrid.innerHTML = `<p class="empty">尚無連結。</p>`;
+    return;
+  }
+  linksGrid.innerHTML = '';
+  allLinks.forEach(v => {
+    const a = document.createElement('a');
+    a.className = 'tile';
+    a.href = safeUrl(v.url);
+    a.target = '_blank'; a.rel = 'noopener';
+    const label = catLabel(v.category);
+    const tag = label ? `<span class="cat">${esc(label)}</span>` : '';
+    a.innerHTML =
+      `${actions('links', v.id)}${ICON_GO}
+       ${tag}<h3>${esc(v.title)}</h3>
+       <p>${esc(v.desc || '')}</p>`;
+    linksGrid.appendChild(a);
+  });
 }
 
-/* ---------- 載入公告 ---------- */
+/* ---------- 載入公告（取前 5 則，格式：日期 + 標題 + 類型） ---------- */
 let allAnns = [];
 async function loadAnnouncements() {
   const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
@@ -855,11 +770,6 @@ async function loadAnnouncements() {
 }
 
 function renderAnns() {
-  $('newsCount').textContent = allAnns.length;
-  $('newsSub').textContent = allAnns.length ? `共 ${allAnns.length} 則公告` : '';
-
-  // 最新消息完整列表
-  annList.innerHTML = '';
   if (!allAnns.length) {
     annList.innerHTML = `<p class="empty">尚無公告。</p>`;
   } else {
@@ -901,6 +811,22 @@ function renderAnns() {
       dashFeed.appendChild(el);
     });
   }
+  annList.innerHTML = '';
+  allAnns.slice(0, 5).forEach(v => {
+    const dt = v.createdAt?.toDate ? v.createdAt.toDate() : null;
+    const date = dt
+      ? `${dt.getFullYear()}/${String(dt.getMonth() + 1).padStart(2, '0')}/${String(dt.getDate()).padStart(2, '0')}`
+      : '';
+    const type = v.type || catLabel(v.category) || '公告';
+    const el = document.createElement('div');
+    el.className = 'ann-mini';
+    el.innerHTML =
+      `${actions('announcements', v.id)}
+       <time>${esc(date)}</time>
+       <span class="am-title">${esc(v.title)}</span>
+       <span class="type-badge">${esc(type)}</span>`;
+    annList.appendChild(el);
+  });
 }
 
 async function loadAll() {
@@ -912,10 +838,43 @@ async function loadAll() {
   }
 }
 
-/* ---------- 手機版選單收合 ---------- */
-$('menuToggle').addEventListener('click', () => sidebar.classList.toggle('open'));
+/* ---------- 側邊欄互動 ----------
+   主控版 → 捲到頂；公告區 / APP → 捲到對應區塊；
+   標記 data-soon 的項目（專案 / 文件下載 / 員工資料 / 設定）內容明天再接，先以提示帶過。 */
+const sidebar = document.getElementById('sidebar');
+function closeMobileMenu() { sidebar.classList.remove('open'); }
+document.getElementById('menuToggle').addEventListener('click', () =>
+  sidebar.classList.toggle('open'));
 
-/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ---------- */
+let toastTimer;
+function toast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+document.querySelectorAll('.nav-menu .nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.href) { location.href = btn.dataset.href; return; }   // 導向其他頁面（如員工資料後台）
+    document.querySelectorAll('.nav-menu .nav-item')
+      .forEach(b => b.classList.toggle('active', b === btn));
+    if (btn.dataset.scroll) {
+      const sec = document.getElementById(btn.dataset.scroll);
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (btn.hasAttribute('data-soon')) {
+      toast('此功能建置中，敬請期待');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });   // 主控版
+    }
+    closeMobileMenu();
+  });
+});
+
+/* ---------- 編輯 / 刪除（事件委派；後端規則再把關） ----------
+   編輯導向發佈頁 publish.html（帶 type 與 id），刪除則就地處理。 */
 document.addEventListener('click', async (e) => {
   const btn = e.target.closest('.act');
   if (!btn) return;
@@ -935,211 +894,60 @@ document.addEventListener('click', async (e) => {
   }
 });
 
-/* ===========================================================
-   員工資料卡：姓名 / 代稱 / 大頭照 由員工自行編輯，存進 Firestore
-   的 profiles 集合（文件 ID = 該員工 UID，只有本人能寫；見
-   firestore.rules）。其餘欄位（員工編號等）暫以假資料代位。
-   =========================================================== */
-let currentEmail = '';
-let currentUid = '';
-const FAKE = { name: '林其間', alias: 'Lin' };   // 尚未編輯前的假資料
-let profile = { name: '', alias: '', avatar: '' };
-
-async function loadProfile(uid) {
-  profile = { name: '', alias: '', avatar: '' };
+/* ---------- 員工資料卡同步（從 profiles 讀姓名／代稱／大頭照） ----------
+   員工本人只讀得到自己那筆 profiles（安全規則把關），敏感欄位留在 staff。 */
+function setAvatarEl(el, avatarUrl, initial) {
+  if (avatarUrl) el.innerHTML = `<img src="${avatarUrl}" alt="">`;
+  else el.textContent = initial;
+}
+async function loadProfile(email) {
+  if (!email) return;
   try {
-    const snap = await getDoc(doc(db, 'profiles', uid));
-    if (snap.exists()) profile = Object.assign(profile, snap.data());
-  } catch (e) { /* 讀取失敗就維持空白預設 */ }
+    const snap = await getDoc(doc(db, 'profiles', email.toLowerCase()));
+    if (!snap.exists()) return;
+    const p = snap.data();
+    const dispName = String(p.name || p.alias || '').trim();
+    if (dispName) {
+      document.getElementById('empName').textContent = dispName;
+      document.getElementById('empNameCard').textContent = dispName;
+    }
+    if (p.alias) {
+      document.getElementById('empAlias').textContent = p.alias;
+      document.getElementById('empAliasRow').style.display = '';
+    }
+    if (p.avatar) {
+      const initial = ((dispName || email).trim()[0] || '·').toUpperCase();
+      setAvatarEl(document.getElementById('avatar'), p.avatar, initial);
+      setAvatarEl(document.getElementById('avatarBig'), p.avatar, initial);
+    }
+  } catch (e) { /* 沒有 profile 或讀取失敗則維持預設值 */ }
 }
-async function persistProfile() {
-  await setDoc(doc(db, 'profiles', currentUid), {
-    name: profile.name || '',
-    alias: profile.alias || '',
-    avatar: profile.avatar || '',
-    updatedAt: serverTimestamp()
-  });
-}
-
-/* 由 email 產生一組穩定的假員工編號 */
-function fakeEmpNo(email) {
-  let h = 0;
-  for (let i = 0; i < email.length; i++) h = (h * 31 + email.charCodeAt(i)) >>> 0;
-  return 'INTRVL-' + String(1000 + (h % 9000));
-}
-
-function renderProfile() {
-  const name = profile.name || FAKE.name;
-  const alias = profile.alias || FAKE.alias;
-  const avatarEl = $('dashAvatar');
-  if (profile.avatar) avatarEl.innerHTML = `<img src="${profile.avatar}" alt="">`;
-  else avatarEl.textContent = (name.trim()[0] || currentEmail.trim()[0] || '·').toUpperCase();
-  $('dashName').textContent = name;
-  $('dashAlias').textContent = '代稱 · ' + alias;
-  $('dashEmpNo').textContent = fakeEmpNo(currentEmail);
-  $('dashEmail').textContent = currentEmail;
-}
-
-/* ---------- 編輯彈窗 + 圓形裁切 ---------- */
-const modal = $('profileModal');
-const cropper = $('cropper');
-const cropImg = $('cropImg');
-const cropEmpty = $('cropEmpty');
-const cropZoom = $('cropZoom');
-const avatarFile = $('avatarFile');
-const avatarRemove = $('avatarRemove');
-
-const CROP_VIEW = 220;            // 裁切視窗直徑（與 CSS 一致）
-const CROP_OUT = 256;             // 輸出尺寸（壓縮後存入 Firestore）
-const MAX_FILE = 8 * 1024 * 1024; // 檔案上限 8MB
-
-let crop = { img: null, base: 1, zoom: 1, scale: 1, ox: 0, oy: 0, drag: false, px: 0, py: 0 };
-
-function clampCrop() {
-  const dw = crop.img.naturalWidth * crop.scale;
-  const dh = crop.img.naturalHeight * crop.scale;
-  crop.ox = Math.min(0, Math.max(CROP_VIEW - dw, crop.ox));
-  crop.oy = Math.min(0, Math.max(CROP_VIEW - dh, crop.oy));
-}
-function applyCrop() {
-  cropImg.style.width = crop.img.naturalWidth * crop.scale + 'px';
-  cropImg.style.height = crop.img.naturalHeight * crop.scale + 'px';
-  cropImg.style.left = crop.ox + 'px';
-  cropImg.style.top = crop.oy + 'px';
-}
-function setCropImage(src) {
-  const img = new Image();
-  img.onload = () => {
-    crop.img = img;
-    crop.base = Math.max(CROP_VIEW / img.naturalWidth, CROP_VIEW / img.naturalHeight);
-    crop.zoom = 1; crop.scale = crop.base;
-    crop.ox = (CROP_VIEW - img.naturalWidth * crop.scale) / 2;
-    crop.oy = (CROP_VIEW - img.naturalHeight * crop.scale) / 2;
-    cropImg.src = src; cropImg.hidden = false; cropEmpty.hidden = true;
-    cropZoom.disabled = false; cropZoom.value = '1'; avatarRemove.hidden = false;
-    applyCrop();
-  };
-  img.src = src;
-}
-function clearCropImage() {
-  crop.img = null; cropImg.hidden = true; cropImg.removeAttribute('src');
-  cropEmpty.hidden = false; cropZoom.disabled = true; cropZoom.value = '1';
-  avatarRemove.hidden = true;
-}
-
-/* 拖曳照片 */
-cropper.addEventListener('pointerdown', (e) => {
-  if (!crop.img) return;
-  crop.drag = true; crop.px = e.clientX; crop.py = e.clientY;
-  cropper.classList.add('dragging'); cropper.setPointerCapture(e.pointerId);
-});
-cropper.addEventListener('pointermove', (e) => {
-  if (!crop.drag) return;
-  crop.ox += e.clientX - crop.px; crop.oy += e.clientY - crop.py;
-  crop.px = e.clientX; crop.py = e.clientY;
-  clampCrop(); applyCrop();
-});
-const endDrag = () => { crop.drag = false; cropper.classList.remove('dragging'); };
-cropper.addEventListener('pointerup', endDrag);
-cropper.addEventListener('pointercancel', endDrag);
-
-/* 縮放（以視窗中心為基準） */
-cropZoom.addEventListener('input', () => {
-  if (!crop.img) return;
-  const old = crop.scale;
-  crop.zoom = parseFloat(cropZoom.value);
-  crop.scale = crop.base * crop.zoom;
-  const cx = (CROP_VIEW / 2 - crop.ox) / old;
-  const cy = (CROP_VIEW / 2 - crop.oy) / old;
-  crop.ox = CROP_VIEW / 2 - cx * crop.scale;
-  crop.oy = CROP_VIEW / 2 - cy * crop.scale;
-  clampCrop(); applyCrop();
-});
-
-/* 選擇檔案：限制類型與大小 */
-avatarFile.addEventListener('change', () => {
-  const file = avatarFile.files && avatarFile.files[0];
-  if (!file) return;
-  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) { alert('請選擇 JPG / PNG / WebP 圖片。'); avatarFile.value = ''; return; }
-  if (file.size > MAX_FILE) { alert('檔案過大，請選擇 8MB 以內的圖片。'); avatarFile.value = ''; return; }
-  const reader = new FileReader();
-  reader.onload = () => setCropImage(reader.result);
-  reader.readAsDataURL(file);
-  avatarFile.value = '';
-});
-avatarRemove.addEventListener('click', clearCropImage);
-
-/* 把目前裁切結果輸出（存方形 dataURL，顯示時以 CSS 圓形呈現） */
-function renderCroppedAvatar() {
-  if (!crop.img) return '';
-  const canvas = document.createElement('canvas');
-  canvas.width = CROP_OUT; canvas.height = CROP_OUT;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#fff';                 // 透明 PNG 轉 JPEG 時補白底，避免變黑
-  ctx.fillRect(0, 0, CROP_OUT, CROP_OUT);
-  const srcW = CROP_VIEW / crop.scale, srcH = CROP_VIEW / crop.scale;
-  ctx.drawImage(crop.img, -crop.ox / crop.scale, -crop.oy / crop.scale, srcW, srcH, 0, 0, CROP_OUT, CROP_OUT);
-  return canvas.toDataURL('image/jpeg', 0.85);
-}
-
-function openModal() {
-  $('editName').value = profile.name || '';
-  $('editAlias').value = profile.alias || '';
-  if (profile.avatar) setCropImage(profile.avatar); else clearCropImage();
-  modal.hidden = false;
-}
-function closeModal() { modal.hidden = true; }
-
-$('profileEditBtn').addEventListener('click', openModal);
-$('modalClose').addEventListener('click', closeModal);
-$('modalCancel').addEventListener('click', closeModal);
-modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-
-$('modalSave').addEventListener('click', async () => {
-  const saveBtn = $('modalSave');
-  profile.name = $('editName').value.trim();
-  profile.alias = $('editAlias').value.trim();
-  profile.avatar = crop.img ? renderCroppedAvatar() : '';
-  saveBtn.disabled = true;
-  const prev = saveBtn.textContent; saveBtn.textContent = '儲存中…';
-  try {
-    await persistProfile();
-    renderProfile();
-    closeModal();
-  } catch (e) {
-    alert('儲存失敗：' + (e?.message || e));
-  } finally {
-    saveBtn.disabled = false; saveBtn.textContent = prev;
-  }
-});
 
 /* ---------- 驗證守門 ---------- */
 onAuthStateChanged(auth, (user) => {
   if (!user) { window.location.replace('login.html'); return; }
-  currentEmail = user.email || '';
-  currentUid = user.uid;
-  $('setEmail').textContent = currentEmail;
-  $('setRole').textContent = '成員';
+  const email = user.email || '';
+  // 員工名稱：先用帳號顯示名稱／信箱 @ 前段作為預設，profiles 載入後再覆蓋為正式姓名
+  const name = user.displayName || email.split('@')[0] || '成員';
+  const initial = (name.trim()[0] || '·').toUpperCase();
 
-  renderProfile();                              // 先用空白/假資料即時顯示
-  loadProfile(currentUid).then(renderProfile);  // 再帶入後端資料
-
-  // PIANN 專屬選單
-  if (PIANN_EMAILS.map(s => s.toLowerCase()).includes(currentEmail.toLowerCase())) {
-    document.body.classList.add('is-piann');
-  }
+  document.getElementById('userEmail').textContent = email;
+  document.getElementById('avatar').textContent = initial;
+  document.getElementById('empName').textContent = name;
+  document.getElementById('empNameCard').textContent = name;
+  document.getElementById('avatarBig').textContent = initial;
+  document.getElementById('empEmail').textContent = email;
 
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
 
-  loadAll();
-  isAdmin(user.uid).then(ok => {
+  loadProfile(email);   // 同步資料卡的姓名／代稱／大頭照
+  loadAll();   // 立即載入內容，不等管理員檢查完成
+  isAdmin(user.uid).then(ok => {   // 並行檢查，完成後才顯示管理員介面（員工資料選單僅管理員/PIANN 可見）
     if (ok) {
       document.body.classList.add('is-admin');
-      $('dashRole').textContent = '管理員';
-      $('setRole').textContent = '管理員';
-      document.querySelectorAll('.set-row.admin-only').forEach(el => el.style.display = 'flex');
+      document.getElementById('userRole').textContent = '管理員';
+      document.getElementById('empRoleCard').textContent = '管理員';
     }
   });
 });
@@ -1150,11 +958,10 @@ $('logoutBtn').addEventListener('click', async () => {
   window.location.replace('login.html');
 });
 
-/* ---------- 初始化日期（YYYY-MM-DD 大字 + 星期） ---------- */
-const now = new Date();
-const pad = (n) => String(n).padStart(2, '0');
-$('bigDate').textContent = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-$('weekday').textContent = now.toLocaleDateString('zh-TW', { weekday: 'long' });
+/* ---------- 今日日期（YYYY年MM月DD日） ---------- */
+const _today = new Date();
+document.getElementById('todayDate').textContent =
+  `${_today.getFullYear()}年${String(_today.getMonth() + 1).padStart(2, '0')}月${String(_today.getDate()).padStart(2, '0')}日`;
 </script>
 </body>
 </html>

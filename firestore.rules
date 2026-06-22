@@ -41,16 +41,26 @@ service cloud.firestore {
         && d.createdAt == request.time;
     }
 
-    // 員工個人資料寫入驗證：只允許這些欄位，並限制長度
-    // （avatar 為 256px 壓縮後的 JPEG data URL，上限約 400KB，
-    //   遠低於 Firestore 單份文件 1MB 限制）
+    // 員工資料寫入驗證（staff）：只允許這些欄位，狀態限三選一，
+    // 大頭照（base64 data URL）長度設上限，避免超過 Firestore 單筆 1MiB。
+    function validStaff() {
+      let d = request.resource.data;
+      return d.keys().hasOnly([
+          'empNo', 'name', 'alias', 'email', 'status',
+          'address', 'mobile', 'lineId', 'jobTitle', 'loginPassword',
+          'birthday', 'passport', 'nationalId', 'note',
+          'onboardDate', 'hireDate', 'leaveDate', 'avatar', 'updatedAt'
+        ])
+        && (!('status' in d) || d.status in ['active', 'left', 'contract'])
+        && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 700000))
+        && (!('note' in d) || (d.note is string && d.note.size() <= 3000));
+    }
+
+    // 公開小卡寫入驗證（profiles）：只放非敏感的同步欄位。
     function validProfile() {
       let d = request.resource.data;
-      return d.keys().hasOnly(['name', 'alias', 'avatar', 'updatedAt'])
-        && (!('name' in d)   || (d.name   is string && d.name.size()   <= 40))
-        && (!('alias' in d)  || (d.alias  is string && d.alias.size()  <= 40))
-        && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 400000))
-        && d.updatedAt == request.time;
+      return d.keys().hasOnly(['name', 'alias', 'avatar', 'jobTitle', 'updatedAt'])
+        && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 700000));
     }
 
     // 公告寫入驗證
@@ -90,6 +100,23 @@ service cloud.firestore {
     match /admins/{uid} {
       allow read:  if isSignedIn();
       allow write: if false;
+    }
+
+    // 員工完整資料（含密碼、身分證、護照、備註等敏感欄位）：
+    // 文件 ID = 員工 email（小寫）。只有管理員能讀寫，員工本人也讀不到。
+    match /staff/{id} {
+      allow read:           if isAdmin();
+      allow create, update: if isAdmin() && validStaff();
+      allow delete:         if isAdmin();
+    }
+
+    // 員工公開小卡：文件 ID = 員工 email（小寫）。
+    // 管理員可讀寫所有人；員工本人只能讀自己這一筆（用於同步姓名/代稱/大頭照），不可寫。
+    match /profiles/{id} {
+      allow read:           if isAdmin()
+                              || (isSignedIn() && request.auth.token.email.lower() == id);
+      allow create, update: if isAdmin() && validProfile();
+      allow delete:         if isAdmin();
     }
 
     // 其他一切預設拒絕
