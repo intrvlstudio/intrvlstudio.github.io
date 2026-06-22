@@ -119,26 +119,28 @@ body.is-admin .nav-item.admin-only { display: flex; }
 .view { display: none; }
 .view.active { display: block; }
 
-/* ============ 第一列：頁首（INTRVL內部專區 + 日期） ============ */
+/* ============ 第一列：Headbanner（INTRVL 內部空間 + 日期 + 標記） ============ */
 .topbar {
   position: relative; overflow: hidden;
-  padding: 28px 34px; margin-bottom: 26px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 26px 34px; margin-bottom: 26px;
   background: var(--gradient); border-radius: 22px; color: #fff;
 }
 .topbar .eyebrow {
   font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(255,255,255,0.9); margin-bottom: 8px;
+  color: rgba(255,255,255,0.92); margin-bottom: 10px;
 }
-.topbar .bigdate {
-  font-family: var(--num); font-size: 40px; font-weight: 800;
-  letter-spacing: .01em; line-height: 1;
+/* 左側日期：YYYY（小）+ MM／DD（大），同列基線對齊 */
+.topbar-date { display: flex; align-items: baseline; gap: 10px; line-height: 1; }
+.topbar-date .year {
+  font-family: var(--num); font-size: 18px; font-weight: 700;
+  letter-spacing: .02em; color: rgba(255,255,255,0.9);
 }
-.topbar .weekday { font-size: 14px; color: rgba(255,255,255,0.92); margin-top: 10px; }
-.topbar::before {
-  content: ""; position: absolute; right: -40px; top: -60px;
-  width: 220px; height: 220px; border-radius: 50%;
-  background: rgba(255,255,255,0.12);
+.topbar-date .md {
+  font-family: var(--num); font-size: 44px; font-weight: 800; letter-spacing: .01em;
 }
+/* 右側標記圖示：顯示 75×75 */
+.topbar-mark { width: 75px; height: 75px; flex: none; }
 
 /* ============ 第二列：左右兩欄 ============ */
 .dash-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
@@ -161,8 +163,8 @@ body.is-admin .nav-item.admin-only { display: flex; }
 }
 .card-link svg { width: 13px; height: 13px; }
 
-/* 員工資料卡 */
-.profile { display: flex; align-items: flex-start; gap: 18px; }
+/* 員工資料卡：圓型頭貼 | 姓名／代稱／職稱／Email（逐行） */
+.profile { display: flex; align-items: center; gap: 18px; }
 .avatar {
   position: relative; width: 76px; height: 76px; flex: none; border-radius: 50%;
   display: grid; place-items: center; color: #fff; font-weight: 800;
@@ -170,29 +172,16 @@ body.is-admin .nav-item.admin-only { display: flex; }
   overflow: hidden; box-shadow: inset 0 0 0 1px rgba(31,24,20,0.08);
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.profile-meta { min-width: 0; flex: 1; }
-.profile-top { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.profile-meta { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .profile-name {
-  font-size: 19px; font-weight: 700; color: var(--ink); line-height: 1.2;
-  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 19px; font-weight: 700; color: var(--ink); line-height: 1.25;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-/* 帳號等級 tag（縮小） */
-.role-pill {
-  display: inline-block; padding: 1px 8px;
-  font-size: 10px; font-weight: 700; letter-spacing: .04em;
-  color: var(--mauve); background: var(--bg-alt);
-  border: 1px solid var(--rule-soft); border-radius: 999px;
-}
-body.is-admin .role-pill { color: #fff; background: var(--gradient); border-color: transparent; }
-.profile-alias { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
-.profile-rows { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
-.profile-row { display: flex; gap: 10px; font-size: 12.5px; min-width: 0; }
-.profile-row .pk { flex: none; width: 64px; color: var(--ink-mute); font-weight: 600; }
-.profile-row .pv { color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* 員工資料由管理員後台統一管理的小提示 */
-.profile-managed {
-  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule-soft);
-  font-size: 12px; color: var(--ink-mute);
+.profile-alias { font-size: 13.5px; color: var(--ink-soft); }
+.profile-title { font-size: 13px; color: var(--ink-mute); }
+.profile-email {
+  font-size: 12.5px; color: var(--ink-mute);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 /* 內部常用 APP 格狀清單 */
@@ -234,15 +223,15 @@ body.is-admin .role-pill { color: #fff; background: var(--gradient); border-colo
 .feed-day { font-family: var(--num); font-size: 24px; font-weight: 800; line-height: 1; color: var(--ink); }
 .feed-month { font-size: 11.5px; color: var(--ink-mute); margin-top: 4px; }
 .feed-body { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-.feed-type {
-  align-self: flex-start; margin-bottom: 5px; padding: 2px 9px;
-  font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
-  color: var(--mauve); background: var(--bg-alt);
-  border: 1px solid var(--rule-soft); border-radius: 999px;
-}
 .feed-title {
   font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.4;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.feed-type {
+  align-self: flex-start; margin-top: 6px; padding: 2px 9px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+  color: var(--mauve); background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); border-radius: 999px;
 }
 
 /* 區段標題（其他視圖共用） */
@@ -367,8 +356,9 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
   .sidebar.open .side-foot { display: block; margin-top: 10px; }
   .nav-group-title { padding-top: 10px; }
   .main { padding: 22px 18px 70px; }
-  .topbar { padding: 22px 24px; }
-  .topbar .bigdate { font-size: 32px; }
+  .topbar { padding: 22px 20px; }
+  .topbar-date .md { font-size: 34px; }
+  .topbar-mark { width: 56px; height: 56px; }
 }
 </style>
 </head>
@@ -440,11 +430,16 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
   <!-- ============ 主內容 ============ -->
   <main class="main">
 
-    <!-- 第一列：頁首（INTRVL內部專區 + 日期） -->
+    <!-- 第一列：Headbanner（INTRVL 內部空間 + 日期 + 標記） -->
     <header class="topbar">
-      <p class="eyebrow">INTRVL 內部專區</p>
-      <div class="bigdate" id="bigDate"></div>
-      <p class="weekday" id="weekday"></p>
+      <div class="topbar-text">
+        <p class="eyebrow">INTRVL 內部空間</p>
+        <div class="topbar-date">
+          <span class="year" id="dateYear"></span>
+          <span class="md" id="dateMD"></span>
+        </div>
+      </div>
+      <img class="topbar-mark" src="assets/icon_mark_white.svg" alt="INTRVL">
     </header>
 
     <!-- ============ 主控版 ============ -->
@@ -460,16 +455,10 @@ body:not(.is-admin) .tile:hover .go { opacity: 1; }
             <div class="profile">
               <div class="avatar" id="dashAvatar">·</div>
               <div class="profile-meta">
-                <div class="profile-top">
-                  <span class="profile-name" id="dashName">員工姓名</span>
-                  <span class="role-pill" id="dashRole">成員</span>
-                </div>
-                <div class="profile-alias" id="dashAlias">代稱 · —</div>
-                <div class="profile-rows">
-                  <div class="profile-row"><span class="pk">職稱</span><span class="pv" id="dashTitle">—</span></div>
-                  <div class="profile-row"><span class="pk">電子郵件</span><span class="pv" id="dashEmail">—</span></div>
-                </div>
-                <p class="profile-managed">姓名、代稱、職稱與大頭照由管理員於員工資料後台統一維護。</p>
+                <span class="profile-name" id="dashName">員工姓名</span>
+                <span class="profile-alias" id="dashAlias">員工代稱</span>
+                <span class="profile-title" id="dashTitle">員工職稱</span>
+                <span class="profile-email" id="dashEmail">員工Email</span>
               </div>
             </div>
           </div>
@@ -766,8 +755,8 @@ function renderAnns() {
            <span class="feed-month">${esc(month)}</span>
          </div>
          <div class="feed-body">
-           <span class="feed-type">公告</span>
            <span class="feed-title">${esc(v.title)}</span>
+           <span class="feed-type">公告</span>
          </div>`;
       el.style.cursor = 'pointer';
       el.addEventListener('click', () => showView('news'));
@@ -832,11 +821,15 @@ function renderProfile() {
   else avatarEl.textContent = (name[0] || currentEmail.trim()[0] || '·').toUpperCase();
   $('dashName').textContent = name;
 
+  // 代稱／職稱有值才顯示，空值就整行隱藏
   const aliasEl = $('dashAlias');
-  if (profile.alias) { aliasEl.textContent = '代稱 · ' + profile.alias; aliasEl.style.display = ''; }
+  if (profile.alias) { aliasEl.textContent = profile.alias; aliasEl.style.display = ''; }
   else aliasEl.style.display = 'none';
 
-  $('dashTitle').textContent = profile.jobTitle || '—';
+  const titleEl = $('dashTitle');
+  if (profile.jobTitle) { titleEl.textContent = profile.jobTitle; titleEl.style.display = ''; }
+  else titleEl.style.display = 'none';
+
   $('dashEmail').textContent = currentEmail;
 }
 
@@ -857,7 +850,6 @@ onAuthStateChanged(auth, (user) => {
   isAdmin(user.uid).then(ok => {
     if (ok) {
       document.body.classList.add('is-admin');
-      $('dashRole').textContent = '管理員';
       $('setRole').textContent = '管理員';
       document.querySelectorAll('.set-row.admin-only').forEach(el => el.style.display = 'flex');
     }
@@ -870,11 +862,11 @@ $('logoutBtn').addEventListener('click', async () => {
   window.location.replace('login.html');
 });
 
-/* ---------- 初始化日期（YYYY-MM-DD 大字 + 星期） ---------- */
+/* ---------- 初始化日期（YYYY 小字 + MM／DD 大字） ---------- */
 const now = new Date();
 const pad = (n) => String(n).padStart(2, '0');
-$('bigDate').textContent = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-$('weekday').textContent = now.toLocaleDateString('zh-TW', { weekday: 'long' });
+$('dateYear').textContent = now.getFullYear();
+$('dateMD').textContent = `${pad(now.getMonth() + 1)}／${pad(now.getDate())}`;
 </script>
 </body>
 </html>

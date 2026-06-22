@@ -86,15 +86,6 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // 員工個人資料（頭像 / 姓名 / 代稱）：文件 ID = 該員工的 UID。
-    // 登入成員皆可讀（卡片資訊非機密、未來同事卡片可互看）；
-    // 只有本人能新增 / 修改自己的那一筆，且須通過內容驗證。
-    match /profiles/{uid} {
-      allow read:           if isSignedIn();
-      allow create, update: if isSignedIn() && request.auth.uid == uid && validProfile();
-      allow delete:         if isSignedIn() && request.auth.uid == uid;
-    }
-
     // 管理員名單：登入成員可讀（前端用來判斷要不要顯示編輯介面）；
     // 不開放任何前端寫入，只能在 Console 手動管理。
     match /admins/{uid} {
