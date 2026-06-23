@@ -62,7 +62,7 @@ body.checking::before {
 
 /* ---------- 側邊欄（全程常駐） ---------- */
 .sidebar {
-  position: sticky; top: 0; align-self: start; height: 100vh;
+  position: sticky; top: 0; align-self: start; height: 100vh; min-width: 0;
   display: flex; flex-direction: column;
   background: #fff; border-right: 1px solid var(--rule-soft);
   padding: 22px 16px;
@@ -113,7 +113,8 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 
 /* ---------- 主內容 ---------- */
 /* 桌面版內容（含所有表格／條列）寬度上限 1100px */
-.main { padding: 30px 40px 80px; max-width: 1100px; }
+/* min-width:0 讓 grid 欄位可收縮到螢幕寬度，避免手機水平跑版 */
+.main { padding: 30px 40px 80px; max-width: 1100px; min-width: 0; }
 
 /* 視圖切換：預設隱藏，.active 才顯示 */
 .view { display: none; }
@@ -328,34 +329,43 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 .news-gallery-host:empty { display: none; }
 .news-body { color: var(--ink-soft); white-space: pre-wrap; word-break: break-word; }
 
-/* 條列容器：與 APP 列表相同的卡片化清單 */
+/* 條列容器：與 APP 列表相同的卡片化清單（縮圖在前的論壇列表） */
 .news-list { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; max-width: 1100px; }
 .news-list .empty { padding: 30px; }
 .news-row {
-  display: flex; align-items: center; gap: 14px; padding: 15px 20px; cursor: pointer;
-  border-top: 1px solid var(--rule-soft); transition: background .12s;
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer;
+  border-top: 1px solid var(--rule-soft); transition: background .12s; min-width: 0;
 }
 .news-row:first-child { border-top: none; }
 .news-row:hover { background: var(--bg); }
-.news-row-main { flex: 1; min-width: 0; }
-.news-row-top { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
+/* 前方縮圖（取內文第一張圖；無圖則顯示佔位圖示） */
+.news-row-thumb {
+  flex: none; width: 54px; height: 54px; border-radius: 12px; overflow: hidden;
+  display: grid; place-items: center; background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); color: var(--ink-mute);
+}
+.news-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.news-row-thumb svg { width: 22px; height: 22px; }
+.news-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.news-row-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .news-row-title {
-  flex: 1; min-width: 0;
   font-size: 15.5px; font-weight: 700; color: var(--ink); line-height: 1.4;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .news-row-snip {
   font-size: 13px; color: var(--ink-mute);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.news-row-side { flex: none; display: flex; align-items: center; gap: 12px; }
+.news-row-side { flex: none; display: flex; align-items: center; gap: 10px; }
 .news-row-go { flex: none; color: var(--ink-mute); }
 .news-row-go svg { width: 18px; height: 18px; display: block; }
 .news-row .row-actions { flex: none; display: none; }
 body.is-admin .news-row .row-actions { display: inline-flex; }
 @media (max-width: 560px) {
-  .news-row { padding: 14px 16px; }
-  .news-row-top .news-date { display: none; } /* 手機列表收起日期，點開內頁可見 */
+  .news-row { padding: 13px 14px; gap: 12px; }
+  .news-row-thumb { width: 48px; height: 48px; border-radius: 10px; }
+  .news-row-snip { display: none; } /* 手機收起摘要，保持精簡 */
+  .news-row-go { display: none; }   /* 整列可點，省去箭頭避免擁擠 */
 }
 
 /* 最新消息內頁（點開看全文 + 相簿） */
@@ -644,7 +654,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   .sidebar.open .nav-scroll { display: block; padding-top: 10px; }
   .sidebar.open .side-foot { display: block; margin-top: 10px; }
   .main { padding: 22px 18px 70px; }
-  .topbar { padding: 22px 20px; }
+  .topbar { padding: 22px 20px; margin-bottom: 16px; }
   .topbar-date .md { font-size: 34px; }
   .topbar-mark { width: 56px; height: 56px; }
   .grid2 { grid-template-columns: 1fr; }
@@ -1367,16 +1377,22 @@ function renderNewsPage() {
     const dateStr = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
     // 內文摘要（單行）：移除換行，作為論壇列表的副標
     const snip = (v.body || '').replace(/\s+/g, ' ').trim();
+    // 前方縮圖：取內文第一張圖，無圖則用公告佔位圖示
+    const firstImg = annImages(v)[0];
+    const thumb = firstImg
+      ? `<span class="news-row-thumb"><img src="${esc(firstImg)}" alt=""></span>`
+      : `<span class="news-row-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>`;
     const el = document.createElement('div');
     el.className = 'news-row';
     el.dataset.annId = v.id;
     el.innerHTML =
-      `<div class="news-row-main">
+      `${thumb}
+       <div class="news-row-main">
          <div class="news-row-top">
            <span class="news-type">${esc(ANN_TYPE[v.type] || '公告')}</span>
-           <span class="news-row-title">${esc(v.title)}</span>
            <span class="news-date">${esc(dateStr)}</span>
          </div>
+         <div class="news-row-title">${esc(v.title)}</div>
          ${snip ? `<div class="news-row-snip">${esc(snip)}</div>` : ''}
        </div>
        <div class="news-row-side">
