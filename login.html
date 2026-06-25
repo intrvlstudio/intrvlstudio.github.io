@@ -130,9 +130,18 @@ function show(text, type) {
   msg.className = 'msg ' + type;
 }
 
+/* 登入後導向：若有分享連結目標（來自 members 的 hash）就導回該項目 */
+function afterLoginTarget() {
+  try {
+    const h = sessionStorage.getItem('intrvl_after_login');
+    if (h) { sessionStorage.removeItem('intrvl_after_login'); return 'members.html' + h; }
+  } catch (_) {}
+  return 'members.html';
+}
+
 /* 已登入就直接進成員頁 */
 onAuthStateChanged(auth, (user) => {
-  if (user) window.location.replace('members.html');
+  if (user) window.location.replace(afterLoginTarget());
 });
 
 form.addEventListener('submit', async (e) => {
@@ -145,7 +154,7 @@ form.addEventListener('submit', async (e) => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    window.location.replace('members.html');
+    window.location.replace(afterLoginTarget());
   } catch (err) {
     btn.disabled = false;
     let key = 'generic';
