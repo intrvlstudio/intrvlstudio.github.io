@@ -721,14 +721,8 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
 .pomo-switch input:checked + .slider { background: var(--mauve); }
 .pomo-switch input:checked + .slider::before { transform: translateX(18px); }
 
-/* ============ APP 內頁：內嵌外部網頁（iframe） ============ */
+/* ============ APP 內頁：內建 APP 顯示區（番茄鐘搬入時用） ============ */
 #appEmbedHost:not(:empty) { margin-top: 10px; }
-.app-embed { border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; background: #fff; }
-.app-embed-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--rule-soft); background: var(--bg); }
-.app-embed-hint { font-size: 12px; color: var(--ink-mute); }
-.app-embed-open { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; color: var(--mauve); white-space: nowrap; }
-.app-embed-open svg { width: 13px; height: 13px; }
-.app-embed iframe { display: block; width: 100%; height: 72vh; min-height: 480px; border: 0; }
 
 /* ---------- 手機版 ---------- */
 .menu-toggle { display: none; }
@@ -758,7 +752,6 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   .survival-num { font-size: 26px; }
   .survival-label { margin-bottom: 6px; letter-spacing: .1em; }
   .grid2 { grid-template-columns: 1fr; }
-  .app-embed iframe { height: 78vh; min-height: 420px; }
 }
 
 /* 手機：表格捨棄較不重要的欄位（收進名稱下方的次要資訊），避免擁擠跑版 */
@@ -1855,7 +1848,7 @@ $('docForm').addEventListener('submit', async (e) => {
 /* ===================== APP（App Store 樣式 + 內頁） ===================== */
 /* 內建 APP（不存 Firestore，永遠排在列表最前面）：
    - 番茄鐘：開啟時把頁面內建的計時器 UI 搬進內頁顯示（kind:'pomodoro'）
-   - INTRVL 即時進度：以 iframe 內嵌 Google Apps Script 網頁程式（kind:'embed'）
+   - INTRVL 即時進度：點卡片直接在新分頁開啟 Google Apps Script（kind:'launch'）
    要改名稱／說明／網址，改這裡即可。 */
 const BUILTIN_APPS = [
   {
@@ -1865,10 +1858,9 @@ const BUILTIN_APPS = [
     iconSvg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="7"/><path d="M12 14V10"/><path d="M9 3h6"/><path d="M12 3v4"/></svg>'
   },
   {
-    id: 'builtin-inapp', kind: 'embed', name: 'INTRVL 即時進度 (INAPP)',
-    desc: '即時查看 INTRVL 專案進度',
-    embedUrl: 'https://script.google.com/macros/s/AKfycbyzfv8DQpFdwxSzX4W4WxYYlqIjLJmS7fv8I6PxTMIDTkiM-vlDuLTyK_d22msPHm4pPw/exec',
-    usage: '此 APP 內嵌自 Google Apps Script。若下方視窗顯示空白，多半是 Google 端的 iframe 限制（X-Frame-Options）或尚未登入 Google 所致，可點右上角「在新分頁開啟」。',
+    id: 'builtin-inapp', kind: 'launch', name: 'INTRVL 即時進度 (INAPP)',
+    desc: '點擊在新分頁開啟即時進度',
+    launchUrl: 'https://script.google.com/macros/s/AKfycbyzfv8DQpFdwxSzX4W4WxYYlqIjLJmS7fv8I6PxTMIDTkiM-vlDuLTyK_d22msPHm4pPw/exec',
     iconSvg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6" rx="1"/><rect x="12" y="7" width="3" height="10" rx="1"/><rect x="17" y="13" width="3" height="4" rx="1"/></svg>'
   }
 ];
@@ -1877,6 +1869,10 @@ const ICON_EXTERNAL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor
 let allApps = [];
 function appsAll() { return BUILTIN_APPS.concat(allApps); }
 function findApp(id) { return BUILTIN_APPS.find(a => a.id === id) || allApps.find(a => a.id === id); }
+/* 在新分頁開啟外部網址（launch 型內建 APP 用） */
+function openExternal(url) { const u = safeUrl(url); if (u) window.open(u, '_blank', 'noopener'); }
+/* 點 APP（卡片／列）：launch 直接開新分頁，其餘進內頁 */
+function openApp(v) { if (v.kind === 'launch') openExternal(v.launchUrl); else openAppDetail(v.id); }
 async function loadApps() {
   const q = query(collection(db, 'apps'), orderBy('createdAt', 'desc'));
   try {
@@ -1903,7 +1899,7 @@ function renderApps() {
     const el = document.createElement('div');
     el.className = 'app-tile';
     el.innerHTML = `${appIcoHTML(v, 'app-tile-ico')}<span class="app-tile-name">${esc(v.name)}</span><span class="app-tile-desc">${esc(v.desc || '')}</span>`;
-    el.addEventListener('click', () => openAppDetail(v.id));
+    el.addEventListener('click', () => openApp(v));
     dash.appendChild(el);
   });
 
@@ -1920,8 +1916,8 @@ function renderApps() {
        <div class="app-row-meta"><div class="app-row-name">${esc(v.name)}</div><div class="app-row-desc">${esc(v.desc || '')}</div></div>
        ${builtin ? '' : rowActions('app', v.id)}
        ${builtin ? '' : shareBtn('apps', v.id)}
-       <span class="app-row-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>`;
-    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions') || e.target.closest('[data-share]')) return; openAppDetail(v.id); });
+       <span class="app-row-go">${v.kind === 'launch' ? ICON_EXTERNAL : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'}</span>`;
+    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions') || e.target.closest('[data-share]')) return; openApp(v); });
     listEl.appendChild(el);
   });
 }
@@ -1932,6 +1928,7 @@ function parkPomo() {
 }
 function openAppDetail(id) {
   const v = findApp(id); if (!v) return;
+  if (v.kind === 'launch') { openExternal(v.launchUrl); return; }   // 啟動式 APP 不開內頁，直接新分頁
   $('appDetIco').innerHTML = v.iconSvg ? v.iconSvg : (v.icon ? `<img src="${esc(v.icon)}" alt="">` : ICON_APP);
   $('appDetName').textContent = v.name || '';
   $('appDetDesc').textContent = v.desc || '';
@@ -1948,16 +1945,6 @@ function openAppDetail(id) {
 
   if (v.kind === 'pomodoro') {
     embed.appendChild($('pomoApp'));      // 搬入計時器 UI（狀態不中斷）
-  } else if (v.kind === 'embed') {
-    const u = safeUrl(v.embedUrl);
-    embed.innerHTML =
-      `<div class="app-embed">
-         <div class="app-embed-bar">
-           <span class="app-embed-hint">在下方視窗操作；若顯示空白請改用 →</span>
-           <a class="app-embed-open" href="${esc(u)}" target="_blank" rel="noopener">在新分頁開啟${ICON_EXTERNAL}</a>
-         </div>
-         <iframe src="${esc(u)}" title="${esc(v.name)}" loading="lazy"></iframe>
-       </div>`;
   } else {
     // 一般 Firestore APP：相簿 + 下載／開啟
     appDetailGallery = createGallery(v.images);
