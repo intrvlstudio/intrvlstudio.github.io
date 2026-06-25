@@ -141,6 +141,18 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 }
 .topbar-mark { width: 75px; height: 75px; flex: none; }
 
+/* Banner 右側：生存天數（在職天數）+ 標記圖示 */
+.topbar-right { display: flex; align-items: center; gap: 18px; flex: none; }
+.topbar-survival { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.topbar-survival[hidden] { display: none; }
+.survival-label {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.85); margin-bottom: 8px;
+}
+.survival-value { display: flex; align-items: baseline; gap: 4px; }
+.survival-num { font-family: var(--num); font-size: 34px; font-weight: 800; letter-spacing: .01em; }
+.survival-unit { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+
 /* ============ 主控版第二列：左右兩欄 ============ */
 .dash-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
 .dash-col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
@@ -681,6 +693,9 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   .topbar { padding: 22px 20px; margin-bottom: 16px; }
   .topbar-date .md { font-size: 34px; }
   .topbar-mark { width: 56px; height: 56px; }
+  .topbar-right { gap: 12px; }
+  .survival-num { font-size: 26px; }
+  .survival-label { margin-bottom: 6px; letter-spacing: .1em; }
   .grid2 { grid-template-columns: 1fr; }
 }
 
@@ -771,7 +786,13 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <span class="md" id="dateMD"></span>
         </div>
       </div>
-      <img class="topbar-mark" src="assets/icon_mark_white.svg" alt="INTRVL">
+      <div class="topbar-right">
+        <div class="topbar-survival" id="survival" hidden>
+          <span class="survival-label">生存天數</span>
+          <span class="survival-value"><span class="survival-num" id="survivalDays">—</span><span class="survival-unit">天</span></span>
+        </div>
+        <img class="topbar-mark" src="assets/icon_mark_white.svg" alt="INTRVL">
+      </div>
     </header>
 
     <!-- ============ 主控版 ============ -->
@@ -1918,7 +1939,7 @@ async function seedStaff() {
     STAFF_FIELDS.forEach(k => data[k] = (k === 'status' ? (s.status || 'active') : (s[k] ?? '')));
     data.email = id; data.updatedAt = serverTimestamp();
     await setDoc(ref, data);
-    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, updatedAt: serverTimestamp() });
+    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, hireDate: data.hireDate || '', updatedAt: serverTimestamp() });
   }
 }
 function renderStaff() {
@@ -2020,7 +2041,7 @@ $('staffForm').addEventListener('submit', async (e) => {
       if ((await getDoc(doc(db, 'staff', id))).exists()) { alert('此電子郵件已有員工資料，請改用編輯。'); btn.disabled = false; return; }
     }
     await setDoc(doc(db, 'staff', id), data);
-    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, updatedAt: serverTimestamp() });
+    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, hireDate: data.hireDate || '', updatedAt: serverTimestamp() });
     closeModal('modal-staff'); toast('已儲存'); await loadStaff();
   } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
 });
@@ -2157,14 +2178,34 @@ async function del(col, id, after, reload) {
 
 /* ===================== 員工資料卡（主控版唯讀） ===================== */
 let currentEmail = '';
-let profile = { name:'', alias:'', avatar:'', jobTitle:'' };
+let profile = { name:'', alias:'', avatar:'', jobTitle:'', hireDate:'' };
 async function loadProfile(email) {
-  profile = { name:'', alias:'', avatar:'', jobTitle:'' };
+  profile = { name:'', alias:'', avatar:'', jobTitle:'', hireDate:'' };
   if (!email) return;
   try { const snap = await getDoc(doc(db, 'profiles', email.toLowerCase())); if (snap.exists()) profile = Object.assign(profile, snap.data()); }
   catch (e) {}
 }
+/* 生存天數（在職天數）：以入職日期到今天，含入職當天為第 1 天。
+   無效或未填日期回傳 null；未來日期回傳 null。 */
+function hireDays(hireDate) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(hireDate || '').trim());
+  if (!m) return null;
+  const hire = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  if (isNaN(hire.getTime())) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.floor((today - hire) / 86400000) + 1;   // 含入職當天
+  return diff >= 1 ? diff : null;
+}
+function renderSurvival() {
+  const box = $('survival');
+  const days = hireDays(profile.hireDate);
+  if (days == null) { box.hidden = true; return; }
+  $('survivalDays').textContent = days.toLocaleString('en-US');
+  box.hidden = false;
+}
 function renderProfile() {
+  renderSurvival();
   const name = (profile.name || profile.alias || currentEmail.split('@')[0] || '成員').trim();
   const a = $('dashAvatar');
   if (profile.avatar) a.innerHTML = `<img src="${esc(profile.avatar)}" alt="">`;

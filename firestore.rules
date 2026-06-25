@@ -57,10 +57,12 @@ service cloud.firestore {
     }
 
     // 公開小卡寫入驗證（profiles）：只放非敏感的同步欄位。
+    // hireDate（入職日期）為非敏感欄位，同步給本人計算「生存天數」。
     function validProfile() {
       let d = request.resource.data;
-      return d.keys().hasOnly(['name', 'alias', 'avatar', 'jobTitle', 'updatedAt'])
-        && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 700000));
+      return d.keys().hasOnly(['name', 'alias', 'avatar', 'jobTitle', 'hireDate', 'updatedAt'])
+        && (!('avatar' in d) || (d.avatar is string && d.avatar.size() <= 700000))
+        && (!('hireDate' in d) || (d.hireDate is string && d.hireDate.size() <= 10));
     }
 
     // 公告寫入驗證（最新消息）：標題 / 內容 / 類型 / 圖片(1:1, base64) / 日期。
