@@ -669,9 +669,61 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ============ 番茄鐘 ============ */
+.pomo-wrap { display: grid; gap: 22px; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: start; }
+.pomo-main { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 32px 24px; }
+
+.pomo-modes { display: inline-flex; gap: 4px; padding: 4px; background: var(--bg); border: 1px solid var(--rule-soft); border-radius: 999px; }
+.pomo-mode {
+  padding: 8px 18px; cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 700;
+  color: var(--ink-soft); background: none; border: none; border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+.pomo-mode:hover { color: var(--ink); }
+.pomo-mode.active { color: #fff; background: var(--gradient); }
+
+.pomo-dial { position: relative; width: 280px; height: 280px; max-width: 78vw; }
+.pomo-dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pomo-dial .track { fill: none; stroke: var(--rule-soft); stroke-width: 13; }
+.pomo-dial .bar { fill: none; stroke: url(#pomoGrad); stroke-width: 13; stroke-linecap: round; transition: stroke-dashoffset .35s linear; }
+.pomo-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.pomo-time { font-family: var(--num); font-size: 58px; font-weight: 800; letter-spacing: .01em; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
+.pomo-state { font-size: 13.5px; font-weight: 700; color: var(--ink-mute); letter-spacing: .04em; }
+
+.pomo-dots { display: flex; gap: 9px; min-height: 11px; }
+.pomo-dots span { width: 11px; height: 11px; border-radius: 50%; background: var(--rule); transition: background .2s; }
+.pomo-dots span.on { background: var(--mauve); }
+
+.pomo-ctrls { display: flex; align-items: center; gap: 12px; }
+.pomo-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 30px; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700;
+  color: #fff; background: var(--gradient); border: none; border-radius: 999px; min-width: 130px;
+  transition: filter .15s;
+}
+.pomo-btn:hover { filter: brightness(1.04); }
+.pomo-btn svg { width: 17px; height: 17px; }
+.pomo-btn.ghost { color: var(--ink-soft); background: #fff; border: 1px solid var(--rule); min-width: 0; padding: 13px 18px; }
+.pomo-btn.ghost:hover { background: var(--bg-alt); filter: none; }
+
+.pomo-rounds { font-size: 13px; color: var(--ink-mute); }
+.pomo-rounds b { color: var(--mauve); font-family: var(--num); font-size: 15px; }
+
+.pomo-set .set-row input[type="number"] {
+  width: 88px; text-align: right; font-family: var(--num); font-size: 14px; font-weight: 600; color: var(--ink);
+  padding: 7px 10px; border: 1px solid var(--rule); border-radius: 9px; background: var(--bg);
+}
+.pomo-set .set-row input[type="number"]:focus { outline: none; border-color: var(--mauve); }
+.pomo-switch { position: relative; width: 42px; height: 24px; flex: none; cursor: pointer; }
+.pomo-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.pomo-switch .slider { position: absolute; inset: 0; background: var(--rule); border-radius: 999px; transition: background .15s; }
+.pomo-switch .slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .15s; }
+.pomo-switch input:checked + .slider { background: var(--mauve); }
+.pomo-switch input:checked + .slider::before { transform: translateX(18px); }
+
 /* ---------- 手機版 ---------- */
 .menu-toggle { display: none; }
-@media (max-width: 900px) { .dash-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .dash-grid, .pomo-wrap { grid-template-columns: 1fr; } }
 @media (max-width: 820px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar {
@@ -751,6 +803,11 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
           <span class="nav-label">APP</span>
           <span class="nav-count" id="appCount"></span>
+        </button>
+
+        <button class="nav-item" data-view="pomodoro">
+          <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="7"/><path d="M12 14V10"/><path d="M9 3h6"/><path d="M12 3v4"/></svg></span>
+          <span class="nav-label">番茄鐘</span>
         </button>
 
         <!-- 員工資料：管理員專屬，已整合為主控版分頁 -->
@@ -975,6 +1032,75 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
       <div class="app-usage">
         <h4>使用說明</h4>
         <div id="appDetUsage"></div>
+      </div>
+    </section>
+
+    <!-- ============ 番茄鐘 ============ -->
+    <section class="view" id="view-pomodoro">
+      <div class="section-head">
+        <div class="titles"><span class="section-title">番茄鐘</span><span class="section-sub">專注一段、休息一下，循環推進工作節奏</span></div>
+      </div>
+      <div class="pomo-wrap">
+        <div class="card pomo-main">
+          <div class="pomo-modes" id="pomoModes">
+            <button type="button" class="pomo-mode active" data-mode="focus">專注</button>
+            <button type="button" class="pomo-mode" data-mode="short">短休息</button>
+            <button type="button" class="pomo-mode" data-mode="long">長休息</button>
+          </div>
+
+          <div class="pomo-dial">
+            <svg viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <linearGradient id="pomoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#F2B689"/>
+                  <stop offset="35%" stop-color="#ECA4A8"/>
+                  <stop offset="70%" stop-color="#DC97B9"/>
+                  <stop offset="100%" stop-color="#B581A3"/>
+                </linearGradient>
+              </defs>
+              <circle class="track" cx="100" cy="100" r="86"/>
+              <circle class="bar" id="pomoBar" cx="100" cy="100" r="86"/>
+            </svg>
+            <div class="pomo-center">
+              <span class="pomo-time" id="pomoTime">25:00</span>
+              <span class="pomo-state" id="pomoState">保持專注</span>
+            </div>
+          </div>
+
+          <div class="pomo-dots" id="pomoDots"></div>
+
+          <div class="pomo-ctrls">
+            <button type="button" class="pomo-btn" id="pomoToggle">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+              <span id="pomoToggleLabel">開始</span>
+            </button>
+            <button type="button" class="pomo-btn ghost" id="pomoReset" title="重設">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+            <button type="button" class="pomo-btn ghost" id="pomoSkip" title="跳過此段">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4l10 8-10 8z"/><path d="M19 5v14"/></svg>
+            </button>
+          </div>
+
+          <p class="pomo-rounds">今日已完成 <b id="pomoTotal">0</b> 段專注</p>
+        </div>
+
+        <div class="card pomo-set">
+          <div class="card-head"><span class="card-title">時間設定</span></div>
+          <div class="set-list">
+            <div class="set-row"><span class="set-key">專注時間（分鐘）</span><input id="pomoFocusMin" type="number" min="1" max="180" inputmode="numeric"></div>
+            <div class="set-row"><span class="set-key">短休息（分鐘）</span><input id="pomoShortMin" type="number" min="1" max="60" inputmode="numeric"></div>
+            <div class="set-row"><span class="set-key">長休息（分鐘）</span><input id="pomoLongMin" type="number" min="1" max="90" inputmode="numeric"></div>
+            <div class="set-row"><span class="set-key">幾段專注後長休息</span><input id="pomoLongEvery" type="number" min="1" max="12" inputmode="numeric"></div>
+            <div class="set-row"><span class="set-key">自動接續下一段</span>
+              <label class="pomo-switch"><input id="pomoAuto" type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="set-row"><span class="set-key">時間到提醒音效</span>
+              <label class="pomo-switch"><input id="pomoSound" type="checkbox"><span class="slider"></span></label>
+            </div>
+          </div>
+          <p class="sub" style="margin-top:14px;">設定會記在這台裝置的瀏覽器，下次回來自動沿用。</p>
+        </div>
       </div>
     </section>
 
@@ -2224,6 +2350,193 @@ async function loadPublic() {
   try { await Promise.all([loadAnnouncements(), loadProjects(), loadDocuments(), loadApps()]); }
   catch (e) { $('loadError').style.display = 'block'; }
 }
+
+/* ===================== 番茄鐘 ===================== */
+/* 純前端個人工具：設定存在這台裝置的 localStorage，不進 Firestore。
+   計時用「結束時間戳」回推剩餘秒數，分頁被瀏覽器節流也不會走鐘。 */
+const POMO_KEY = 'intrvl_pomo';
+const POMO_DEFAULT = { focus: 25, short: 5, long: 15, longEvery: 4, auto: true, sound: true };
+const POMO_LABEL = { focus: '專注', short: '短休息', long: '長休息' };
+const POMO_STATE = { focus: '保持專注', short: '起來動一動', long: '好好休息一下' };
+const POMO_LIMIT = { focus: [1, 180], short: [1, 60], long: [1, 90], longEvery: [1, 12] };
+const POMO_R = 86;
+const POMO_C = 2 * Math.PI * POMO_R;
+const POMO_TITLE = document.title;
+
+let pomoSet = loadPomoSet();
+let pomoMode = 'focus';
+let pomoRunning = false;
+let pomoRemain = pomoSet.focus * 60;   // 剩餘秒數
+let pomoEndAt = 0;                      // 執行中時的結束時間戳（ms）
+let pomoTick = null;
+let pomoCycle = 0;                      // 本輪已完成的專注段數（達 longEvery 後歸零）
+let pomoTotal = 0;                      // 本次開頁累計完成的專注段數
+let pomoAudio = null;
+
+function loadPomoSet() {
+  try {
+    const s = JSON.parse(localStorage.getItem(POMO_KEY) || '{}');
+    return Object.assign({}, POMO_DEFAULT, s);
+  } catch (e) { return Object.assign({}, POMO_DEFAULT); }
+}
+function savePomoSet() { try { localStorage.setItem(POMO_KEY, JSON.stringify(pomoSet)); } catch (e) {} }
+
+const pomoDur = (m) => Math.max(60, (pomoSet[m] || 1) * 60);
+const pomoFmt = (s) => { s = Math.max(0, Math.round(s)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
+
+function pomoRender() {
+  $('pomoTime').textContent = pomoFmt(pomoRemain);
+  $('pomoState').textContent = POMO_STATE[pomoMode];
+  $('pomoToggleLabel').textContent = pomoRunning ? '暫停' : '開始';
+  document.querySelectorAll('#pomoModes .pomo-mode').forEach(b => b.classList.toggle('active', b.dataset.mode === pomoMode));
+
+  // 進度環：剩餘比例（滿 → 空）
+  const ratio = pomoRemain / pomoDur(pomoMode);
+  $('pomoBar').setAttribute('stroke-dasharray', POMO_C);
+  $('pomoBar').setAttribute('stroke-dashoffset', POMO_C * (1 - Math.max(0, Math.min(1, ratio))));
+
+  // 切換鈕圖示：播放 / 暫停
+  const ico = $('pomoToggle').querySelector('svg');
+  ico.innerHTML = pomoRunning ? '<path d="M7 5h3v14H7zM14 5h3v14h-3z"/>' : '<path d="M8 5v14l11-7z"/>';
+
+  // 本輪段數圓點
+  const dots = $('pomoDots');
+  const n = Math.max(1, pomoSet.longEvery);
+  const filled = pomoCycle % n;
+  dots.innerHTML = '';
+  for (let i = 0; i < n; i++) { const d = document.createElement('span'); if (i < filled) d.className = 'on'; dots.appendChild(d); }
+
+  $('pomoTotal').textContent = pomoTotal;
+  document.title = pomoRunning ? `(${pomoFmt(pomoRemain)}) ${POMO_LABEL[pomoMode]} — INTRVL` : POMO_TITLE;
+}
+
+function pomoSetMode(m) {
+  pomoMode = m;
+  pomoRemain = pomoDur(m);
+  pomoRender();
+}
+
+function pomoStart() {
+  if (pomoRemain <= 0) pomoRemain = pomoDur(pomoMode);
+  pomoRunning = true;
+  pomoEndAt = Date.now() + pomoRemain * 1000;
+  // 首次啟動才建立音訊環境（符合瀏覽器自動播放限制）
+  if (pomoSet.sound && !pomoAudio) { try { pomoAudio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (pomoSet.sound && 'Notification' in window && Notification.permission === 'default') { try { Notification.requestPermission(); } catch (e) {} }
+  clearInterval(pomoTick);
+  pomoTick = setInterval(pomoOnTick, 250);
+  pomoRender();
+}
+function pomoPause() {
+  if (pomoRunning) pomoRemain = Math.max(0, (pomoEndAt - Date.now()) / 1000);
+  pomoRunning = false;
+  clearInterval(pomoTick);
+  pomoRender();
+}
+function pomoToggle() { pomoRunning ? pomoPause() : pomoStart(); }
+function pomoReset() {
+  pomoRunning = false;
+  clearInterval(pomoTick);
+  pomoRemain = pomoDur(pomoMode);
+  pomoRender();
+}
+function pomoOnTick() {
+  pomoRemain = Math.max(0, (pomoEndAt - Date.now()) / 1000);
+  if (pomoRemain <= 0) { pomoFinish(); return; }
+  pomoRender();
+}
+
+/* 一段時間到 → 提醒 → 推進到下一段（完成專注才累計輪數，滿 longEvery 進長休息） */
+function pomoFinish() {
+  clearInterval(pomoTick);
+  pomoRunning = false;
+  let next;
+  if (pomoMode === 'focus') {
+    pomoCycle++; pomoTotal++;
+    next = (pomoCycle % Math.max(1, pomoSet.longEvery) === 0) ? 'long' : 'short';
+  } else {
+    next = 'focus';
+  }
+  pomoBeep();
+  const msg = pomoMode === 'focus' ? '專注時間結束，休息一下吧' : '休息結束，繼續專注';
+  toast(msg);
+  pomoNotify(POMO_LABEL[pomoMode] + '結束', msg);
+  pomoSetMode(next);
+  if (pomoSet.auto) pomoStart();
+}
+/* 跳過此段：不計入完成段數、不發提醒，直接切到下一段（專注→短休息、休息→專注） */
+function pomoSkip() {
+  clearInterval(pomoTick);
+  const wasRunning = pomoRunning;
+  pomoRunning = false;
+  pomoSetMode(pomoMode === 'focus' ? 'short' : 'focus');
+  if (wasRunning && pomoSet.auto) pomoStart();
+}
+
+function pomoBeep() {
+  if (!pomoSet.sound || !pomoAudio) return;
+  try {
+    if (pomoAudio.state === 'suspended') pomoAudio.resume();
+    [0, 0.28].forEach((delay) => {
+      const t = pomoAudio.currentTime + delay;
+      const o = pomoAudio.createOscillator(), g = pomoAudio.createGain();
+      o.connect(g); g.connect(pomoAudio.destination);
+      o.type = 'sine'; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.3, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+      o.start(t); o.stop(t + 0.24);
+    });
+  } catch (e) {}
+}
+function pomoNotify(title, body) {
+  try {
+    if (pomoSet.sound && 'Notification' in window && Notification.permission === 'granted')
+      new Notification(title, { body, icon: 'assets/icon.png' });
+  } catch (e) {}
+}
+
+function initPomo() {
+  if (!$('pomoToggle')) return;
+  // 設定值回填
+  $('pomoFocusMin').value = pomoSet.focus;
+  $('pomoShortMin').value = pomoSet.short;
+  $('pomoLongMin').value = pomoSet.long;
+  $('pomoLongEvery').value = pomoSet.longEvery;
+  $('pomoAuto').checked = !!pomoSet.auto;
+  $('pomoSound').checked = !!pomoSet.sound;
+
+  $('pomoToggle').addEventListener('click', pomoToggle);
+  $('pomoReset').addEventListener('click', pomoReset);
+  $('pomoSkip').addEventListener('click', pomoSkip);
+  $('pomoModes').addEventListener('click', (e) => {
+    const b = e.target.closest('.pomo-mode'); if (!b) return;
+    pomoPause();
+    pomoSetMode(b.dataset.mode);
+  });
+
+  // 數字設定：套用 → 存檔 → 閒置時刷新目前段顯示
+  const numFields = [['pomoFocusMin', 'focus'], ['pomoShortMin', 'short'], ['pomoLongMin', 'long'], ['pomoLongEvery', 'longEvery']];
+  numFields.forEach(([id, key]) => {
+    $(id).addEventListener('change', () => {
+      const [lo, hi] = POMO_LIMIT[key];
+      let v = parseInt($(id).value, 10);
+      if (isNaN(v)) v = POMO_DEFAULT[key];
+      v = Math.max(lo, Math.min(hi, v));
+      $(id).value = v; pomoSet[key] = v; savePomoSet();
+      if (!pomoRunning) pomoRemain = pomoDur(pomoMode);
+      pomoRender();
+    });
+  });
+  $('pomoAuto').addEventListener('change', () => { pomoSet.auto = $('pomoAuto').checked; savePomoSet(); });
+  $('pomoSound').addEventListener('change', () => {
+    pomoSet.sound = $('pomoSound').checked; savePomoSet();
+    if (pomoSet.sound && !pomoAudio) { try { pomoAudio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  });
+
+  pomoRender();
+}
+initPomo();
 
 /* ===================== 驗證守門 ===================== */
 onAuthStateChanged(auth, (user) => {
