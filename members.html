@@ -62,7 +62,7 @@ body.checking::before {
 
 /* ---------- 側邊欄（全程常駐） ---------- */
 .sidebar {
-  position: sticky; top: 0; align-self: start; height: 100vh;
+  position: sticky; top: 0; align-self: start; height: 100vh; min-width: 0;
   display: flex; flex-direction: column;
   background: #fff; border-right: 1px solid var(--rule-soft);
   padding: 22px 16px;
@@ -113,7 +113,8 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 
 /* ---------- 主內容 ---------- */
 /* 桌面版內容（含所有表格／條列）寬度上限 1100px */
-.main { padding: 30px 40px 80px; max-width: 1100px; }
+/* min-width:0 讓 grid 欄位可收縮到螢幕寬度，避免手機水平跑版 */
+.main { padding: 30px 40px 80px; max-width: 1100px; min-width: 0; }
 
 /* 視圖切換：預設隱藏，.active 才顯示 */
 .view { display: none; }
@@ -139,6 +140,18 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
   font-family: var(--num); font-size: 44px; font-weight: 800; letter-spacing: .01em;
 }
 .topbar-mark { width: 75px; height: 75px; flex: none; }
+
+/* Banner 右側：生存天數（在職天數）+ 標記圖示 */
+.topbar-right { display: flex; align-items: center; gap: 18px; flex: none; }
+.topbar-survival { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.topbar-survival[hidden] { display: none; }
+.survival-label {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.85); margin-bottom: 8px;
+}
+.survival-value { display: flex; align-items: baseline; gap: 4px; }
+.survival-num { font-family: var(--num); font-size: 34px; font-weight: 800; letter-spacing: .01em; }
+.survival-unit { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
 
 /* ============ 主控版第二列：左右兩欄 ============ */
 .dash-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
@@ -305,6 +318,30 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 .act svg { width: 15px; height: 15px; }
 .act.edit:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
 .act.del:hover  { color: #B23B36; border-color: #E7B8B5; background: #fff; }
+.act.share:hover { color: var(--mauve); border-color: var(--mauve); background: #fff; }
+
+/* 表格列尾操作群組（分享、編輯…）：永遠靠右排列 */
+.cell-actions { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.col-actions { white-space: nowrap; }
+
+/* 分享小視窗（複製連結／系統分享） */
+.share-pop {
+  position: absolute; z-index: 200; min-width: 172px; display: none;
+  padding: 6px; background: #fff; border: 1px solid var(--rule); border-radius: 12px;
+  box-shadow: 0 18px 42px -18px rgba(31,24,20,0.45);
+}
+.share-pop.open { display: block; }
+.share-pop button {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 9px 11px; cursor: pointer; font-family: inherit; font-size: 13.5px;
+  font-weight: 600; color: var(--ink-soft); background: none; border: none; border-radius: 8px;
+}
+.share-pop button:hover { background: var(--bg-alt); color: var(--ink); }
+.share-pop button svg { width: 16px; height: 16px; flex: none; color: var(--ink-mute); }
+
+/* 開啟分享連結時的列高亮 */
+@keyframes rowFlash { 0%,100% { background: transparent; } 28% { background: var(--bg-alt); } }
+.data-table tbody tr.row-flash { animation: rowFlash 1.7s ease; }
 
 /* ============ 篩選列（專案） ============ */
 .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -328,34 +365,43 @@ body.is-admin th.admin-only, body.is-admin td.admin-only { display: table-cell !
 .news-gallery-host:empty { display: none; }
 .news-body { color: var(--ink-soft); white-space: pre-wrap; word-break: break-word; }
 
-/* 條列容器：與 APP 列表相同的卡片化清單 */
+/* 條列容器：與 APP 列表相同的卡片化清單（縮圖在前的論壇列表） */
 .news-list { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; max-width: 1100px; }
 .news-list .empty { padding: 30px; }
 .news-row {
-  display: flex; align-items: center; gap: 14px; padding: 15px 20px; cursor: pointer;
-  border-top: 1px solid var(--rule-soft); transition: background .12s;
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer;
+  border-top: 1px solid var(--rule-soft); transition: background .12s; min-width: 0;
 }
 .news-row:first-child { border-top: none; }
 .news-row:hover { background: var(--bg); }
-.news-row-main { flex: 1; min-width: 0; }
-.news-row-top { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
+/* 前方縮圖（取內文第一張圖；無圖則顯示佔位圖示） */
+.news-row-thumb {
+  flex: none; width: 54px; height: 54px; border-radius: 12px; overflow: hidden;
+  display: grid; place-items: center; background: var(--bg-alt);
+  border: 1px solid var(--rule-soft); color: var(--ink-mute);
+}
+.news-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.news-row-thumb svg { width: 22px; height: 22px; }
+.news-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.news-row-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .news-row-title {
-  flex: 1; min-width: 0;
   font-size: 15.5px; font-weight: 700; color: var(--ink); line-height: 1.4;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .news-row-snip {
   font-size: 13px; color: var(--ink-mute);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.news-row-side { flex: none; display: flex; align-items: center; gap: 12px; }
+.news-row-side { flex: none; display: flex; align-items: center; gap: 10px; }
 .news-row-go { flex: none; color: var(--ink-mute); }
 .news-row-go svg { width: 18px; height: 18px; display: block; }
 .news-row .row-actions { flex: none; display: none; }
 body.is-admin .news-row .row-actions { display: inline-flex; }
 @media (max-width: 560px) {
-  .news-row { padding: 14px 16px; }
-  .news-row-top .news-date { display: none; } /* 手機列表收起日期，點開內頁可見 */
+  .news-row { padding: 13px 14px; gap: 12px; }
+  .news-row-thumb { width: 48px; height: 48px; border-radius: 10px; }
+  .news-row-snip { display: none; } /* 手機收起摘要，保持精簡 */
+  .news-row-go { display: none; }   /* 整列可點，省去箭頭避免擁擠 */
 }
 
 /* 最新消息內頁（點開看全文 + 相簿） */
@@ -644,9 +690,12 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   .sidebar.open .nav-scroll { display: block; padding-top: 10px; }
   .sidebar.open .side-foot { display: block; margin-top: 10px; }
   .main { padding: 22px 18px 70px; }
-  .topbar { padding: 22px 20px; }
+  .topbar { padding: 22px 20px; margin-bottom: 16px; }
   .topbar-date .md { font-size: 34px; }
   .topbar-mark { width: 56px; height: 56px; }
+  .topbar-right { gap: 12px; }
+  .survival-num { font-size: 26px; }
+  .survival-label { margin-bottom: 6px; letter-spacing: .1em; }
   .grid2 { grid-template-columns: 1fr; }
 }
 
@@ -737,7 +786,13 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <span class="md" id="dateMD"></span>
         </div>
       </div>
-      <img class="topbar-mark" src="assets/icon_mark_white.svg" alt="INTRVL">
+      <div class="topbar-right">
+        <div class="topbar-survival" id="survival" hidden>
+          <span class="survival-label">生存天數</span>
+          <span class="survival-value"><span class="survival-num" id="survivalDays">—</span><span class="survival-unit">天</span></span>
+        </div>
+        <img class="topbar-mark" src="assets/icon_mark_white.svg" alt="INTRVL">
+      </div>
     </header>
 
     <!-- ============ 主控版 ============ -->
@@ -861,7 +916,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
               <th>狀態</th>
               <th class="col-hide-sm">年份</th>
               <th>連結</th>
-              <th class="admin-only" style="text-align:right">編輯</th>
+              <th style="text-align:right">分享</th>
             </tr>
           </thead>
           <tbody id="projBody"><tr><td colspan="7" class="empty">載入中…</td></tr></tbody>
@@ -885,7 +940,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
               <th>文件類型</th>
               <th>標題</th>
               <th class="col-hide-sm">內容說明</th>
-              <th class="admin-only" style="text-align:right">編輯</th>
+              <th style="text-align:right">分享</th>
             </tr>
           </thead>
           <tbody id="docBody"><tr><td colspan="4" class="empty">載入中…</td></tr></tbody>
@@ -1217,6 +1272,12 @@ const rowActions = (kind, id) =>
      <button type="button" class="act del" data-del="${kind}" data-id="${id}" title="刪除">${ICON_TRASH}</button>
    </span>`;
 
+/* 分享：每個列表項目都有一顆分享鈕（複製連結／系統分享），方便轉貼 */
+const ICON_SHARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 3.9M15.4 6.6l-6.8 3.9"/></svg>`;
+const ICON_LINK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg>`;
+const shareBtn = (view, id) =>
+  `<button type="button" class="act share" data-share="${view}" data-id="${esc(id)}" title="分享／複製連結" aria-label="分享">${ICON_SHARE}</button>`;
+
 /* 公告類型對照 */
 const ANN_TYPE = { share:'分享', project:'專案', hr:'人事', event:'活動', system:'系統', important:'重要' };
 /* 製作狀態對照與排序權重（進行中 > 籌備中 > 已完成） */
@@ -1367,23 +1428,30 @@ function renderNewsPage() {
     const dateStr = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '';
     // 內文摘要（單行）：移除換行，作為論壇列表的副標
     const snip = (v.body || '').replace(/\s+/g, ' ').trim();
+    // 前方縮圖：取內文第一張圖，無圖則用公告佔位圖示
+    const firstImg = annImages(v)[0];
+    const thumb = firstImg
+      ? `<span class="news-row-thumb"><img src="${esc(firstImg)}" alt=""></span>`
+      : `<span class="news-row-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>`;
     const el = document.createElement('div');
     el.className = 'news-row';
     el.dataset.annId = v.id;
     el.innerHTML =
-      `<div class="news-row-main">
+      `${thumb}
+       <div class="news-row-main">
          <div class="news-row-top">
            <span class="news-type">${esc(ANN_TYPE[v.type] || '公告')}</span>
-           <span class="news-row-title">${esc(v.title)}</span>
            <span class="news-date">${esc(dateStr)}</span>
          </div>
+         <div class="news-row-title">${esc(v.title)}</div>
          ${snip ? `<div class="news-row-snip">${esc(snip)}</div>` : ''}
        </div>
        <div class="news-row-side">
          ${rowActions('ann', v.id)}
+         ${shareBtn('news', v.id)}
          <span class="news-row-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
        </div>`;
-    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions')) return; openNewsDetail(v.id); });
+    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions') || e.target.closest('[data-share]')) return; openNewsDetail(v.id); });
     list.appendChild(el);
   });
 
@@ -1524,6 +1592,7 @@ function renderProjects() {
     // 手機隱藏「類型／年份」欄，改收進名稱下方的次要資訊
     const metaBits = [v.kind ? esc(v.kind) : '', v.year ? esc(v.year) : ''].filter(Boolean).join(' · ');
     const tr = document.createElement('tr');
+    tr.dataset.projId = v.id;
     tr.innerHTML =
       `<td>${thumb}</td>
        <td><div class="cell-name"><span class="t-title">${esc(v.title)}</span></div>${v.desc ? `<div class="t-desc">${esc(v.desc)}</div>` : ''}${metaBits ? `<div class="t-meta">${metaBits}</div>` : ''}</td>
@@ -1531,7 +1600,7 @@ function renderProjects() {
        <td>${st}</td>
        <td class="col-hide-sm">${v.year ? esc(v.year) : '<span class="muted">—</span>'}</td>
        <td>${link}</td>
-       <td class="admin-only" style="text-align:right"><button type="button" class="act edit" data-edit="proj" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></td>`;
+       <td class="col-actions" style="text-align:right"><span class="cell-actions">${shareBtn('projects', v.id)}<span class="admin-only"><button type="button" class="act edit" data-edit="proj" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></span></span></td>`;
     body.appendChild(tr);
   });
 }
@@ -1606,15 +1675,13 @@ function renderDocuments() {
       `<td>${v.docType ? `<span class="doctype-tag">${esc(v.docType)}</span>` : '<span class="muted">—</span>'}</td>
        <td><span class="t-title">${esc(v.title)}</span>${v.desc ? `<div class="t-meta">${esc(v.desc)}</div>` : ''}</td>
        <td class="col-hide-sm">${v.desc ? `<span class="t-desc">${esc(v.desc)}</span>` : '<span class="muted">—</span>'}</td>
-       <td class="admin-only" style="text-align:right"><button type="button" class="act edit" data-edit="doc" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></td>`;
+       <td class="col-actions" style="text-align:right"><span class="cell-actions">${shareBtn('docs', v.id)}<span class="admin-only"><button type="button" class="act edit" data-edit="doc" data-id="${esc(v.id)}" title="編輯" aria-label="編輯">${ICON_EDIT}</button></span></span></td>`;
     body.appendChild(tr);
   });
 }
-/* 點列開啟文件檢視（員工看內容） */
-$('docBody').addEventListener('click', (e) => {
-  if (e.target.closest('[data-edit]')) return;          // 編輯鈕另行處理
-  const tr = e.target.closest('tr.clickable'); if (!tr) return;
-  const v = allDocs.find(d => d.id === tr.dataset.docId); if (!v) return;
+/* 文件檢視（員工看內容）：抽成函式供點列與深層連結共用 */
+function openDocView(v) {
+  if (!v) return;
   $('docvTitle').textContent = v.title || '文件';
   $('docvType').textContent = v.docType || '文件';
   $('docvDesc').textContent = v.desc || '（無內容說明）';
@@ -1622,6 +1689,11 @@ $('docBody').addEventListener('click', (e) => {
   const link = $('docvLink');
   if (url) { link.href = url; link.style.display = 'inline-block'; } else { link.style.display = 'none'; }
   openModal('modal-doc-view');
+}
+$('docBody').addEventListener('click', (e) => {
+  if (e.target.closest('[data-edit]') || e.target.closest('[data-share]')) return;  // 編輯／分享鈕另行處理
+  const tr = e.target.closest('tr.clickable'); if (!tr) return;
+  openDocView(allDocs.find(d => d.id === tr.dataset.docId));
 });
 
 /* 文件彈窗 */
@@ -1700,8 +1772,9 @@ function renderApps() {
       `${appIcoHTML(v, 'app-row-ico')}
        <div class="app-row-meta"><div class="app-row-name">${esc(v.name)}</div><div class="app-row-desc">${esc(v.desc || '')}</div></div>
        ${rowActions('app', v.id)}
+       ${shareBtn('apps', v.id)}
        <span class="app-row-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>`;
-    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions')) return; openAppDetail(v.id); });
+    el.addEventListener('click', (e) => { if (e.target.closest('.row-actions') || e.target.closest('[data-share]')) return; openAppDetail(v.id); });
     list.appendChild(el);
   });
 }
@@ -1866,7 +1939,7 @@ async function seedStaff() {
     STAFF_FIELDS.forEach(k => data[k] = (k === 'status' ? (s.status || 'active') : (s[k] ?? '')));
     data.email = id; data.updatedAt = serverTimestamp();
     await setDoc(ref, data);
-    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, updatedAt: serverTimestamp() });
+    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, hireDate: data.hireDate || '', updatedAt: serverTimestamp() });
   }
 }
 function renderStaff() {
@@ -1968,13 +2041,109 @@ $('staffForm').addEventListener('submit', async (e) => {
       if ((await getDoc(doc(db, 'staff', id))).exists()) { alert('此電子郵件已有員工資料，請改用編輯。'); btn.disabled = false; return; }
     }
     await setDoc(doc(db, 'staff', id), data);
-    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, updatedAt: serverTimestamp() });
+    await setDoc(doc(db, 'profiles', id), { name: data.name, alias: data.alias, avatar: data.avatar, jobTitle: data.jobTitle, hireDate: data.hireDate || '', updatedAt: serverTimestamp() });
     closeModal('modal-staff'); toast('已儲存'); await loadStaff();
   } catch (err) { alert('儲存失敗：' + err.message); } finally { btn.disabled = false; }
 });
 
+/* ===================== 分享／複製連結 ===================== */
+/* 深層連結網址：members.html#<view>/<id>，登入後可直接開到該項目 */
+function shareUrl(view, id) {
+  return `${location.origin}${location.pathname}#${view}/${id}`;
+}
+function shareTitle(view, id) {
+  const find = { news: allAnns, projects: allProjects, docs: allDocs, apps: allApps }[view] || [];
+  const item = find.find(x => x.id === id);
+  return (item && (item.title || item.name)) || 'INTRVL Studio';
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch (_) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      const ok = document.execCommand('copy'); document.body.removeChild(ta); return ok;
+    } catch (_) { return false; }
+  }
+}
+let sharePop = null, shareCtx = null;
+function ensureSharePop() {
+  if (sharePop) return sharePop;
+  sharePop = document.createElement('div');
+  sharePop.className = 'share-pop';
+  sharePop.innerHTML =
+    `<button type="button" data-share-act="copy">${ICON_LINK}<span>複製連結</span></button>
+     <button type="button" data-share-act="share"${navigator.share ? '' : ' hidden'}>${ICON_SHARE}<span>分享…</span></button>`;
+  document.body.appendChild(sharePop);
+  sharePop.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-share-act]'); if (!b || !shareCtx) return;
+    const ctx = shareCtx;
+    if (b.dataset.shareAct === 'copy') {
+      const ok = await copyText(ctx.url); toast(ok ? '已複製連結' : '複製失敗，請手動複製');
+    } else {
+      try { await navigator.share({ title: ctx.title, url: ctx.url }); } catch (_) {}
+    }
+    closeSharePop();
+  });
+  return sharePop;
+}
+function openSharePop(btn, ctx) {
+  shareCtx = ctx;
+  const pop = ensureSharePop();
+  pop.classList.add('open');
+  const r = btn.getBoundingClientRect();
+  let left = r.right + window.scrollX - pop.offsetWidth;
+  let top = r.bottom + window.scrollY + 6;
+  const minLeft = window.scrollX + 8;
+  if (left < minLeft) left = minLeft;
+  if (r.bottom + 6 + pop.offsetHeight > window.innerHeight) top = r.top + window.scrollY - pop.offsetHeight - 6;
+  pop.style.left = `${left}px`;
+  pop.style.top = `${top}px`;
+}
+function closeSharePop() { if (sharePop) sharePop.classList.remove('open'); shareCtx = null; }
+document.addEventListener('click', (e) => {
+  if (!sharePop || !sharePop.classList.contains('open')) return;
+  if (e.target.closest('[data-share]') || e.target.closest('.share-pop')) return;
+  closeSharePop();
+});
+window.addEventListener('scroll', closeSharePop, true);
+window.addEventListener('resize', closeSharePop);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSharePop(); });
+
+/* ===================== 深層連結路由 ===================== */
+function openDocViewById(id) { const v = allDocs.find(d => d.id === id); if (v) openDocView(v); }
+function openNewsDetailById(id) { if (allAnns.find(a => a.id === id)) openNewsDetail(id); }
+function highlightProj(id) {
+  showView('projects');
+  const row = $('projBody') && $('projBody').querySelector(`tr[data-proj-id="${(window.CSS && CSS.escape) ? CSS.escape(id) : id}"]`);
+  if (!row) return;
+  row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  row.classList.remove('row-flash'); void row.offsetWidth; row.classList.add('row-flash');
+}
+function routeFromHash() {
+  const h = (location.hash || '').replace(/^#/, '');
+  if (!h) return;
+  const slash = h.indexOf('/');
+  const view = slash === -1 ? h : h.slice(0, slash);
+  const id = slash === -1 ? '' : h.slice(slash + 1);
+  if (view === 'news')        { if (id) openNewsDetailById(id); else showView('news'); }
+  else if (view === 'apps')   { if (id) openAppDetail(id);      else showView('apps'); }
+  else if (view === 'docs')   { showView('docs'); if (id) openDocViewById(id); }
+  else if (view === 'projects'){ if (id) highlightProj(id);     else showView('projects'); }
+  else if (['dashboard','settings','staff'].includes(view)) showView(view);
+}
+window.addEventListener('hashchange', routeFromHash);
+
 /* ===================== 編輯 / 刪除事件委派 ===================== */
 document.addEventListener('click', (e) => {
+  const shareBtnEl = e.target.closest('[data-share]');
+  if (shareBtnEl) {
+    e.preventDefault(); e.stopPropagation();
+    const { share: view, id } = shareBtnEl.dataset;
+    openSharePop(shareBtnEl, { url: shareUrl(view, id), title: shareTitle(view, id) });
+    return;
+  }
   const editBtn = e.target.closest('[data-edit]');
   if (editBtn) {
     e.preventDefault(); e.stopPropagation();
@@ -2009,14 +2178,34 @@ async function del(col, id, after, reload) {
 
 /* ===================== 員工資料卡（主控版唯讀） ===================== */
 let currentEmail = '';
-let profile = { name:'', alias:'', avatar:'', jobTitle:'' };
+let profile = { name:'', alias:'', avatar:'', jobTitle:'', hireDate:'' };
 async function loadProfile(email) {
-  profile = { name:'', alias:'', avatar:'', jobTitle:'' };
+  profile = { name:'', alias:'', avatar:'', jobTitle:'', hireDate:'' };
   if (!email) return;
   try { const snap = await getDoc(doc(db, 'profiles', email.toLowerCase())); if (snap.exists()) profile = Object.assign(profile, snap.data()); }
   catch (e) {}
 }
+/* 生存天數（在職天數）：以入職日期到今天，含入職當天為第 1 天。
+   無效或未填日期回傳 null；未來日期回傳 null。 */
+function hireDays(hireDate) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(hireDate || '').trim());
+  if (!m) return null;
+  const hire = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  if (isNaN(hire.getTime())) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.floor((today - hire) / 86400000) + 1;   // 含入職當天
+  return diff >= 1 ? diff : null;
+}
+function renderSurvival() {
+  const box = $('survival');
+  const days = hireDays(profile.hireDate);
+  if (days == null) { box.hidden = true; return; }
+  $('survivalDays').textContent = days.toLocaleString('en-US');
+  box.hidden = false;
+}
 function renderProfile() {
+  renderSurvival();
   const name = (profile.name || profile.alias || currentEmail.split('@')[0] || '成員').trim();
   const a = $('dashAvatar');
   if (profile.avatar) a.innerHTML = `<img src="${esc(profile.avatar)}" alt="">`;
@@ -2038,7 +2227,11 @@ async function loadPublic() {
 
 /* ===================== 驗證守門 ===================== */
 onAuthStateChanged(auth, (user) => {
-  if (!user) { window.location.replace('login.html'); return; }
+  if (!user) {
+    // 保留分享連結目標，登入後再導回該項目
+    try { if (location.hash) sessionStorage.setItem('intrvl_after_login', location.hash); } catch (_) {}
+    window.location.replace('login.html'); return;
+  }
   currentEmail = user.email || '';
   $('setEmail').textContent = currentEmail;
   $('setRole').textContent = '成員';
@@ -2049,7 +2242,7 @@ onAuthStateChanged(auth, (user) => {
   document.body.classList.remove('checking');
   document.body.classList.add('ready');
 
-  loadPublic();
+  loadPublic().then(routeFromHash);   // 載入完成後，依網址 hash 開到對應項目（分享連結）
 
   isAdmin(user.uid).then(async (ok) => {
     if (ok) {
