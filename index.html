@@ -1185,6 +1185,173 @@ html[lang="zh-TW"] .work-meta-sub {
 }
 
 /* =========================================================
+   WORKS — KEY VISUALS GALLERY (作品視覺，可點放大)
+   ========================================================= */
+.gallery-block {
+  margin-top: 96px;
+  padding-top: 72px;
+  border-top: 1px solid var(--rule);
+}
+
+.gallery-subhead {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  font-family: var(--body);
+  margin-bottom: 40px;
+}
+html[lang="zh-TW"] .gallery-subhead {
+  font-family: var(--body-zh);
+  letter-spacing: 0.2em;
+}
+html[lang="ko"] .gallery-subhead {
+  font-family: var(--body-ko);
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.gallery {
+  column-count: 3;
+  column-gap: 16px;
+}
+@media (max-width: 900px) { .gallery { column-count: 2; } }
+@media (max-width: 520px) { .gallery { column-count: 1; } }
+
+.gallery-item {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 16px;
+  cursor: zoom-in;
+}
+
+.gallery-thumb {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--gradient-soft);
+}
+
+.gallery-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.gallery-item:hover .gallery-thumb img { transform: scale(1.04); }
+
+/* Enlarge badge — mirrors the works card ↗ */
+.gallery-thumb::after {
+  content: "\2922";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  background: rgba(251, 246, 238, 0.95);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 700;
+  z-index: 2;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s, color 0.35s;
+  line-height: 1;
+}
+.gallery-item:hover .gallery-thumb::after {
+  background: var(--gradient);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Placeholder shown behind the image (visible if the file isn't in assets/ yet) */
+.gallery-ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+html[lang="zh-TW"] .gallery-ph { font-family: var(--body-zh); }
+html[lang="ko"] .gallery-ph { font-family: var(--body-ko); }
+
+.gallery-cap {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  font-family: var(--body);
+}
+html[lang="zh-TW"] .gallery-cap { font-family: var(--body-zh); }
+html[lang="ko"] .gallery-cap { font-family: var(--body-ko); }
+
+.gallery-cap strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Lightbox overlay */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 16, 14, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.lightbox.open { display: flex; }
+
+.lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(251, 246, 238, 0.12);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.lightbox-close:hover { background: rgba(251, 246, 238, 0.25); }
+
+@media (max-width: 768px) {
+  .gallery-block { margin-top: 64px; padding-top: 56px; }
+  .lightbox { padding: 20px; }
+  .lightbox-close { top: 14px; right: 16px; }
+}
+
+/* =========================================================
    04 — DEBUT FEATURE
    ========================================================= */
 .debut {
@@ -2432,6 +2599,87 @@ html[lang="zh-TW"] .scroll-top-label {
       </div>
     </a>
   </div>
+
+  <!-- KEY VISUALS GALLERY (作品視覺) -->
+  <div class="gallery-block reveal">
+    <div class="gallery-subhead">
+      <span class="lang-en">Key Visuals</span>
+      <span class="lang-zh">作品視覺</span>
+      <span class="lang-ko">작품 비주얼</span>
+    </div>
+    <div class="gallery">
+      <!-- 外送夥伴 — FoodPenguin -->
+      <div class="gallery-item" data-full="assets/kv_delivery_foodpenguin.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">The Delivery Partner is Arriving</div>
+          <img src="assets/kv_delivery_foodpenguin.jpg" alt="外送夥伴即將抵達 — FoodPenguin" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="gallery-cap">
+          <strong>
+            <span class="lang-en">The Delivery Partner is Arriving</span>
+            <span class="lang-zh">外送夥伴即將抵達</span>
+            <span class="lang-ko">배달 파트너가 도착합니다</span>
+          </strong>
+        </div>
+      </div>
+
+      <!-- 外送夥伴 — 珍奶 -->
+      <div class="gallery-item" data-full="assets/kv_delivery_milktea.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">The Delivery Partner is Arriving</div>
+          <img src="assets/kv_delivery_milktea.jpg" alt="外送夥伴即將抵達 — 珍奶" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="gallery-cap">
+          <strong>
+            <span class="lang-en">The Delivery Partner is Arriving</span>
+            <span class="lang-zh">外送夥伴即將抵達</span>
+            <span class="lang-ko">배달 파트너가 도착합니다</span>
+          </strong>
+        </div>
+      </div>
+
+      <!-- 就要弄死你 — 動作 -->
+      <div class="gallery-item" data-full="assets/kv_kill_action.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">I'm Going to Kill You</div>
+          <img src="assets/kv_kill_action.jpg" alt="就要弄死你 — 動作" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="gallery-cap">
+          <strong>
+            <span class="lang-en">I'm Going to Kill You</span>
+            <span class="lang-zh">就要弄死你</span>
+            <span class="lang-ko">너를 죽여줄게</span>
+          </strong>
+        </div>
+      </div>
+
+      <!-- 就要弄死你 — 角色 -->
+      <div class="gallery-item" data-full="assets/kv_kill_solo.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">I'm Going to Kill You</div>
+          <img src="assets/kv_kill_solo.jpg" alt="就要弄死你 — 角色" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="gallery-cap">
+          <strong>
+            <span class="lang-en">I'm Going to Kill You</span>
+            <span class="lang-zh">就要弄死你</span>
+            <span class="lang-ko">너를 죽여줄게</span>
+          </strong>
+        </div>
+      </div>
+
+      <!-- PRY -->
+      <div class="gallery-item" data-full="assets/kv_pry.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 3 / 2;">
+          <div class="gallery-ph">PRY</div>
+          <img src="assets/kv_pry.jpg" alt="窺 PRY" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="gallery-cap">
+          <strong>PRY</strong>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ================ 05 IN FOCUS ================ -->
@@ -2763,6 +3011,12 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 </footer>
 
+<!-- ================ LIGHTBOX ================ -->
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <img src="" alt="" id="lightboxImg">
+</div>
+
 <!-- ================ SCROLL TO TOP ================ -->
 <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
   <span class="scroll-top-label">
@@ -2829,6 +3083,43 @@ window.addEventListener('scroll', () => {
    Uses window.scrollTo with 'smooth' (CSS scroll-behavior also helps). */
 scrollTopBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* =========================================================
+   GALLERY LIGHTBOX
+   ========================================================= */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+
+function openLightbox(src, alt) {
+  lightboxImg.src = src;
+  lightboxImg.alt = alt || '';
+  lightbox.classList.add('open');
+  lightbox.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lightbox.setAttribute('aria-hidden', 'true');
+  lightboxImg.src = '';
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.gallery-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const thumbImg = item.querySelector('.gallery-thumb img');
+    /* Skip if the image file isn't in assets/ yet (placeholder state) */
+    if (!thumbImg || thumbImg.style.display === 'none' || !thumbImg.complete || thumbImg.naturalWidth === 0) return;
+    openLightbox(item.dataset.full, thumbImg.alt);
+  });
+});
+
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
 });
 </script>
 
