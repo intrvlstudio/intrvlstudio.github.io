@@ -1214,16 +1214,17 @@ html[lang="ko"] .gallery-subhead {
 
 .gallery {
   column-count: 3;
-  column-gap: 16px;
+  column-gap: 12px;
 }
 @media (max-width: 900px) { .gallery { column-count: 2; } }
-@media (max-width: 520px) { .gallery { column-count: 1; } }
+@media (max-width: 520px) { .gallery { column-count: 2; } }
 
 .gallery-item {
+  position: relative;
   display: block;
   break-inside: avoid;
-  margin-bottom: 16px;
-  cursor: zoom-in;
+  margin-bottom: 12px;
+  cursor: pointer;
 }
 
 .gallery-thumb {
@@ -1241,36 +1242,55 @@ html[lang="ko"] .gallery-subhead {
   object-fit: cover;
   transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+.gallery-item:hover .gallery-thumb img { transform: scale(1.05); }
 
-.gallery-item:hover .gallery-thumb img { transform: scale(1.04); }
+/* Work name revealed on a mask — hover on desktop, first tap on touch */
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(26,21,18,0) 38%, rgba(26,21,18,0.8) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.gallery-item:hover .gallery-overlay,
+.gallery-item.revealed .gallery-overlay { opacity: 1; }
 
-/* Enlarge badge — mirrors the works card ↗ */
-.gallery-thumb::after {
+.gallery-overlay::after {
   content: "\2922";
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  background: rgba(251, 246, 238, 0.95);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 50%;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  border-radius: 50%;
+  background: rgba(251, 246, 238, 0.92);
   color: var(--ink);
+  font-size: 15px;
   font-weight: 700;
-  z-index: 2;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s, color 0.35s;
   line-height: 1;
 }
-.gallery-item:hover .gallery-thumb::after {
-  background: var(--gradient);
+
+.gallery-name {
   color: #fff;
-  transform: scale(1.1);
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  transform: translateY(6px);
+  transition: transform 0.4s ease;
 }
+html[lang="zh-TW"] .gallery-name { font-family: var(--body-zh); }
+html[lang="ko"] .gallery-name { font-family: var(--body-ko); }
+.gallery-item:hover .gallery-name,
+.gallery-item.revealed .gallery-name { transform: translateY(0); }
 
 /* Placeholder shown behind the image (visible if the file isn't in assets/ yet) */
 .gallery-ph {
@@ -1289,21 +1309,6 @@ html[lang="ko"] .gallery-subhead {
 }
 html[lang="zh-TW"] .gallery-ph { font-family: var(--body-zh); }
 html[lang="ko"] .gallery-ph { font-family: var(--body-ko); }
-
-.gallery-cap {
-  margin-top: 10px;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--ink-soft);
-  font-family: var(--body);
-}
-html[lang="zh-TW"] .gallery-cap { font-family: var(--body-zh); }
-html[lang="ko"] .gallery-cap { font-family: var(--body-ko); }
-
-.gallery-cap strong {
-  color: var(--ink);
-  font-weight: 600;
-}
 
 /* Lightbox overlay */
 .lightbox {
@@ -1619,11 +1624,14 @@ html[lang="ko"] .debut-cta { font-family: var(--body-ko); }
 .making { background: var(--bg); }
 
 .making-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 44px 48px;
 }
+
+.making-col { flex: 1 1 300px; max-width: 372px; min-width: 0; }
 
 .making-col-label {
   font-size: 11px;
@@ -1651,12 +1659,28 @@ html[lang="ko"] .making-col-label {
 .process-frame {
   position: relative;
   width: 100%;
-  max-width: 420px;
   aspect-ratio: 3 / 5;
   border-radius: 12px;
   overflow: hidden;
   background: var(--gradient-soft);
   box-shadow: 0 24px 60px -28px rgba(26, 21, 18, 0.35);
+}
+
+/* Slim production-progress bar under the frame */
+.process-progress {
+  margin-top: 16px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--rule-soft);
+  overflow: hidden;
+}
+.process-progress-fill {
+  display: block;
+  height: 100%;
+  width: 20%;
+  border-radius: 3px;
+  background: var(--gradient);
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .process-stage {
@@ -1692,8 +1716,7 @@ html[lang="ko"] .process-ph { font-family: var(--body-ko); }
   display: flex;
   flex-wrap: wrap;
   gap: 10px 18px;
-  margin-top: 24px;
-  max-width: 420px;
+  margin-top: 20px;
 }
 .process-steps li {
   font-size: 12px;
@@ -1761,11 +1784,13 @@ html[lang="ko"] .process-steps li { font-family: var(--body-ko); }
   height: auto;
   display: block;
   will-change: transform;
-  animation: stripScroll 22s ease-in-out infinite alternate;
+  animation: stripScroll 14s linear infinite;
 }
+/* Read slowly top→bottom, brief pause, then snap quickly back to the top */
 @keyframes stripScroll {
-  from { transform: translateY(0); }
-  to   { transform: translateY(var(--scroll-end, -65%)); }
+  0%, 6%   { transform: translateY(0); }
+  84%, 90% { transform: translateY(var(--scroll-end, -65%)); }
+  100%     { transform: translateY(0); }
 }
 .phone-screen.no-strip::after {
   content: "條漫待補 / strip pending";
@@ -1786,7 +1811,7 @@ html[lang="ko"] .process-steps li { font-family: var(--body-ko); }
 }
 
 @media (max-width: 900px) {
-  .making-grid { grid-template-columns: 1fr; gap: 56px; max-width: 420px; margin: 0 auto; }
+  .making-grid { gap: 40px; }
 }
 
 /* =========================================================
@@ -2816,28 +2841,13 @@ html[lang="zh-TW"] .scroll-top-label {
         <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
           <div class="gallery-ph">The Delivery Partner is Arriving</div>
           <img src="assets/kv_delivery_foodpenguin.jpg" alt="外送夥伴即將抵達 — FoodPenguin" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <div class="gallery-cap">
-          <strong>
-            <span class="lang-en">The Delivery Partner is Arriving</span>
-            <span class="lang-zh">外送夥伴即將抵達</span>
-            <span class="lang-ko">배달 파트너가 도착합니다</span>
-          </strong>
-        </div>
-      </div>
-
-      <!-- 外送夥伴 — 珍奶 -->
-      <div class="gallery-item" data-full="assets/kv_delivery_milktea.jpg">
-        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
-          <div class="gallery-ph">The Delivery Partner is Arriving</div>
-          <img src="assets/kv_delivery_milktea.jpg" alt="外送夥伴即將抵達 — 珍奶" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <div class="gallery-cap">
-          <strong>
-            <span class="lang-en">The Delivery Partner is Arriving</span>
-            <span class="lang-zh">外送夥伴即將抵達</span>
-            <span class="lang-ko">배달 파트너가 도착합니다</span>
-          </strong>
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">The Delivery Partner is Arriving</span>
+              <span class="lang-zh">外送夥伴即將抵達</span>
+              <span class="lang-ko">배달 파트너가 도착합니다</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -2846,13 +2856,24 @@ html[lang="zh-TW"] .scroll-top-label {
         <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
           <div class="gallery-ph">I'm Going to Kill You</div>
           <img src="assets/kv_kill_action.jpg" alt="就要弄死你 — 動作" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">I'm Going to Kill You</span>
+              <span class="lang-zh">就要弄死你</span>
+              <span class="lang-ko">너를 죽여줄게</span>
+            </span>
+          </div>
         </div>
-        <div class="gallery-cap">
-          <strong>
-            <span class="lang-en">I'm Going to Kill You</span>
-            <span class="lang-zh">就要弄死你</span>
-            <span class="lang-ko">너를 죽여줄게</span>
-          </strong>
+      </div>
+
+      <!-- PRY (橫幅) -->
+      <div class="gallery-item" data-full="assets/kv_pry.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 3 / 2;">
+          <div class="gallery-ph">PRY</div>
+          <img src="assets/kv_pry.jpg" alt="窺 PRY" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">PRY</span>
+          </div>
         </div>
       </div>
 
@@ -2861,24 +2882,28 @@ html[lang="zh-TW"] .scroll-top-label {
         <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
           <div class="gallery-ph">I'm Going to Kill You</div>
           <img src="assets/kv_kill_solo.jpg" alt="就要弄死你 — 角色" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <div class="gallery-cap">
-          <strong>
-            <span class="lang-en">I'm Going to Kill You</span>
-            <span class="lang-zh">就要弄死你</span>
-            <span class="lang-ko">너를 죽여줄게</span>
-          </strong>
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">I'm Going to Kill You</span>
+              <span class="lang-zh">就要弄死你</span>
+              <span class="lang-ko">너를 죽여줄게</span>
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- PRY -->
-      <div class="gallery-item" data-full="assets/kv_pry.jpg">
-        <div class="gallery-thumb" style="aspect-ratio: 3 / 2;">
-          <div class="gallery-ph">PRY</div>
-          <img src="assets/kv_pry.jpg" alt="窺 PRY" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <div class="gallery-cap">
-          <strong>PRY</strong>
+      <!-- 外送夥伴 — 珍奶 -->
+      <div class="gallery-item" data-full="assets/kv_delivery_milktea.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">The Delivery Partner is Arriving</div>
+          <img src="assets/kv_delivery_milktea.jpg" alt="外送夥伴即將抵達 — 珍奶" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">The Delivery Partner is Arriving</span>
+              <span class="lang-zh">外送夥伴即將抵達</span>
+              <span class="lang-ko">배달 파트너가 도착합니다</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -3077,6 +3102,7 @@ html[lang="zh-TW"] .scroll-top-label {
           <img class="process-stage" data-stage="5" src="assets/process_5_final.png" alt="完成" onerror="this.classList.add('broken')">
         </div>
       </div>
+      <div class="process-progress"><span class="process-progress-fill"></span></div>
       <ol class="process-steps">
         <li data-stage="1">
           <span class="lang-en">Sketch</span><span class="lang-zh">草稿</span><span class="lang-ko">스케치</span>
@@ -3388,12 +3414,22 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 
-document.querySelectorAll('.gallery-item').forEach(item => {
+const galleryItems = document.querySelectorAll('.gallery-item');
+const canHover = window.matchMedia('(hover: hover)').matches;
+
+galleryItems.forEach(item => {
   item.addEventListener('click', () => {
     const thumbImg = item.querySelector('.gallery-thumb img');
-    /* Skip if the image file isn't in assets/ yet (placeholder state) */
-    if (!thumbImg || thumbImg.style.display === 'none' || !thumbImg.complete || thumbImg.naturalWidth === 0) return;
-    openLightbox(item.dataset.full, thumbImg.alt);
+    const ready = thumbImg && thumbImg.style.display !== 'none' && thumbImg.complete && thumbImg.naturalWidth > 0;
+
+    /* Touch devices: first tap reveals the name mask, second tap opens the lightbox */
+    if (!canHover && !item.classList.contains('revealed')) {
+      galleryItems.forEach(i => { if (i !== item) i.classList.remove('revealed'); });
+      item.classList.add('revealed');
+      return;
+    }
+    /* Desktop (name already shown on hover) or second tap on touch */
+    if (ready) openLightbox(item.dataset.full, thumbImg.alt);
   });
 });
 
@@ -3412,6 +3448,7 @@ document.addEventListener('keydown', (e) => {
   if (!anim) return;
   const stages = Array.from(anim.querySelectorAll('.process-stage'));
   const steps = Array.from(document.querySelectorAll('.process-steps li'));
+  const fill = document.querySelector('.process-progress-fill');
   if (!stages.length) return;
 
   const STEP_MS = 1500;   // time on each stage
@@ -3421,6 +3458,7 @@ document.addEventListener('keydown', (e) => {
   function show(idx) {
     stages.forEach((s, n) => s.classList.toggle('active', n === idx));
     steps.forEach(s => s.classList.toggle('active', Number(s.dataset.stage) === idx + 1));
+    if (fill) fill.style.width = ((idx + 1) / stages.length * 100) + '%';
   }
   show(0);
 
@@ -3453,7 +3491,8 @@ document.addEventListener('keydown', (e) => {
     const end = strip.clientHeight - screen.clientHeight;
     if (end > 0) {
       strip.style.setProperty('--scroll-end', '-' + end + 'px');
-      strip.style.animationDuration = Math.max(12, Math.min(45, end / 55)) + 's';
+      /* ~110px/s read speed; the keyframe handles the fast rewind */
+      strip.style.animationDuration = Math.max(8, Math.min(26, end / 85)) + 's';
     }
   }
 
