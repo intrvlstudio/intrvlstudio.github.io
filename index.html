@@ -14,9 +14,9 @@
 </script>
 
 <title>INTRVL Studio — 之間工作室</title>
-<meta name="description" content="A Taiwan-based vertical scroll webtoon studio creating cinematic Boys' Love romance. Weekly updates on LINE WEBTOON.">
+<meta name="description" content="A Taiwan-based vertical scroll webtoon studio creating Boys' Love romance. Weekly updates on LINE WEBTOON.">
 <meta property="og:title" content="INTRVL Studio — 之間工作室">
-<meta property="og:description" content="A Taiwan-based vertical scroll webtoon studio creating cinematic Boys' Love romance. Weekly updates on LINE WEBTOON.">
+<meta property="og:description" content="A Taiwan-based vertical scroll webtoon studio creating Boys' Love romance. Weekly updates on LINE WEBTOON.">
 <meta property="og:image" content="https://intrvlstudio.github.io/assets/Logo_cover_thumb.jpg">
 <meta property="og:url" content="https://intrvlstudio.github.io">
 
@@ -845,7 +845,156 @@ html[lang="zh-TW"] .member-bio {
 }
 
 /* =========================================================
-   03 — WORKS
+   BY THE NUMBERS — proof strip (純文字、細線分隔、無裝飾)
+   ========================================================= */
+.numbers {
+  background: var(--bg);
+  padding: 88px 60px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.numbers-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  font-family: var(--body);
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+html[lang="zh-TW"] .numbers-eyebrow {
+  font-family: var(--body-zh);
+  letter-spacing: 0.2em;
+}
+html[lang="ko"] .numbers-eyebrow {
+  font-family: var(--body-ko);
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.numbers-cell {
+  text-align: center;
+  padding: 8px 24px;
+  border-left: 1px solid var(--rule);
+}
+.numbers-cell:first-child { border-left: none; }
+
+.numbers-value {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(48px, 5.4vw, 78px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 16px;
+}
+
+html[lang="ko"] .numbers-value {
+  font-family: var(--display-ko);
+}
+
+.numbers-label {
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+html[lang="zh-TW"] .numbers-label { font-family: var(--body-zh); }
+html[lang="ko"] .numbers-label { font-family: var(--body-ko); }
+
+@media (max-width: 768px) {
+  .numbers { padding: 64px 24px; }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); gap: 48px 0; }
+  .numbers-cell:nth-child(odd) { border-left: none; }
+  .numbers-cell:nth-child(3),
+  .numbers-cell:nth-child(4) { padding-top: 0; }
+}
+
+/* =========================================================
+   COLLABORATORS (合作夥伴 — 併入 Contact 區，外部短期協作者)
+   ========================================================= */
+.collab-merge {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 64px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.collab-merge-text { max-width: 560px; }
+
+@media (max-width: 768px) {
+  .collab-merge { grid-template-columns: 1fr; gap: 36px; }
+}
+
+/* Expandable grid — new partners just add a card */
+.collab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+/* External chip — marks non-resident collaborators */
+.member-chip {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-family: var(--body);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mauve);
+  background: var(--bg-alt);
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  padding: 4px 10px;
+}
+
+html[lang="zh-TW"] .member-chip {
+  font-family: var(--body-zh);
+  letter-spacing: 0.1em;
+  text-transform: none;
+}
+html[lang="ko"] .member-chip {
+  font-family: var(--body-ko);
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.member-collab {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.member-collab em {
+  font-style: italic;
+  color: var(--mauve);
+}
+
+html[lang="zh-TW"] .member-collab { font-family: var(--body-zh); }
+html[lang="ko"] .member-collab { font-family: var(--body-ko); }
+
+/* =========================================================
+   04 — WORKS
    ========================================================= */
 .works {
   background: var(--bg);
@@ -1023,6 +1172,178 @@ html[lang="zh-TW"] .work-meta-sub {
 }
 
 /* =========================================================
+   WORKS — KEY VISUALS GALLERY (作品視覺，可點放大)
+   ========================================================= */
+.gallery-block {
+  margin-top: 96px;
+  padding-top: 72px;
+  border-top: 1px solid var(--rule);
+}
+
+.gallery-subhead {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  font-family: var(--body);
+  margin-bottom: 40px;
+}
+html[lang="zh-TW"] .gallery-subhead {
+  font-family: var(--body-zh);
+  letter-spacing: 0.2em;
+}
+html[lang="ko"] .gallery-subhead {
+  font-family: var(--body-ko);
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.gallery {
+  column-count: 3;
+  column-gap: 12px;
+}
+@media (max-width: 900px) { .gallery { column-count: 2; } }
+@media (max-width: 520px) { .gallery { column-count: 2; } }
+
+.gallery-item {
+  position: relative;
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.gallery-thumb {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--gradient-soft);
+}
+
+.gallery-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.gallery-item:hover .gallery-thumb img { transform: scale(1.05); }
+
+/* Work name revealed on a mask — hover on desktop, first tap on touch */
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(26,21,18,0) 38%, rgba(26,21,18,0.8) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.gallery-item:hover .gallery-overlay,
+.gallery-item.revealed .gallery-overlay { opacity: 1; }
+
+.gallery-overlay::after {
+  content: "\2922";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(251, 246, 238, 0.92);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.gallery-name {
+  color: #fff;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  transform: translateY(6px);
+  transition: transform 0.4s ease;
+}
+html[lang="zh-TW"] .gallery-name { font-family: var(--body-zh); }
+html[lang="ko"] .gallery-name { font-family: var(--body-ko); }
+.gallery-item:hover .gallery-name,
+.gallery-item.revealed .gallery-name { transform: translateY(0); }
+
+/* Placeholder shown behind the image (visible if the file isn't in assets/ yet) */
+.gallery-ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+html[lang="zh-TW"] .gallery-ph { font-family: var(--body-zh); }
+html[lang="ko"] .gallery-ph { font-family: var(--body-ko); }
+
+/* Lightbox overlay */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 16, 14, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.lightbox.open { display: flex; }
+
+.lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(251, 246, 238, 0.12);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.lightbox-close:hover { background: rgba(251, 246, 238, 0.25); }
+
+@media (max-width: 768px) {
+  .gallery-block { margin-top: 64px; padding-top: 56px; }
+  .lightbox { padding: 20px; }
+  .lightbox-close { top: 14px; right: 16px; }
+}
+
+/* =========================================================
    04 — DEBUT FEATURE
    ========================================================= */
 .debut {
@@ -1107,6 +1428,33 @@ html[lang="zh-TW"] .debut-image-meta {
   letter-spacing: 0.15em;
   text-transform: none;
   font-size: 12px;
+}
+
+/* Floating Kadokawa print edition (去背 PNG，特裝視覺) */
+.debut-book {
+  position: absolute;
+  right: -24px;
+  bottom: -46px;
+  width: 44%;
+  max-width: 220px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 22px 38px rgba(26, 21, 18, 0.35));
+  animation: bookFloat 5.5s ease-in-out infinite;
+}
+
+@keyframes bookFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-12px) rotate(-1.5deg); }
+}
+
+@media (max-width: 1024px) {
+  .debut-book { width: 38%; max-width: 175px; right: 0; bottom: -34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .debut-book { animation: none; }
 }
 
 .debut-content {
@@ -1205,12 +1553,252 @@ html[lang="zh-TW"] .debut-spec-val {
   font-size: 17px;
 }
 
+.debut-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.debut-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 24px;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+html[lang="zh-TW"] .debut-cta { font-family: var(--body-zh); }
+html[lang="ko"] .debut-cta { font-family: var(--body-ko); }
+
+.debut-cta-primary {
+  background: var(--ink);
+  color: var(--bg);
+  border: 1px solid var(--ink);
+}
+.debut-cta-primary:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.debut-cta-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+.debut-cta-secondary:hover {
+  border-color: var(--ink);
+}
+
+.debut-cta-arrow { font-size: 16px; }
+
 @media (max-width: 1024px) {
   .debut-feature {
     grid-template-columns: 1fr;
     gap: 60px;
   }
   .debut-tag { top: 80px; right: 24px; }
+}
+
+/* =========================================================
+   06 — BEHIND THE SCENES (製作幕後)
+   ========================================================= */
+.making { background: var(--bg); }
+
+.making-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 44px 48px;
+}
+
+.making-col { flex: 1 1 300px; max-width: 372px; min-width: 0; }
+
+.making-col-label {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  font-family: var(--body);
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+html[lang="zh-TW"] .making-col-label {
+  font-family: var(--body-zh);
+  letter-spacing: 0.12em;
+  text-transform: none;
+}
+html[lang="ko"] .making-col-label {
+  font-family: var(--body-ko);
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+
+/* ── Process birth animation ── */
+.process-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 5;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--gradient-soft);
+  box-shadow: 0 24px 60px -28px rgba(26, 21, 18, 0.35);
+}
+
+/* Slim production-progress bar under the frame */
+.process-progress {
+  margin-top: 16px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--rule-soft);
+  overflow: hidden;
+}
+.process-progress-fill {
+  display: block;
+  height: 100%;
+  width: 20%;
+  border-radius: 3px;
+  background: var(--gradient);
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.process-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.process-stage.active { opacity: 1; }
+.process-stage.broken { display: none; }
+
+.process-anim.resetting .process-frame { opacity: 0; transition: opacity 0.4s ease; }
+
+.process-ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--body);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+html[lang="zh-TW"] .process-ph { font-family: var(--body-zh); }
+html[lang="ko"] .process-ph { font-family: var(--body-ko); }
+
+.process-steps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-top: 20px;
+}
+.process-steps li {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--ink-mute);
+  font-family: var(--body);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.3s;
+}
+html[lang="zh-TW"] .process-steps li { font-family: var(--body-zh); }
+html[lang="ko"] .process-steps li { font-family: var(--body-ko); }
+.process-steps li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rule);
+  transition: background 0.3s, transform 0.3s;
+}
+.process-steps li.active {
+  color: var(--ink);
+  font-weight: 600;
+}
+.process-steps li.active::before {
+  background: var(--gradient);
+  transform: scale(1.5);
+}
+
+/* ── Phone mockup (auto-scrolling webtoon strip) ── */
+.phone {
+  position: relative;
+  width: 100%;
+  max-width: 266px;
+  margin: 0 auto;
+  aspect-ratio: 9 / 19;
+  background: #1b1614;
+  border-radius: 36px;
+  padding: 12px;
+  box-shadow: 0 36px 80px -30px rgba(26, 21, 18, 0.55),
+              inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+.phone-notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36%;
+  height: 18px;
+  background: #1b1614;
+  border-radius: 0 0 12px 12px;
+  z-index: 3;
+}
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+.phone-strip {
+  width: 100%;
+  height: auto;
+  display: block;
+  will-change: transform;
+  animation: stripScroll 14s linear infinite;
+}
+/* Read slowly top→bottom, brief pause, then snap quickly back to the top */
+@keyframes stripScroll {
+  0%, 6%   { transform: translateY(0); }
+  84%, 90% { transform: translateY(var(--scroll-end, -65%)); }
+  100%     { transform: translateY(0); }
+}
+.phone-screen.no-strip::after {
+  content: "條漫待補 / strip pending";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  font-family: var(--body-zh);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-strip { animation: none; }
+}
+
+@media (max-width: 900px) {
+  .making-grid { gap: 40px; }
 }
 
 /* =========================================================
@@ -1695,9 +2283,9 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-ko">인터벌</span>
       </h1>
       <p class="cover-tagline">
-        <span class="lang-en">A weekly rhythm. A space between collaborators. A Taiwan-based webtoon studio publishing cinematic Boys' Love on LINE WEBTOON.</span>
+        <span class="lang-en">A fully remote webtoon studio with weekly releases — Boys' Love, serialized on LINE WEBTOON.</span>
         <span class="lang-zh">穩定週更、全遠端合作的 WEBTOON 製作團隊。</span>
-        <span class="lang-ko">매주 이어지는 리듬. 동료와 동료 사이의 공간. 대만에 거점을 두고 LINE WEBTOON에서 영화 같은 BL 웹툰을 연재하는 스튜디오입니다.</span>
+        <span class="lang-ko">매주 연재, 완전 원격으로 협업하는 웹툰 제작 팀 — LINE WEBTOON에서 BL 웹툰을 연재합니다.</span>
       </p>
     </div>
     <div class="cover-footer">
@@ -1728,12 +2316,59 @@ html[lang="zh-TW"] .scroll-top-label {
   <div class="cover-image">
     <img src="assets/cover_delivery.jpg" alt="INTRVL Studio — The Delivery Partner is Arriving">
     <div class="cover-image-caption">
-      <span class="lang-en">From the studio debut, <em>The Delivery Partner is Arriving</em></span>
-      <span class="lang-zh">節錄自工作室出道作《外送夥伴即將抵達》</span>
-      <span class="lang-ko">스튜디오 데뷔작 《배달 파트너가 도착합니다》 중에서</span>
+      <span class="lang-en">From our latest completed work, <em>The Delivery Partner is Arriving</em></span>
+      <span class="lang-zh">節錄自工作室最新完結作《外送夥伴即將抵達》</span>
+      <span class="lang-ko">스튜디오 최신 완결작 《배달 파트너가 도착합니다》 중에서</span>
     </div>
   </div>
 </header>
+
+<!-- ================ BY THE NUMBERS ================ -->
+<section class="numbers reveal">
+  <div class="numbers-eyebrow">
+    <span class="lang-en">By the Numbers</span>
+    <span class="lang-zh">數字一覽</span>
+    <span class="lang-ko">숫자로 보는 INTRVL</span>
+  </div>
+  <div class="numbers-grid">
+    <div class="numbers-cell">
+      <div class="numbers-value">200+</div>
+      <div class="numbers-label">
+        <span class="lang-en">Episodes published</span>
+        <span class="lang-zh">累積連載話數</span>
+        <span class="lang-ko">누적 연재 화수</span>
+      </div>
+    </div>
+    <div class="numbers-cell">
+      <div class="numbers-value">
+        <span class="lang-en">28M</span>
+        <span class="lang-zh">2,800萬</span>
+        <span class="lang-ko">2,800만</span>
+      </div>
+      <div class="numbers-label">
+        <span class="lang-en">Peak views on a single title</span>
+        <span class="lang-zh">單一作品最高觀看數</span>
+        <span class="lang-ko">단일 작품 최고 조회수</span>
+      </div>
+    </div>
+    <div class="numbers-cell">
+      <div class="numbers-value">2×</div>
+      <div class="numbers-label">
+        <span class="lang-en">LINE WEBTOON "Best New Series" selections</span>
+        <span class="lang-zh">入選 LINE WEBTOON 年度最佳新作</span>
+        <span class="lang-ko">LINE WEBTOON 올해의 신작 선정</span>
+      </div>
+    </div>
+    <div class="numbers-cell">
+      <div class="numbers-value">4</div>
+      <div class="numbers-label">
+        <span class="lang-en">Completed serializations</span>
+        <span class="lang-zh">完結連載作品</span>
+        <span class="lang-ko">완결 연재작</span>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ================ 01 ABOUT ================ -->
 <section class="section about" id="about">
@@ -1778,7 +2413,7 @@ html[lang="zh-TW"] .scroll-top-label {
     <div class="about-side">
       <div class="about-pullquote">
         <span class="lang-en">"On time, every week — that's the foundation everything else stands on."</span>
-        <span class="lang-zh">熱情是我們的唯一原則。」</span>
+        <span class="lang-zh">「準時，每一週——是其餘一切得以成立的基礎。」</span>
         <span class="lang-ko">"매주, 정시에 — 그것이 모든 것을 떠받치는 토대입니다."</span>
         <span class="about-pullquote-cite">— INTRVL Studio</span>
       </div>
@@ -1802,8 +2437,8 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-ko">하나의 팀, <em>저마다의 본업</em>.</span>
       </h2>
       <p style="margin-top: 28px; font-size: 17px; line-height: 1.7; color: var(--ink-soft); max-width: 600px;">
-        <span class="lang-en">All of us hold full-time careers outside the studio — in software, marketing, and small business. We believe that grounding in everyday working life is precisely what gives our stories their texture.</span>
-        <span class="lang-zh">我們在工作室之外都擁有各自的正職——分別在軟體工程、行銷企劃與實體店面經營領域。<br>我們相信，這些來自日常職場的真實體驗，正是賦予我們故事豐富層次與質感的關鍵。</span>
+        <span class="lang-en">All of us hold full-time careers outside the studio — in software, marketing, and small business. That grounding in everyday working life is exactly what gives our stories their texture.</span>
+        <span class="lang-zh">我們在工作室之外都擁有各自的正職——分別在軟體工程、行銷企劃與實體店面經營領域。<br>我們相信，這些來自日常職場的真實體驗，正是賦予故事層次與質感的關鍵。</span>
         <span class="lang-ko">우리 모두는 스튜디오 밖에서 각자의 본업을 가지고 있습니다 — 소프트웨어 엔지니어링, 마케팅, 자영업 분야에서요. 일상적인 직장 생활에서 비롯된 이런 경험들이 우리 이야기에 깊이와 질감을 부여한다고 믿습니다.</span>
       </p>
     </div>
@@ -1846,14 +2481,14 @@ html[lang="zh-TW"] .scroll-top-label {
           </span>
           <span class="member-meta-val">
             <span class="lang-en">Director</span>
-            <span class="lang-zh">主要監製人</span>
+            <span class="lang-zh">總監</span>
             <span class="lang-ko">디렉터</span>
           </span>
         </div>
       </div>
       <p class="member-bio">
-        <span class="lang-en">Serialized creator on LINE WEBTOON. Script and visual director for all studio projects — the source of every story we build together.</span>
-        <span class="lang-zh">LINE WEBTOON 連載作者，也是工作室所有專案的劇本與分鏡美術總監。</span>
+        <span class="lang-en">Serialized creator on LINE WEBTOON. Script and visual director for every studio project — the source of every story we build.</span>
+        <span class="lang-zh">LINE WEBTOON 連載作者，工作室所有專案的劇本與分鏡美術總監——每個故事的源頭。</span>
         <span class="lang-ko">LINE WEBTOON 연재 작가이자 스튜디오 모든 프로젝트의 시나리오·비주얼 디렉터.</span>
       </p>
     </article>
@@ -2006,16 +2641,16 @@ html[lang="zh-TW"] .scroll-top-label {
       </div>
       <h2 class="section-title">
         <span class="lang-en">A range from <em>tender</em> to <em>raw</em>.</span>
-        <span class="lang-zh">從生活中找尋<em>溫柔</em></span>
+        <span class="lang-zh">從<em>溫柔</em>到<em>鋒利</em></span>
         <span class="lang-ko"><em>부드러움</em>에서 <em>날카로움</em>까지.</span>
       </h2>
     </div>
   </div>
 
   <p class="works-intro reveal delay-1">
-    <span class="lang-en">PIANN has completed four serializations on LINE WEBTOON. They span everyday romance and dark adult drama — a deliberately wide range, united by character-first storytelling.</span>
-    <span class="lang-zh">PIANN 於 LINE WEBTOON 已完結四部連載作品。<br>題材橫跨日常戀愛到黑色成人劇——刻意寬廣的光譜，被以角色為核心的敘事貫穿。</span>
-    <span class="lang-ko">PIANN은 LINE WEBTOON에서 4편의 연재를 완결했습니다. 일상 로맨스부터 어둡고 묵직한 성인 드라마까지 — 의도적으로 넓은 스펙트럼을 캐릭터 중심의 서사가 하나로 묶어냅니다.</span>
+    <span class="lang-en">Our works span everyday romance to dark adult drama — a deliberately wide range, held together by character-first storytelling.</span>
+    <span class="lang-zh">INTRVL 的作品橫跨日常戀愛到黑色成人劇——刻意寬廣的光譜，以角色為核心的敘事貫穿其中。</span>
+    <span class="lang-ko">INTRVL의 작품은 일상 로맨스부터 어둡고 묵직한 성인 드라마까지 — 의도적으로 넓은 스펙트럼을 캐릭터 중심의 서사가 하나로 묶습니다.</span>
   </p>
 
   <div class="works-grid">
@@ -2029,9 +2664,9 @@ html[lang="zh-TW"] .scroll-top-label {
       </div>
       <div class="work-overlay">
         <div class="work-meta-label">
-          <span class="lang-en">Studio Debut · 2025</span>
-          <span class="lang-zh">工作室出道作 · 2025</span>
-          <span class="lang-ko">스튜디오 데뷔작 · 2025</span>
+          <span class="lang-en">Latest · Completed 2025</span>
+          <span class="lang-zh">最新完結作 · 2025</span>
+          <span class="lang-ko">최신 완결작 · 2025</span>
         </div>
         <div class="work-meta-title">
           <span class="lang-en">The Delivery Partner is Arriving</span>
@@ -2052,10 +2687,9 @@ html[lang="zh-TW"] .scroll-top-label {
        rel="noopener noreferrer"
        aria-label="My Handsome Senior Roommate on LINE WEBTOON">
       <div class="work-image">
-        <img src="assets/cover_roommate.png" alt="我的室友帥哥學長">
+        <img src="assets/cover_roommate.jpg" alt="我的室友帥哥學長">
       </div>
       <div class="work-overlay">
-        <div class="work-meta-label">PIANN · Solo</div>
         <div class="work-meta-title">
           <span class="lang-en">My Handsome Senior Roommate</span>
           <span class="lang-zh">我的室友帥哥學長</span>
@@ -2078,7 +2712,6 @@ html[lang="zh-TW"] .scroll-top-label {
         <img src="assets/cover_pry.jpg" alt="窺 PRY">
       </div>
       <div class="work-overlay">
-        <div class="work-meta-label">PIANN · Solo</div>
         <div class="work-meta-title">PRY</div>
         <div class="work-meta-sub">
           <span class="lang-en">窺 PRY</span>
@@ -2097,7 +2730,11 @@ html[lang="zh-TW"] .scroll-top-label {
         <img src="assets/cover_kill.jpg" alt="就要弄死你">
       </div>
       <div class="work-overlay">
-        <div class="work-meta-label">PIANN · Solo</div>
+        <div class="work-meta-label">
+          <span class="lang-en">Writer: 18xDay</span>
+          <span class="lang-zh">編劇 十八日</span>
+          <span class="lang-ko">각본: 18xDay</span>
+        </div>
         <div class="work-meta-title">
           <span class="lang-en">I'm Going to Kill You</span>
           <span class="lang-zh">就要弄死你</span>
@@ -2111,14 +2748,95 @@ html[lang="zh-TW"] .scroll-top-label {
       </div>
     </a>
   </div>
+
+  <!-- KEY VISUALS GALLERY (作品視覺) -->
+  <div class="gallery-block reveal">
+    <div class="gallery-subhead">
+      <span class="lang-en">Key Visuals</span>
+      <span class="lang-zh">作品視覺</span>
+      <span class="lang-ko">작품 비주얼</span>
+    </div>
+    <div class="gallery">
+      <!-- 外送夥伴 — FoodPenguin -->
+      <div class="gallery-item" data-full="assets/kv_delivery_foodpenguin.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">The Delivery Partner is Arriving</div>
+          <img src="assets/kv_delivery_foodpenguin.jpg" alt="外送夥伴即將抵達 — FoodPenguin" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">The Delivery Partner is Arriving</span>
+              <span class="lang-zh">外送夥伴即將抵達</span>
+              <span class="lang-ko">배달 파트너가 도착합니다</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 就要弄死你 — 動作 -->
+      <div class="gallery-item" data-full="assets/kv_kill_action.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">I'm Going to Kill You</div>
+          <img src="assets/kv_kill_action.jpg" alt="就要弄死你 — 動作" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">I'm Going to Kill You</span>
+              <span class="lang-zh">就要弄死你</span>
+              <span class="lang-ko">너를 죽여줄게</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRY (橫幅) -->
+      <div class="gallery-item" data-full="assets/kv_pry.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 3 / 2;">
+          <div class="gallery-ph">PRY</div>
+          <img src="assets/kv_pry.jpg" alt="窺 PRY" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">PRY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 就要弄死你 — 角色 -->
+      <div class="gallery-item" data-full="assets/kv_kill_solo.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">I'm Going to Kill You</div>
+          <img src="assets/kv_kill_solo.jpg" alt="就要弄死你 — 角色" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">I'm Going to Kill You</span>
+              <span class="lang-zh">就要弄死你</span>
+              <span class="lang-ko">너를 죽여줄게</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 外送夥伴 — 珍奶 -->
+      <div class="gallery-item" data-full="assets/kv_delivery_milktea.jpg">
+        <div class="gallery-thumb" style="aspect-ratio: 2 / 3;">
+          <div class="gallery-ph">The Delivery Partner is Arriving</div>
+          <img src="assets/kv_delivery_milktea.jpg" alt="外送夥伴即將抵達 — 珍奶" loading="lazy" onerror="this.style.display='none'">
+          <div class="gallery-overlay">
+            <span class="gallery-name">
+              <span class="lang-en">The Delivery Partner is Arriving</span>
+              <span class="lang-zh">外送夥伴即將抵達</span>
+              <span class="lang-ko">배달 파트너가 도착합니다</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ================ 04 DEBUT FEATURE ================ -->
+<!-- ================ 04 IN FOCUS ================ -->
 <section class="section debut">
   <div class="debut-tag">
-    <span class="lang-en">Studio Debut Feature</span>
-    <span class="lang-zh">出道作特寫</span>
-    <span class="lang-ko">데뷔작 특집</span>
+    <span class="lang-en">Latest · Completed</span>
+    <span class="lang-zh">最新完結作</span>
+    <span class="lang-ko">최신 완결작</span>
   </div>
 
   <div class="section-header reveal">
@@ -2130,9 +2848,9 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-ko">작품 클로즈업</span>
       </div>
       <h2 class="section-title">
-        <span class="lang-en">The studio's <em>first</em> full collaboration.</span>
-        <span class="lang-zh">工作室<em>第一部</em>全面協作作品</span>
-        <span class="lang-ko">스튜디오의 <em>첫</em> 완전 협업 작품.</span>
+        <span class="lang-en">Our <em>latest</em> completed work.</span>
+        <span class="lang-zh">工作室<em>最新</em>完結作</span>
+        <span class="lang-ko">스튜디오 <em>최신</em> 완결작.</span>
       </h2>
     </div>
   </div>
@@ -2147,6 +2865,7 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-zh">已完結 · 2025</span>
         <span class="lang-ko">완결 · 2025</span>
       </div>
+      <img class="debut-book" src="assets/kadokawa_book.png" alt="《外送夥伴即將抵達》台灣角川單行本 第 1 集" onerror="this.style.display='none'">
     </div>
 
     <div class="debut-content reveal delay-1">
@@ -2166,9 +2885,9 @@ html[lang="zh-TW"] .scroll-top-label {
         <span class="lang-ko">外送夥伴即將抵達 · The Delivery Partner is Arriving</span>
       </div>
       <p class="debut-body">
-        <span class="lang-en">Our first fully collaborative work and the studio's debut serialization. Completed on LINE WEBTOON in Traditional Chinese, with a print edition published by Kadokawa Taiwan — marking PIANN, PAGE, and M3's first project together as INTRVL.</span>
-        <span class="lang-zh">這是我們第一部全面合作的作品，也是工作室的首部連載。<br>已於 LINE WEBTOON（繁體中文版）完結，實體單行本由台灣角川出版發行——這是 PIANN、PAGE、M3 三人以 INTRVL 之名共同完成的第一個專案。</span>
-        <span class="lang-ko">우리의 첫 완전 협업 작품이자 스튜디오의 데뷔 연재. LINE WEBTOON에서 번체 중국어판으로 완결되었으며, 단행본은 대만 카도카와에서 출간되었습니다 — PIANN, PAGE, M3 세 사람이 INTRVL의 이름으로 함께 완성한 첫 프로젝트입니다.</span>
+        <span class="lang-en"><em>The Delivery Partner is Arriving</em> is INTRVL's latest completed serialization and the studio's first work in print. It concluded on LINE WEBTOON (Traditional Chinese); the print edition is published by Kadokawa Taiwan, with a special edition featuring an acrylic stand, soft badge, and a signed postcard.</span>
+        <span class="lang-zh">《外送夥伴即將抵達》是 INTRVL 最新完結的連載，也是工作室首部實體出版作品。<br>已於 LINE WEBTOON（繁體中文）完結，單行本由台灣角川發行，並推出收錄壓克力立牌、軟軟胸章與印簽明信片的特裝版。</span>
+        <span class="lang-ko">《배달 파트너가 도착합니다》는 INTRVL의 최신 완결 연재이자 스튜디오의 첫 단행본 작품입니다. LINE WEBTOON(번체 중국어)에서 완결되었고, 단행본은 대만 카도카와에서 출간되었으며, 아크릴 스탠드·뱃지·사인 엽서가 포함된 특장판도 출시되었습니다.</span>
       </p>
 
       <div class="debut-specs">
@@ -2190,6 +2909,18 @@ html[lang="zh-TW"] .scroll-top-label {
             <span class="lang-en">Kadokawa Taiwan</span>
             <span class="lang-zh">台灣角川</span>
             <span class="lang-ko">대만 카도카와</span>
+          </div>
+        </div>
+        <div>
+          <div class="debut-spec-key">
+            <span class="lang-en">Rating</span>
+            <span class="lang-zh">分級</span>
+            <span class="lang-ko">등급</span>
+          </div>
+          <div class="debut-spec-val">
+            <span class="lang-en">18+ Mature</span>
+            <span class="lang-zh">18+ 限制級</span>
+            <span class="lang-ko">18+</span>
           </div>
         </div>
         <div>
@@ -2216,12 +2947,121 @@ html[lang="zh-TW"] .scroll-top-label {
             <span class="lang-ko">완결</span>
           </div>
         </div>
+        <div>
+          <div class="debut-spec-key">
+            <span class="lang-en">Views</span>
+            <span class="lang-zh">瀏覽數</span>
+            <span class="lang-ko">조회수</span>
+          </div>
+          <div class="debut-spec-val">
+            <span class="lang-en">Over 4M</span>
+            <span class="lang-zh">突破 400 萬</span>
+            <span class="lang-ko">400만 돌파</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="debut-ctas">
+        <a class="debut-cta debut-cta-primary"
+           href="https://www.kadokawa.com.tw/products/4711289631477"
+           target="_blank" rel="noopener noreferrer">
+          <span class="lang-en">Buy at Kadokawa</span>
+          <span class="lang-zh">角川購書</span>
+          <span class="lang-ko">카도카와에서 구매</span>
+          <span class="debut-cta-arrow">→</span>
+        </a>
+        <a class="debut-cta debut-cta-secondary"
+           href="https://www.webtoons.com/zh-hant/romance/your-dielivery-is-almost-there/list?title_no=8064"
+           target="_blank" rel="noopener noreferrer">
+          <span class="lang-en">Read on WEBTOON</span>
+          <span class="lang-zh">WEBTOON 閱讀</span>
+          <span class="lang-ko">WEBTOON에서 보기</span>
+          <span class="debut-cta-arrow">↗</span>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================ 05 UPCOMING ================ -->
+<!-- ================ 05 BEHIND THE SCENES ================ -->
+<section class="section making" id="making">
+  <div class="section-header reveal">
+    <div class="section-num">05</div>
+    <div class="section-label-block">
+      <div class="section-label">
+        <span class="lang-en">Behind the Scenes</span>
+        <span class="lang-zh">製作幕後</span>
+        <span class="lang-ko">제작 비하인드</span>
+      </div>
+      <h2 class="section-title">
+        <span class="lang-en">From <em>sketch</em> to <em>screen</em>.</span>
+        <span class="lang-zh">從<em>草稿</em>到<em>螢幕</em></span>
+        <span class="lang-ko"><em>스케치</em>에서 <em>화면</em>까지.</span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="making-grid">
+    <!-- 一張圖的誕生 — 逐階段演變動畫 -->
+    <div class="making-col reveal delay-1">
+      <div class="making-col-label">
+        <span class="lang-en">How a panel is built</span>
+        <span class="lang-zh">一張圖的誕生</span>
+        <span class="lang-ko">한 컷이 완성되기까지</span>
+      </div>
+      <div class="process-anim">
+        <div class="process-frame">
+          <div class="process-ph">
+            <span class="lang-en">Process</span>
+            <span class="lang-zh">製作過程</span>
+            <span class="lang-ko">제작 과정</span>
+          </div>
+          <img class="process-stage" data-stage="1" src="assets/process_1_sketch.png" alt="草稿" onerror="this.classList.add('broken')">
+          <img class="process-stage" data-stage="2" src="assets/process_2_line.png" alt="線稿" onerror="this.classList.add('broken')">
+          <img class="process-stage" data-stage="3" src="assets/process_3_flat.jpg" alt="平塗" onerror="this.classList.add('broken')">
+          <img class="process-stage" data-stage="4" src="assets/process_4_color.jpg" alt="上色" onerror="this.classList.add('broken')">
+          <img class="process-stage" data-stage="5" src="assets/process_5_final.jpg" alt="完成" onerror="this.classList.add('broken')">
+        </div>
+      </div>
+      <div class="process-progress"><span class="process-progress-fill"></span></div>
+      <ol class="process-steps">
+        <li data-stage="1">
+          <span class="lang-en">Sketch</span><span class="lang-zh">草稿</span><span class="lang-ko">스케치</span>
+        </li>
+        <li data-stage="2">
+          <span class="lang-en">Line art</span><span class="lang-zh">線稿</span><span class="lang-ko">선화</span>
+        </li>
+        <li data-stage="3">
+          <span class="lang-en">Flat color</span><span class="lang-zh">平塗</span><span class="lang-ko">밑색</span>
+        </li>
+        <li data-stage="4">
+          <span class="lang-en">Shading</span><span class="lang-zh">上色</span><span class="lang-ko">채색</span>
+        </li>
+        <li data-stage="5">
+          <span class="lang-en">Final</span><span class="lang-zh">完成</span><span class="lang-ko">완성</span>
+        </li>
+      </ol>
+    </div>
+
+    <!-- 在手機上 — 條漫自動滑動 mockup -->
+    <div class="making-col reveal delay-2">
+      <div class="making-col-label">
+        <span class="lang-en">On your phone</span>
+        <span class="lang-zh">在手機上的樣子</span>
+        <span class="lang-ko">휴대폰에서 보기</span>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <img class="phone-strip" src="assets/webtoon_strip.jpg" alt="條漫節選"
+               onerror="this.style.display='none'; this.closest('.phone-screen').classList.add('no-strip')">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ COMING SOON ================ -->
 <section class="section upcoming">
   <div class="reveal">
     <div class="upcoming-label">
@@ -2235,28 +3075,81 @@ html[lang="zh-TW"] .scroll-top-label {
       <span class="lang-ko">새로운 연재, 제작 중.</span>
     </h2>
     <p class="upcoming-body">
-      <span class="lang-en">Our second collaborative project is currently in development. Details will be announced in due time — follow us on Instagram to be the first to know.</span>
+      <span class="lang-en">Our second collaborative project is currently in production. Details will be announced in due time — follow us on Instagram to hear first.</span>
       <span class="lang-zh">工作室的第二部協作作品正在製作中。<br>詳情將於日後公佈——可追蹤我們的 Instagram 獲得最新消息。</span>
-      <span class="lang-ko">스튜디오의 두 번째 협업 프로젝트가 현재 제작 중입니다. 자세한 내용은 추후 공개될 예정이니 Instagram에서 가장 먼저 소식을 받아보세요.</span>
+      <span class="lang-ko">스튜디오의 두 번째 협업 프로젝트가 제작 중입니다. 자세한 내용은 추후 공개됩니다 — Instagram에서 가장 먼저 소식을 받아보세요.</span>
     </p>
   </div>
 </section>
 
-<!-- ================ 06 FIND US / CONTACT ================ -->
+<!-- ================ 06 COLLABORATE / FIND US / CONTACT ================ -->
 <section class="section contact" id="contact">
   <div class="section-header reveal">
     <div class="section-num">06</div>
     <div class="section-label-block">
       <div class="section-label">
-        <span class="lang-en">Find Us · Inquire</span>
-        <span class="lang-zh">找到我們 · 洽詢</span>
-        <span class="lang-ko">우리를 만나는 곳 · 문의</span>
+        <span class="lang-en">Collaborate · Find Us · Inquire</span>
+        <span class="lang-zh">合作夥伴 · 找到我們 · 洽詢</span>
+        <span class="lang-ko">협력 · 우리를 만나는 곳 · 문의</span>
       </div>
       <h2 class="section-title">
         <span class="lang-en">Read us. <em>Work with us.</em></span>
         <span class="lang-zh">認識我們，<em>與我們合作</em></span>
         <span class="lang-ko">읽어주세요. <em>함께 일해요.</em></span>
       </h2>
+    </div>
+  </div>
+
+  <!-- 合作夥伴(外部短期協作者) -->
+  <div class="collab-merge reveal" id="collab">
+    <div class="collab-merge-text">
+      <div class="contact-block-label">
+        <span class="lang-en">Collaborators</span>
+        <span class="lang-zh">合作夥伴</span>
+        <span class="lang-ko">협력 파트너</span>
+      </div>
+      <p class="partnership-body">
+        <span class="lang-en">Beyond our core members, INTRVL collaborates with outside creators on individual titles — the people who worked alongside us on a specific project, not studio staff. This list will keep growing.</span>
+        <span class="lang-zh">除了核心成員，INTRVL 也與外部創作者進行單一作品的短期協作。<br>以下夥伴並非工作室常駐成員，而是在特定作品中與我們並肩的人，名單未來會持續增加。</span>
+        <span class="lang-ko">핵심 멤버 외에도, INTRVL은 개별 작품에서 외부 창작자와 단기로 협업합니다. 아래 파트너는 특정 작품에서 우리와 함께한 사람들이며, 이 명단은 앞으로 계속 늘어납니다.</span>
+      </p>
+    </div>
+    <div class="collab-grid">
+      <!-- 十八日 / 18xDay -->
+      <article class="member reveal">
+        <div class="member-chip">
+          <span class="lang-en">External</span>
+          <span class="lang-zh">外部</span>
+          <span class="lang-ko">외부</span>
+        </div>
+        <div class="member-mascot"><img src="assets/collab_18xday.png" alt="18xDay" onerror="this.outerHTML='<span class=&quot;mascot-text&quot;>18xDay</span>'"></div>
+        <div class="member-role">
+          <span class="lang-en">Writer</span>
+          <span class="lang-zh">編劇</span>
+          <span class="lang-ko">각본</span>
+        </div>
+        <h3 class="member-name">
+          <span class="lang-en">18xDay</span>
+          <span class="lang-zh">十八日</span>
+          <span class="lang-ko">18xDay</span>
+        </h3>
+        <div class="member-name-sub">
+          <span class="lang-en">十八日</span>
+          <span class="lang-zh">18xDay</span>
+          <span class="lang-ko">十八日</span>
+        </div>
+        <div class="member-divider"></div>
+        <div class="member-collab">
+          <span class="lang-en">Collaboration — <em>I'm Going to Kill You</em></span>
+          <span class="lang-zh">合作作品《就要弄死你》</span>
+          <span class="lang-ko">협업작 《너를 죽여줄게》</span>
+        </div>
+        <p class="member-bio">
+          <span class="lang-en">Writer. Collaborated with INTRVL on <em>I'm Going to Kill You</em>.</span>
+          <span class="lang-zh">編劇。與 INTRVL 的合作作品為《就要弄死你》。</span>
+          <span class="lang-ko">각본가. INTRVL과 《너를 죽여줄게》에서 협업했습니다.</span>
+        </p>
+      </article>
     </div>
   </div>
 
@@ -2399,6 +3292,12 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 </footer>
 
+<!-- ================ LIGHTBOX ================ -->
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <img src="" alt="" id="lightboxImg">
+</div>
+
 <!-- ================ SCROLL TO TOP ================ -->
 <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
   <span class="scroll-top-label">
@@ -2466,6 +3365,115 @@ window.addEventListener('scroll', () => {
 scrollTopBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+/* =========================================================
+   GALLERY LIGHTBOX
+   ========================================================= */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+
+function openLightbox(src, alt) {
+  lightboxImg.src = src;
+  lightboxImg.alt = alt || '';
+  lightbox.classList.add('open');
+  lightbox.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lightbox.setAttribute('aria-hidden', 'true');
+  lightboxImg.src = '';
+  document.body.style.overflow = '';
+}
+
+const galleryItems = document.querySelectorAll('.gallery-item');
+const canHover = window.matchMedia('(hover: hover)').matches;
+
+galleryItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const thumbImg = item.querySelector('.gallery-thumb img');
+    const ready = thumbImg && thumbImg.style.display !== 'none' && thumbImg.complete && thumbImg.naturalWidth > 0;
+
+    /* Touch devices: first tap reveals the name mask, second tap opens the lightbox */
+    if (!canHover && !item.classList.contains('revealed')) {
+      galleryItems.forEach(i => { if (i !== item) i.classList.remove('revealed'); });
+      item.classList.add('revealed');
+      return;
+    }
+    /* Desktop (name already shown on hover) or second tap on touch */
+    if (ready) openLightbox(item.dataset.full, thumbImg.alt);
+  });
+});
+
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+});
+
+/* =========================================================
+   BEHIND THE SCENES — process "birth" animation
+   Cycles the artwork through its production stages, looping.
+   ========================================================= */
+(function () {
+  const anim = document.querySelector('.process-anim');
+  if (!anim) return;
+  const stages = Array.from(anim.querySelectorAll('.process-stage'));
+  const steps = Array.from(document.querySelectorAll('.process-steps li'));
+  const fill = document.querySelector('.process-progress-fill');
+  if (!stages.length) return;
+
+  const STEP_MS = 1500;   // time on each stage
+  const RESET_MS = 900;   // fade-out before looping back to the sketch
+  let i = 0;
+
+  function show(idx) {
+    stages.forEach((s, n) => s.classList.toggle('active', n === idx));
+    steps.forEach(s => s.classList.toggle('active', Number(s.dataset.stage) === idx + 1));
+    if (fill) fill.style.width = ((idx + 1) / stages.length * 100) + '%';
+  }
+  show(0);
+
+  setInterval(() => {
+    if (i < stages.length - 1) {
+      i++;
+      show(i);
+    } else {
+      anim.classList.add('resetting');
+      setTimeout(() => {
+        i = 0;
+        show(0);
+        anim.classList.remove('resetting');
+      }, RESET_MS);
+    }
+  }, STEP_MS);
+})();
+
+/* =========================================================
+   BEHIND THE SCENES — phone webtoon auto-scroll
+   Pans the long strip so the scroll distance/speed match the
+   actual image height (set once it loads).
+   ========================================================= */
+(function () {
+  const strip = document.querySelector('.phone-strip');
+  const screen = document.querySelector('.phone-screen');
+  if (!strip || !screen) return;
+
+  function tune() {
+    const end = strip.clientHeight - screen.clientHeight;
+    if (end > 0) {
+      strip.style.setProperty('--scroll-end', '-' + end + 'px');
+      /* ~110px/s read speed; the keyframe handles the fast rewind */
+      strip.style.animationDuration = Math.max(8, Math.min(26, end / 85)) + 's';
+    }
+  }
+
+  if (strip.complete && strip.naturalWidth) tune();
+  strip.addEventListener('load', tune);
+  window.addEventListener('resize', tune);
+})();
 </script>
 
 </body>
