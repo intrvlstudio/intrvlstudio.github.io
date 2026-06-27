@@ -925,35 +925,22 @@ html[lang="ko"] .numbers-label { font-family: var(--body-ko); }
 }
 
 /* =========================================================
-   03 — COLLABORATORS (外部短期協作者，與常駐團隊區隔)
+   COLLABORATORS (合作夥伴 — 併入 Contact 區，外部短期協作者)
    ========================================================= */
-.collab {
-  background: var(--bg);
+.collab-merge {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 64px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid var(--rule);
 }
 
-.collab-intro {
-  font-family: var(--body);
-  font-style: normal;
-  font-weight: 400;
-  font-size: clamp(17px, 1.6vw, 20px);
-  line-height: 1.65;
-  color: var(--ink-soft);
-  max-width: 640px;
-  margin-bottom: 60px;
-  margin-left: 260px;
-}
+.collab-merge-text { max-width: 560px; }
 
-html[lang="zh-TW"] .collab-intro {
-  font-family: var(--body-zh);
-  line-height: 1.95;
-}
-html[lang="ko"] .collab-intro {
-  font-family: var(--body-ko);
-  line-height: 1.85;
-}
-
-@media (max-width: 1024px) {
-  .collab-intro { margin-left: 0; }
+@media (max-width: 768px) {
+  .collab-merge { grid-template-columns: 1fr; gap: 36px; }
 }
 
 /* Expandable grid — new partners just add a card */
@@ -2265,9 +2252,6 @@ html[lang="zh-TW"] .scroll-top-label {
     <a href="#team" class="lang-en">Team</a>
     <a href="#team" class="lang-zh">團隊</a>
     <a href="#team" class="lang-ko">팀</a>
-    <a href="#collab" class="lang-en">Collaborators</a>
-    <a href="#collab" class="lang-zh">合作夥伴</a>
-    <a href="#collab" class="lang-ko">협력</a>
     <a href="#works" class="lang-en">Works</a>
     <a href="#works" class="lang-zh">作品</a>
     <a href="#works" class="lang-ko">작품</a>
@@ -2645,73 +2629,10 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 </section>
 
-<!-- ================ 03 COLLABORATORS ================ -->
-<section class="section collab" id="collab">
-  <div class="section-header reveal">
-    <div class="section-num">03</div>
-    <div class="section-label-block">
-      <div class="section-label">
-        <span class="lang-en">Collaborators</span>
-        <span class="lang-zh">合作夥伴</span>
-        <span class="lang-ko">협력 파트너</span>
-      </div>
-      <h2 class="section-title">
-        <span class="lang-en">The people we <em>build with</em>.</span>
-        <span class="lang-zh">與我們<em>並肩</em>的人</span>
-        <span class="lang-ko">함께 <em>만들어가는</em> 사람들.</span>
-      </h2>
-    </div>
-  </div>
-
-  <p class="collab-intro reveal delay-1">
-    <span class="lang-en">Beyond our core members, INTRVL collaborates with outside creators on individual titles. The partners below aren't studio staff — they're the people who worked alongside us on a specific project. This list will keep growing.</span>
-    <span class="lang-zh">除了核心成員，INTRVL 也與外部創作者進行單一作品的短期協作。<br>以下夥伴並非工作室常駐成員，而是在特定作品中與我們並肩的人。這個名單未來會持續增加。</span>
-    <span class="lang-ko">핵심 멤버 외에도, INTRVL은 개별 작품에서 외부 창작자와 단기로 협업합니다. 아래 파트너는 상주 멤버가 아니라 특정 작품에서 우리와 함께한 사람들이며, 이 명단은 앞으로 계속 늘어납니다.</span>
-  </p>
-
-  <div class="collab-grid">
-    <!-- 十八日 / 18xDay -->
-    <article class="member reveal delay-2">
-      <div class="member-chip">
-        <span class="lang-en">External</span>
-        <span class="lang-zh">外部</span>
-        <span class="lang-ko">외부</span>
-      </div>
-      <div class="member-mascot"><img src="assets/collab_18xday.png" alt="18xDay" onerror="this.outerHTML='<span class=&quot;mascot-text&quot;>18xDay</span>'"></div>
-      <div class="member-role">
-        <span class="lang-en">Writer</span>
-        <span class="lang-zh">編劇</span>
-        <span class="lang-ko">각본</span>
-      </div>
-      <h3 class="member-name">
-        <span class="lang-en">18xDay</span>
-        <span class="lang-zh">十八日</span>
-        <span class="lang-ko">18xDay</span>
-      </h3>
-      <div class="member-name-sub">
-        <span class="lang-en">十八日</span>
-        <span class="lang-zh">18xDay</span>
-        <span class="lang-ko">十八日</span>
-      </div>
-      <div class="member-divider"></div>
-      <div class="member-collab">
-        <span class="lang-en">Collaboration — <em>I'm Going to Kill You</em></span>
-        <span class="lang-zh">合作作品《就要弄死你》</span>
-        <span class="lang-ko">협업작 《너를 죽여줄게》</span>
-      </div>
-      <p class="member-bio">
-        <span class="lang-en">Writer. Collaborated with INTRVL on <em>I'm Going to Kill You</em>.</span>
-        <span class="lang-zh">編劇。與 INTRVL 的合作作品為《就要弄死你》。</span>
-        <span class="lang-ko">각본가. INTRVL과 《너를 죽여줄게》에서 협업했습니다.</span>
-      </p>
-    </article>
-  </div>
-</section>
-
-<!-- ================ 04 WORKS ================ -->
+<!-- ================ 03 WORKS ================ -->
 <section class="section works" id="works">
   <div class="section-header reveal">
-    <div class="section-num">04</div>
+    <div class="section-num">03</div>
     <div class="section-label-block">
       <div class="section-label">
         <span class="lang-en">Selected Works</span>
@@ -2910,7 +2831,7 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 </section>
 
-<!-- ================ 05 IN FOCUS ================ -->
+<!-- ================ 04 IN FOCUS ================ -->
 <section class="section debut">
   <div class="debut-tag">
     <span class="lang-en">Latest · Completed</span>
@@ -2919,7 +2840,7 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 
   <div class="section-header reveal">
-    <div class="section-num">05</div>
+    <div class="section-num">04</div>
     <div class="section-label-block">
       <div class="section-label">
         <span class="lang-en">In Focus</span>
@@ -3062,10 +2983,10 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 </section>
 
-<!-- ================ 06 BEHIND THE SCENES ================ -->
+<!-- ================ 05 BEHIND THE SCENES ================ -->
 <section class="section making" id="making">
   <div class="section-header reveal">
-    <div class="section-num">06</div>
+    <div class="section-num">05</div>
     <div class="section-label-block">
       <div class="section-label">
         <span class="lang-en">Behind the Scenes</span>
@@ -3161,21 +3082,74 @@ html[lang="zh-TW"] .scroll-top-label {
   </div>
 </section>
 
-<!-- ================ 07 FIND US / CONTACT ================ -->
+<!-- ================ 06 COLLABORATE / FIND US / CONTACT ================ -->
 <section class="section contact" id="contact">
   <div class="section-header reveal">
-    <div class="section-num">07</div>
+    <div class="section-num">06</div>
     <div class="section-label-block">
       <div class="section-label">
-        <span class="lang-en">Find Us · Inquire</span>
-        <span class="lang-zh">找到我們 · 洽詢</span>
-        <span class="lang-ko">우리를 만나는 곳 · 문의</span>
+        <span class="lang-en">Collaborate · Find Us · Inquire</span>
+        <span class="lang-zh">合作夥伴 · 找到我們 · 洽詢</span>
+        <span class="lang-ko">협력 · 우리를 만나는 곳 · 문의</span>
       </div>
       <h2 class="section-title">
         <span class="lang-en">Read us. <em>Work with us.</em></span>
         <span class="lang-zh">認識我們，<em>與我們合作</em></span>
         <span class="lang-ko">읽어주세요. <em>함께 일해요.</em></span>
       </h2>
+    </div>
+  </div>
+
+  <!-- 合作夥伴(外部短期協作者) -->
+  <div class="collab-merge reveal" id="collab">
+    <div class="collab-merge-text">
+      <div class="contact-block-label">
+        <span class="lang-en">Collaborators</span>
+        <span class="lang-zh">合作夥伴</span>
+        <span class="lang-ko">협력 파트너</span>
+      </div>
+      <p class="partnership-body">
+        <span class="lang-en">Beyond our core members, INTRVL collaborates with outside creators on individual titles — the people who worked alongside us on a specific project, not studio staff. This list will keep growing.</span>
+        <span class="lang-zh">除了核心成員，INTRVL 也與外部創作者進行單一作品的短期協作。<br>以下夥伴並非工作室常駐成員，而是在特定作品中與我們並肩的人，名單未來會持續增加。</span>
+        <span class="lang-ko">핵심 멤버 외에도, INTRVL은 개별 작품에서 외부 창작자와 단기로 협업합니다. 아래 파트너는 특정 작품에서 우리와 함께한 사람들이며, 이 명단은 앞으로 계속 늘어납니다.</span>
+      </p>
+    </div>
+    <div class="collab-grid">
+      <!-- 十八日 / 18xDay -->
+      <article class="member reveal">
+        <div class="member-chip">
+          <span class="lang-en">External</span>
+          <span class="lang-zh">外部</span>
+          <span class="lang-ko">외부</span>
+        </div>
+        <div class="member-mascot"><img src="assets/collab_18xday.png" alt="18xDay" onerror="this.outerHTML='<span class=&quot;mascot-text&quot;>18xDay</span>'"></div>
+        <div class="member-role">
+          <span class="lang-en">Writer</span>
+          <span class="lang-zh">編劇</span>
+          <span class="lang-ko">각본</span>
+        </div>
+        <h3 class="member-name">
+          <span class="lang-en">18xDay</span>
+          <span class="lang-zh">十八日</span>
+          <span class="lang-ko">18xDay</span>
+        </h3>
+        <div class="member-name-sub">
+          <span class="lang-en">十八日</span>
+          <span class="lang-zh">18xDay</span>
+          <span class="lang-ko">十八日</span>
+        </div>
+        <div class="member-divider"></div>
+        <div class="member-collab">
+          <span class="lang-en">Collaboration — <em>I'm Going to Kill You</em></span>
+          <span class="lang-zh">合作作品《就要弄死你》</span>
+          <span class="lang-ko">협업작 《너를 죽여줄게》</span>
+        </div>
+        <p class="member-bio">
+          <span class="lang-en">Writer. Collaborated with INTRVL on <em>I'm Going to Kill You</em>.</span>
+          <span class="lang-zh">編劇。與 INTRVL 的合作作品為《就要弄死你》。</span>
+          <span class="lang-ko">각본가. INTRVL과 《너를 죽여줄게》에서 협업했습니다.</span>
+        </p>
+      </article>
     </div>
   </div>
 
