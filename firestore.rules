@@ -178,6 +178,113 @@ service cloud.firestore {
       allow delete:         if isAdmin();
     }
 
+    // 員工表單：欄位發布後固定；管理員可開關收件。
+    function validFormField(f) {
+      return f is map && f.keys().hasOnly(['label', 'type', 'required', 'options'])
+        && validStr(f.label, 100) && f.type in ['text', 'number', 'select']
+        && f.required is bool && f.options is list && f.options.size() <= 20
+        && (f.type != 'select' || f.options.size() > 0);
+    }
+    function validFieldAt(fields, i) {
+      return fields.size() <= i || validFormField(fields[i]);
+    }
+    function validForm() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['title', 'description', 'fields', 'open', 'createdAt'])
+        && validStr(d.title, 100) && d.description is string && d.description.size() <= 2000
+        && d.open is bool && d.createdAt == request.time
+        && d.fields is list && d.fields.size() > 0 && d.fields.size() <= 20
+        && validFieldAt(d.fields, 0)
+        && validFieldAt(d.fields, 1)
+        && validFieldAt(d.fields, 2)
+        && validFieldAt(d.fields, 3)
+        && validFieldAt(d.fields, 4)
+        && validFieldAt(d.fields, 5)
+        && validFieldAt(d.fields, 6)
+        && validFieldAt(d.fields, 7)
+        && validFieldAt(d.fields, 8)
+        && validFieldAt(d.fields, 9)
+        && validFieldAt(d.fields, 10)
+        && validFieldAt(d.fields, 11)
+        && validFieldAt(d.fields, 12)
+        && validFieldAt(d.fields, 13)
+        && validFieldAt(d.fields, 14)
+        && validFieldAt(d.fields, 15)
+        && validFieldAt(d.fields, 16)
+        && validFieldAt(d.fields, 17)
+        && validFieldAt(d.fields, 18)
+        && validFieldAt(d.fields, 19);
+    }
+    function uniformFields() {
+      return [
+        {'type':'number','required':true}, {'type':'number','required':true},
+        {'type':'number','required':true}, {'type':'number','required':true},
+        {'type':'number','required':true}, {'type':'number','required':true},
+        {'type':'select','required':true,'options':['輕量','一般','厚重','無偏好']},
+        {'type':'text','required':true}
+      ];
+    }
+    function validAnswerAt(fields, answers, i) {
+      return fields.size() <= i || (
+        (!fields[i].required && answers[i] == '')
+        || (fields[i].type == 'text' && validStr(answers[i], 200))
+        || (fields[i].type == 'number' && answers[i] is number && answers[i] >= 0.1 && answers[i] <= 1000)
+        || (fields[i].type == 'select' && answers[i] is string && answers[i] in fields[i].options)
+      );
+    }
+    function validFormResponse(id) {
+      let stored = exists(/databases/$(database)/documents/forms/$(id));
+      let fields = stored ? get(/databases/$(database)/documents/forms/$(id)).data.fields : uniformFields();
+      let d = request.resource.data;
+      return (stored || id == 'uniform-sizes')
+        && (!stored || get(/databases/$(database)/documents/forms/$(id)).data.open == true)
+        && d.keys().hasOnly(['answers','email','updatedAt'])
+        && d.email == request.auth.token.email && d.updatedAt == request.time
+        && d.answers is list && d.answers.size() == fields.size()
+        && validAnswerAt(fields, d.answers, 0)
+        && validAnswerAt(fields, d.answers, 1)
+        && validAnswerAt(fields, d.answers, 2)
+        && validAnswerAt(fields, d.answers, 3)
+        && validAnswerAt(fields, d.answers, 4)
+        && validAnswerAt(fields, d.answers, 5)
+        && validAnswerAt(fields, d.answers, 6)
+        && validAnswerAt(fields, d.answers, 7)
+        && validAnswerAt(fields, d.answers, 8)
+        && validAnswerAt(fields, d.answers, 9)
+        && validAnswerAt(fields, d.answers, 10)
+        && validAnswerAt(fields, d.answers, 11)
+        && validAnswerAt(fields, d.answers, 12)
+        && validAnswerAt(fields, d.answers, 13)
+        && validAnswerAt(fields, d.answers, 14)
+        && validAnswerAt(fields, d.answers, 15)
+        && validAnswerAt(fields, d.answers, 16)
+        && validAnswerAt(fields, d.answers, 17)
+        && validAnswerAt(fields, d.answers, 18)
+        && validAnswerAt(fields, d.answers, 19);
+    }
+    match /forms/{id} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin() && validForm()
+        && (id != 'uniform-sizes' || request.resource.data.fields == [
+          {'label':'身高（cm）','type':'number','required':true,'options':[]},
+          {'label':'體重（kg）','type':'number','required':true,'options':[]},
+          {'label':'肩寬（cm）','type':'number','required':true,'options':[]},
+          {'label':'胸圍（cm）','type':'number','required':true,'options':[]},
+          {'label':'衣長（cm）','type':'number','required':true,'options':[]},
+          {'label':'袖長（cm）','type':'number','required':true,'options':[]},
+          {'label':'衣服重量類型','type':'select','required':true,'options':['輕量','一般','厚重','無偏好']},
+          {'label':'想印在衣服背後的名字','type':'text','required':true,'options':[]}
+        ]);
+      allow update: if isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['open'])
+        && request.resource.data.open is bool;
+      allow delete: if false;
+      match /responses/{uid} {
+        allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+        allow create, update: if isSignedIn() && request.auth.uid == uid && validFormResponse(id);
+        allow delete: if false;
+      }
+    }
+
     // 其他一切預設拒絕
     match /{document=**} {
       allow read, write: if false;
