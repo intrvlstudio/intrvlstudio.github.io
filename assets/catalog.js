@@ -1,0 +1,1 @@
+document.querySelectorAll('[data-process]').forEach(button=>button.addEventListener('click',()=>{document.querySelector('[data-process-frame]').dataset.processFrame=button.dataset.process;document.querySelectorAll('[data-process]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)))}));

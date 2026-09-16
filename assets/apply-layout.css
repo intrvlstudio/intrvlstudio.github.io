@@ -1,0 +1,14 @@
+.apply-page{background:#191919;color:#fff;font-family:Arial,'Microsoft JhengHei',sans-serif}
+.apply-page .public-nav{border-color:#444}.apply-page .public-nav img{filter:invert(1)}
+.apply-page .public-main{max-width:1200px}.apply-page h1{font-weight:900;letter-spacing:.02em}.apply-page .eyebrow{color:#ff9142}.apply-page .lede{color:#ccc}
+.apply-page .application-layout{gap:65px}.apply-page .application-layout aside article{border-color:#555;padding:24px 0}.apply-page .application-layout aside p{color:#ccc}
+.apply-page .application-note{background:#242424;border-left:3px solid #ff9142;padding:24px}.apply-page .application-note a{color:#ff9142}
+.apply-page form{background:#fff;color:#191919;padding:40px}.apply-page label{font-size:16px}.apply-page label small{color:#555}.apply-page input,.apply-page textarea,.apply-page select{background:#f5f5f5;border:1px solid #aaa;color:#191919}.apply-page option{background:#fff;color:#191919}
+.apply-page .privacy-note{color:#555}.apply-page #form-error{color:#9c3000}.apply-page #draft{border-color:#aaa}.apply-page pre{background:#eee;color:#191919}.apply-page #copy-draft{background:#ddd;color:#191919}.apply-page #draft-mail{background:#191919;color:#fff}.apply-page button,.apply-page a.button{background:#ff9142;color:#191919;border-radius:0}.apply-page button:hover,.apply-page a.button:hover{background:#191919;color:#ff9142}.apply-page :focus-visible{outline-color:#ff9142}.apply-page .public-footer{color:#191919;border:0}
+@media(max-width:700px){.apply-page .application-layout{gap:35px}.apply-page form{padding:24px}.apply-page h1{font-size:48px}.apply-page .draft-actions>*{width:100%;text-align:center}}
+
+.apply-page .application-layout aside .opening-card{position:relative;isolation:isolate;margin:18px 0;padding:26px 28px;background:#242424;border:1px solid #444;border-left:3px solid #ff9142;box-shadow:0 6px 14px #0002;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease,background .3s ease}
+.opening-card::after{content:'';position:absolute;right:0;top:0;width:24px;height:24px;background:#ff9142;clip-path:polygon(100% 0,100% 100%,0 0)}
+.apply-page .opening-card h3{font-size:25px;margin:12px 0 8px;letter-spacing:.05em}.opening-label{color:#ff9142;font-size:10px;letter-spacing:.17em}.opening-meta{display:flex;justify-content:space-between;margin-top:24px;padding-top:12px;border-top:1px solid #444;color:#aaa;font-size:10px;letter-spacing:.12em}
+@media(hover:hover){.apply-page .application-layout aside .opening-card:hover{transform:translateY(-5px);background:#2b2b2b;border-color:#ff9142;box-shadow:0 16px 30px #0005}}
+@media(prefers-reduced-motion:reduce){.apply-page .application-layout aside .opening-card{transition:none}.apply-page .application-layout aside .opening-card:hover{transform:none}}

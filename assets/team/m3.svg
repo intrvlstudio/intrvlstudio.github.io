@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="290 200 500 690"><defs>
+    <style>
+      .m3-cls-1 {
+        fill: none;
+      }
+
+      .m3-cls-2 {
+        fill: #60685a;
+      }
+
+      .m3-cls-3 {
+        fill: #fff8ee;
+      }
+
+      .m3-cls-4 {
+        fill: #9ec981;
+      }
+
+      .m3-cls-5 {
+        clip-path: url(#m3-clippath);
+      }
+    </style>
+    <clipPath id="m3-clippath">
+      <rect class="m3-cls-1" x="526.53" y="265.29" width="158.87" height="207.39"/>
+    </clipPath>
+  <style>@keyframes jump {0%{transform:translate(540px,814px) rotate(0deg) scale(1,1) translate(-540px,-814px)}11.25%{transform:translate(540px,814px) rotate(-3deg) scale(1,1) translate(-540px,-814px)}18%{transform:translate(540px,814px) rotate(-4deg) scale(1.1,0.88) translate(-540px,-814px)}22.5%{transform:translate(540px,724px) rotate(-2deg) scale(0.94,1.09) translate(-540px,-814px)}29.5%{transform:translate(540px,659px) rotate(4deg) scale(1,1) translate(-540px,-814px)}35.5%{transform:translate(540px,704px) rotate(5deg) scale(1,1) translate(-540px,-814px)}42%{transform:translate(540px,814px) rotate(2deg) scale(1.14,0.85) translate(-540px,-814px)}46.75%{transform:translate(540px,794px) rotate(-2deg) scale(0.96,1.05) translate(-540px,-814px)}52.5%{transform:translate(540px,814px) rotate(-2deg) scale(1.04,0.97) translate(-540px,-814px)}60%{transform:translate(540px,814px) rotate(0deg) scale(1,1) translate(-540px,-814px)}77.5%{transform:translate(540px,814px) rotate(2deg) scale(1,1) translate(-540px,-814px)}88.75%{transform:translate(540px,814px) rotate(0deg) scale(1,1) translate(-540px,-814px)}100%{transform:translate(540px,814px) rotate(0deg) scale(1,1) translate(-540px,-814px)}}@keyframes blink{0%,64%,72%,100%{transform:translateY(591px) scaleY(1) translateY(-591px)}68%{transform:translateY(591px) scaleY(.07) translateY(-591px)}}@keyframes pearls{0%,20%,65%,100%{transform:translateY(0)}30%{transform:translateY(-12px)}42%{transform:translateY(10px)}51%{transform:translateY(-5px)}}@keyframes straw{0%,50%,100%{transform:rotate(0deg)}25%{transform:rotate(2deg)}75%{transform:rotate(-2deg)}}#m3-mascot{animation:jump 4s infinite ease-in-out}#m3-eyes{animation:blink 4s infinite}.pearl{animation:pearls 4s infinite}#m3-straw{transform-origin:600px 465px;animation:straw 4s infinite}</style></defs><ellipse cx="540" cy="838" rx="130" ry="14" fill="#333d30" opacity="0.15"/><g id="m3-mascot" transform="translate(540 814) rotate(0) scale(1 1) translate(-540 -814)"><path class="m3-cls-3" d="M687.97,507.28l-17.25,232.07c-3.22,40.51-37.22,71.54-76.47,75.01-8.17.72-14.67.14-21.88.14h-.18l-81.18.02c-26.48.01-50.15-13.23-65.66-34.18-10.15-13.73-15.58-29.25-16.92-46.48l-19.4-226.73,298.94.16Z"/><g class="pearl" transform="translate(0 0)"><circle class="m3-cls-4" cx="615.11" cy="734.45" r="29.34"/></g><g class="pearl" transform="translate(0 0)"><circle class="m3-cls-4" cx="464.84" cy="720.65" r="29.24"/></g><g class="pearl" transform="translate(0 0)"><circle class="m3-cls-4" cx="536.8" cy="754.41" r="29.28"/></g><g id="m3-eyes" transform="translate(0 591) scale(1 1) translate(0 -591)"><path class="m3-cls-4" d="M484.61,599.82c-.57,6.33-5.58,9.66-10.81,9.39-12.53-.64-11.11-15.62-10.18-26.41.51-5.97,5.63-9.79,10.95-9.64,12.15.33,11.02,15.76,10.04,26.66Z"/><path class="m3-cls-4" d="M616.6,599.54c-.58,6.19-5.68,9.83-11.09,9.65-12.27-.41-10.76-15.1-10.24-25.55.3-5.95,4.81-10.34,10.3-10.48,5.36-.14,10.36,3.69,11.01,9.66.6,5.52.54,11.17.02,16.72Z"/></g><path class="m3-cls-4" d="M573.17,601.76c-1.36-11.79-17.62,3.33-25.01-15.37-1.02-3.54-4.28-6.13-8.14-6.13-3.53,0-6.56,2.16-7.83,5.23-.02,0-.06,0-.06,0-7.19,19.78-22.91,4.98-25.15,15.43-.61,2.87.56,6.53,3.86,7.4,11.11,2.92,21.81-1.37,29.18-10.61,7.09,9.31,16.59,12.34,26.84,11.21,4.07-.45,6.76-3.25,6.3-7.16Z"/><rect class="m3-cls-4" x="363.77" y="450.76" width="352.45" height="56.52" rx="28.26" ry="28.26"/><g id="m3-straw" transform="rotate(0 600 465)"><g class="m3-cls-5">
+          <rect class="m3-cls-4" x="401.73" y="435.11" width="352.45" height="56.52" rx="28.26" ry="28.26" transform="translate(-50.41 855.67) rotate(-70.7)"/>
+        </g></g></g></svg>

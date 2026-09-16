@@ -1,0 +1,67 @@
+[
+  {
+    "id": "steal",
+    "title": "扒進你心裡",
+    "cover": "assets/cover_steal.jpg",
+    "read": "https://www.webtoons.com/zh-hant/bl-gl/stealyourheart/list?title_no=10934",
+    "visuals": [],
+    "characters": [],
+    "year": "2026",
+    "tagline": "執著死板攻x輕浮扒手受"
+  },
+  {
+    "id": "delivery",
+    "title": "外送夥伴即將抵達",
+    "cover": "assets/cover_delivery.jpg",
+    "read": "https://www.webtoons.com/zh-hant/romance/your-dielivery-is-almost-there/list?title_no=8064",
+    "visuals": [
+      "assets/kv_delivery_foodpenguin.jpg",
+      "assets/kv_delivery_milktea.jpg",
+      "assets/media-20260917/feature-full.jpg",
+      "assets/media-20260917/studio-cafe.png"
+    ],
+    "characters": [],
+    "buy": "https://www.kadokawa.com.tw/products/4711289631477",
+    "description": "\r\n        <span class=\"lang-en\"><em>The Delivery Partner is Arriving</em> is INTRVL's flagship serialization and the studio's first work in print. It concluded on LINE WEBTOON (Traditional Chinese); the print edition is published by Kadokawa Taiwan, with a special edition featuring an acrylic stand, soft badge, and a signed postcard.</span>\r\n        <span class=\"lang-zh\">《外送夥伴即將抵達》是 INTRVL 的主打作品，也是工作室首部實體出版作品。<br>已於 LINE WEBTOON（繁體中文）完結，單行本由台灣角川發行，並推出收錄壓克力立牌、軟軟胸章與印簽明信片的特裝版。</span>\r\n        <span class=\"lang-ko\">《배달 파트너가 도착합니다》는 INTRVL의 대표작이자 스튜디오의 첫 단행본 작품입니다. LINE WEBTOON(번체 중국어)에서 완결되었고, 단행본은 대만 카도카와에서 출간되었으며, 아크릴 스탠드·뱃지·사인 엽서가 포함된 특장판도 출시되었습니다.</span>\r\n      ",
+    "year": "2025",
+    "tagline": "衷心乖狗攻x網黃無助受"
+  },
+  {
+    "id": "roommate",
+    "title": "我的室友帥哥學長",
+    "cover": "assets/cover_roommate.jpg",
+    "read": "https://www.webtoons.com/zh-hant/bl-gl/myroommatesenior-full-length/list?title_no=6149",
+    "visuals": [
+      "assets/media-20260917/roommate.png"
+    ],
+    "characters": [],
+    "year": "2021",
+    "tagline": "創傷包袱攻x陽光療癒受"
+  },
+  {
+    "id": "pry",
+    "title": "窺 PRY",
+    "cover": "assets/cover_pry.jpg",
+    "read": "https://www.webtoons.com/zh-hant/romance/pry/list?title_no=5558",
+    "visuals": [
+      "assets/media-20260917/pry.png",
+      "assets/kv_pry.jpg"
+    ],
+    "characters": [],
+    "year": "2023",
+    "tagline": "禁慾老男攻x受虐騷氣受"
+  },
+  {
+    "id": "kill",
+    "title": "就要弄死你",
+    "cover": "assets/cover_kill.jpg",
+    "read": "https://www.webtoons.com/zh-hant/bl-gl/robberandthief-r18/list?title_no=7704",
+    "visuals": [
+      "assets/kv_kill_action.jpg",
+      "assets/kv_kill_solo.jpg"
+    ],
+    "characters": [],
+    "year": "2024",
+    "tagline": "易怒狼犬攻x欠幹奸詐受"
+  }
+]
