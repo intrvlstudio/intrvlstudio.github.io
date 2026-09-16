@@ -92,6 +92,7 @@
   }
   function count(p){values[0].textContent=Math.round(200*p)+'+';values[1].querySelector('.lang-zh').textContent=Math.round(2800*p).toLocaleString('en-US')+'萬';values[1].querySelector('.lang-en').textContent=(28*p).toFixed(p===1?0:1)+'M';values[1].querySelector('.lang-ko').textContent=Math.round(2800*p).toLocaleString('en-US')+'만';values[2].textContent=Math.round(2*p)+'×';values[3].textContent=Math.round(4*p);}
   let reading=reduced.matches, unit=innerHeight, current=0, pending=false;
+  let viewportWidth=0,cardWidth=0,cardStride=0,lastMeshProgress=-1;
   function position(){return clamp(-runway.getBoundingClientRect().top/(unit*end))*end}
   function updateLogoShadow(){
     const logo=document.querySelector('.emblem-menu');
@@ -104,44 +105,50 @@
   function paint(){pending=false;updateLogoShadow();document.body.classList.toggle("past-film",runway.getBoundingClientRect().bottom<100);topButton.classList.toggle('on-footer',footer.getBoundingClientRect().top<topButton.getBoundingClientRect().bottom);
     if(reading)return;
     const t=position();current=starts.reduce((last,start,i)=>t>=start?i:last,0);
-    shots.forEach((shot,i)=>{const enter=i?smooth((t-starts[i])/.5):1, exit=i<4?smooth((t-starts[i+1])/.5):0;const opacity=enter*(1-exit);pose(shot,(1-enter)*innerHeight*.25-exit*innerHeight*.25,opacity);shot.classList.toggle('is-visible',opacity>.001);shot.classList.toggle('is-current',i===current);shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));});
+    shots.forEach((shot,i)=>{const enter=i?smooth((t-starts[i])/.5):1, exit=i<4?smooth((t-starts[i+1])/.5):0;const opacity=enter*(1-exit);pose(shot,(1-enter)*unit*.25-exit*unit*.25,opacity);shot.classList.toggle('is-visible',opacity>.001);shot.classList.toggle('is-current',i===current);shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));});
     pose(document.querySelector('.cover-title'),-t*12,1,`scale(${1+Math.min(t,2)*.055})`);
     const local=t-starts[1]-.5;
     paintBackgrounds(local);
-    // Hold each card at the reading position, then cross the transition threshold.
-    const cardTravel=innerWidth*.65+cards[0].offsetWidth/2;
+    // Native scroll maps directly to a continuous, closely spaced strip.
+    const travel=local/1.24+Math.max(0,local-4.96)*1.5;
     cards.forEach((card,i)=>{
-      const phase=local-i*1.24;
-      const enter=smooth((phase+.72)/.22),exit=smooth((phase-.50)/.22);
-      const opacity=enter*(1-exit);
-      const visible=opacity>.001;
-      const x=(1-enter-exit)*cardTravel;
+      const x=(i-travel)*cardStride;
+      const visible=Math.abs(x)<innerWidth/2+cardWidth/2;
       card.style.transform=`translate3d(calc(-50% + ${x}px),-50%,0)`;
-      card.style.opacity=opacity;
+      card.style.opacity=visible?1:0;
       card.classList.toggle('is-visible',visible);
       card.classList.toggle('is-current',visible);
       card.inert=!visible;card.setAttribute('aria-hidden',String(!visible));
     });
+    const meshProgress=Math.max(0,Math.min(1.2,local-5.38));
+    if(meshProgress!==lastMeshProgress){lastMeshProgress=meshProgress;
     tiles.forEach((tile,i)=>{const delay=((i%8)+Math.floor(i/8))*.018;const orange=smooth((local-5.38-delay)/.3),black=smooth((local-5.7-delay)/.3);tile.style.backgroundColor=black>0?`rgb(${Math.round(255*(1-black))} ${Math.round(145*(1-black))} ${Math.round(66*(1-black))})`:`rgba(255,145,66,${orange})`;tile.style.transform=`perspective(600px) rotateY(${orange>0&&orange<1?(1-orange)*90:black>0&&black<1?(1-black)*90:0}deg)`;tile.style.backgroundImage=black===1?'none':'';tile.style.borderColor=`rgba(255,255,255,${.18*(1-black)})`});
+    }
     const mp=smooth((local-6.1)/.3);pose(more,(1-mp)*80,mp);more.inert=mp<.7;
     const a=t-starts[2];letters(aboutLetters,a-.25);collage.forEach((el,i)=>{const p=smooth((a-1.15-i*.4)/.65);pose(el,(1-p)*(250+i*60),p,`rotate(${(1-p)*(i%2?12:-9)}deg)`)});const cp=smooth((a-2.65)/.7);pose(copy,(1-cp)*100,cp);shots[2].style.setProperty("--copy-progress",cp);
     const n=smooth((t-starts[3]-.3)/1.7);count(n);if(current===3&&n===1&&!burstPlayed){burstPlayed=true;burst()}if(n<.75)burstPlayed=false;if(n<1||current!==3)confetti.replaceChildren();
     const f=t-starts[4];letters(featureLetters,f-.1);
     const dock=smooth((f-1.65)/1);intro.style.setProperty('--title-dock',dock);
     const push=smooth((f-featureStarts[0])/.9);
-    pose(intro,-push*innerHeight,1);
+    pose(intro,-push*unit,1);
     const reveal=smooth((f-1.2)/1.1);
-    pose(document.querySelector('.plane-front'),(1-reveal)*innerHeight*.7,reveal);pose(document.querySelector('.plane-back'),(1-reveal)*100,reveal,`scale(${1.14-reveal*.14})`);
-    visuals.forEach((visual,i)=>{const vstart=featureStarts[i], enter=smooth((f-vstart)/.9), exit=i<2?smooth((f-featureStarts[i+1])/.9):0;pose(visual,i===0?(1-enter)*innerHeight:0,i===0?1-exit:enter*(1-exit));visual.inert=enter<.8||exit>.2;const text=smooth((f-vstart-.8)/.85);pose(visual.querySelector('p'),i===2?0:(1-text)*80-exit*90,text,i===2?`scale(${.5+text*.5})`:'');});
-    range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<innerHeight*.35;
+    pose(document.querySelector('.plane-front'),(1-reveal)*unit*.7,reveal);pose(document.querySelector('.plane-back'),(1-reveal)*100,reveal,`scale(${1.14-reveal*.14})`);
+    visuals.forEach((visual,i)=>{const vstart=featureStarts[i], enter=smooth((f-vstart)/.9), exit=i<2?smooth((f-featureStarts[i+1])/.9):0;pose(visual,i===0?(1-enter)*unit:0,i===0?1-exit:enter*(1-exit));visual.inert=enter<.8||exit>.2;const text=smooth((f-vstart-.8)/.85);pose(visual.querySelector('p'),i===2?0:(1-text)*80-exit*90,text,i===2?`scale(${.5+text*.5})`:'');});
+    range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
   }
   function schedule(){if(!pending){pending=true;requestAnimationFrame(paint)}}
-  let snapTimer;
-  function queueCardSnap(){clearTimeout(snapTimer);snapTimer=setTimeout(()=>{if(reading||reduced.matches||current!==1)return;const local=position()-2.1;if(local<-.2||local>5.6)return;const index=Math.max(0,Math.min(4,Math.floor((local+.74)/1.24)));const target=2.1+index*1.24;if(Math.abs(position()-target)>.03)seek(target,'smooth')},160)}
-  addEventListener('wheel',queueCardSnap,{passive:true});addEventListener('touchend',queueCardSnap,{passive:true});
   function seek(t,behavior='instant'){window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches)paint()}
   function go(target,behavior='smooth'){const i=shots.indexOf(target);if(!reading&&i>=0)seek(stops[i],behavior);else target.scrollIntoView({behavior:reduced.matches?'instant':behavior})}
-  function resize(){const t=position(),box=runway.getBoundingClientRect(),preserve=!reading&&box.top<0&&box.bottom>=innerHeight;unit=innerHeight;runway.style.setProperty('--film-length',`${(end+1)*unit}px`);if(preserve)seek(t);schedule()}
+  function resize(){
+    const width=document.documentElement.clientWidth;
+    // Mobile browser chrome changes height during a swipe: never seek in response.
+    if(viewportWidth===width&&width<=700)return;
+    const t=position(),box=runway.getBoundingClientRect(),preserve=!reading&&box.top<0&&box.bottom>=unit;
+    viewportWidth=width;unit=stage.clientHeight||innerHeight;
+    cardWidth=cards[0].offsetWidth;cardStride=cardWidth+(width<=700?24:48);
+    runway.style.setProperty('--film-length',`${(end+1)*unit}px`);
+    if(preserve)seek(t);schedule();
+  }
   function setMode(value){backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=innerHeight;runway.style.setProperty('--film-length',`${(end+1)*unit}px`);seek(starts[saved]+(saved?.65:0))}}
   mode.addEventListener('click',()=>setMode(!reading));reduced.addEventListener('change',()=>setMode(reduced.matches));range.addEventListener('input',()=>seek(Number(range.value)/100));controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.addEventListener('click',()=>{if(i===3){burstPlayed=false;burst(b)}go(shots[i]);schedule()}));addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);
   const menu=document.getElementById('chapter-menu'), opener=document.querySelector('.menu-open');

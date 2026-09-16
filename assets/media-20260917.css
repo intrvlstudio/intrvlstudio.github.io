@@ -23,3 +23,8 @@
 .film-enabled .more-works{z-index:4}
 .film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-size:contain;background-position:center bottom}
 .collab-grid .member,.collab-grid .member-mascot,.collab-grid .member-mascot svg{rotate:0deg;transform:none}
+@media(max-width:700px){
+  .work-background{filter:blur(6px);scale:1.04}
+  .film-enabled .works .work{width:74vw;max-width:340px}
+  .work-mesh{contain:layout paint}
+}
