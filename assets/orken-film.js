@@ -91,10 +91,17 @@
     }
   }
   function count(p){values[0].textContent=Math.round(200*p)+'+';values[1].querySelector('.lang-zh').textContent=Math.round(2800*p).toLocaleString('en-US')+'萬';values[1].querySelector('.lang-en').textContent=(28*p).toFixed(p===1?0:1)+'M';values[1].querySelector('.lang-ko').textContent=Math.round(2800*p).toLocaleString('en-US')+'만';values[2].textContent=Math.round(2*p)+'×';values[3].textContent=Math.round(4*p);}
-  let reading=reduced.matches, unit=innerHeight, current=0, pending=false;
+  let reading=reduced.matches, unit=innerHeight, current=0, pending=0;
+  let displayedPosition=0,lastPaintTime=0;
   let viewportWidth=0,cardWidth=0,cardStride=0,lastMeshProgress=-1;
   let scrollFactor=1;
   function position(){return clamp(-runway.getBoundingClientRect().top/(unit*scrollFactor*end))*end}
+  // A short, bounded visual tail; the browser keeps control of touch momentum.
+  function easeTimeline(value,target,elapsed,mobile){
+    const gap=Math.max(-.16,Math.min(.16,target-value));
+    if(Math.abs(gap)<.00025)return target;
+    return target-gap*Math.exp(-elapsed/(mobile?90:115));
+  }
   function updateLogoShadow(){
     const logo=document.querySelector('.emblem-menu');
     const y=logo.getBoundingClientRect().top+logo.offsetHeight/2;
@@ -103,11 +110,15 @@
     const white=(y>=contact.top&&y<contact.bottom)||(y>=team.top&&y<team.top+team.height*.02);
     logo.classList.toggle('on-white',white);
   }
-  function paint(){pending=false;updateLogoShadow();document.body.classList.toggle("past-film",runway.getBoundingClientRect().bottom<100);topButton.classList.toggle('on-footer',footer.getBoundingClientRect().top<topButton.getBoundingClientRect().bottom);
-    if(reading)return;
-    const t=position();current=starts.reduce((last,start,i)=>t>=start?i:last,0);
+  function paint(now=performance.now()){
+    if(pending)cancelAnimationFrame(pending);pending=0;
+    updateLogoShadow();document.body.classList.toggle("past-film",runway.getBoundingClientRect().bottom<100);topButton.classList.toggle('on-footer',footer.getBoundingClientRect().top<topButton.getBoundingClientRect().bottom);
+    if(reading){lastPaintTime=0;return}
+    const target=position(),mobile=viewportWidth<=700;
+    const elapsed=lastPaintTime?Math.max(1,Math.min(50,now-lastPaintTime)):1000/60;
+    displayedPosition=reduced.matches||target===0||target===end?target:easeTimeline(displayedPosition,target,elapsed,mobile);
+    const t=displayedPosition;current=starts.reduce((last,start,i)=>t>=start?i:last,0);
     shots.forEach((shot,i)=>{const enter=i?smooth((t-starts[i])/.5):1, exit=i<4?smooth((t-starts[i+1])/.5):0;const opacity=enter*(1-exit);pose(shot,(1-enter)*unit*.25-exit*unit*.25,opacity);shot.classList.toggle('is-visible',opacity>.001);shot.classList.toggle('is-current',i===current);shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));});
-    const mobile=viewportWidth<=700;
     if(mobile){
       const exit=smooth((t-starts[1])/.5);
       pose(shots[0],-Math.min(t*.48,1)*unit,1-exit);
@@ -145,9 +156,10 @@
     pose(document.querySelector('.plane-front'),(1-reveal)*unit*.7,reveal);pose(document.querySelector('.plane-back'),(1-reveal)*100,reveal,`scale(${1.14-reveal*.14})`);
     visuals.forEach((visual,i)=>{const vstart=featureStarts[i], enter=smooth((f-vstart)/.9), exit=i<2?smooth((f-featureStarts[i+1])/.9):0;pose(visual,i===0?(1-enter)*unit:0,i===0?1-exit:enter*(1-exit));visual.inert=enter<.8||exit>.2;const text=smooth((f-vstart-.8)/.85);pose(visual.querySelector('p'),i===2?0:(1-text)*80-exit*90,text,i===2?`scale(${.5+text*.5})`:'');});
     range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
+    if(displayedPosition!==target){lastPaintTime=now;schedule()}else lastPaintTime=0;
   }
-  function schedule(){if(!pending){pending=true;requestAnimationFrame(paint)}}
-  function seek(t,behavior='instant'){window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches)paint()}
+  function schedule(){if(!pending)pending=requestAnimationFrame(paint)}
+  function seek(t,behavior='instant'){window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches){displayedPosition=position();lastPaintTime=0;paint()}}
   function go(target,behavior='smooth'){const i=shots.indexOf(target);if(!reading&&i>=0)seek(stops[i],behavior);else target.scrollIntoView({behavior:reduced.matches?'instant':behavior})}
   function resize(){
     const width=document.documentElement.clientWidth;
