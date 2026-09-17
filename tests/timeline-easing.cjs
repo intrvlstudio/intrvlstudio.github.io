@@ -15,8 +15,10 @@ for(const mobile of [true,false]){
     assert(next>=p&&next<=5.12);p=next;
   }
   assert.equal(p,5.12);
+  // The glide should still be noticeable 100 ms after input ends.
+  assert(5.12-ease(5,5.12,100,mobile)>.05);
   // Large flicks cannot accumulate a long catch-up animation.
-  assert(Math.abs(20-ease(0,20,16,mobile))<.16);
+  assert(Math.abs(20-ease(0,20,16,mobile))<1/3);
   // Reversing direction responds on the next frame, with no overshoot.
   const reverse=ease(5.1,4.9,16,mobile);
   assert(reverse<5.1&&reverse>4.9);

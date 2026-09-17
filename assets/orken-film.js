@@ -96,11 +96,12 @@
   let viewportWidth=0,cardWidth=0,cardStride=0,lastMeshProgress=-1;
   let scrollFactor=1;
   function position(){return clamp(-runway.getBoundingClientRect().top/(unit*scrollFactor*end))*end}
-  // A short, bounded visual tail; the browser keeps control of touch momentum.
+  // A longer glide with bounded lag; native touch momentum stays in control.
   function easeTimeline(value,target,elapsed,mobile){
-    const gap=Math.max(-.16,Math.min(.16,target-value));
+    const maxLag=mobile?.26:.30;
+    const gap=Math.max(-maxLag,Math.min(maxLag,target-value));
     if(Math.abs(gap)<.00025)return target;
-    return target-gap*Math.exp(-elapsed/(mobile?90:115));
+    return target-gap*Math.exp(-elapsed/(mobile?160:200));
   }
   function updateLogoShadow(){
     const logo=document.querySelector('.emblem-menu');
