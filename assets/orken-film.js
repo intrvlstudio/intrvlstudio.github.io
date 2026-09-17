@@ -4,16 +4,16 @@
   if(reloaded){history.replaceState(null,'','#top');scrollTo({top:0,behavior:'instant'})}
   const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const shots=['.cover','.works','.about','.numbers','.story-scene'].map(s=>document.querySelector(s));
-  const starts=[0,1.6,8.6,12.4,15.2], end=25.2;
-  const stops=[0,2.1,10.3,14.45,16.8];
-  const featureStarts=[3.4,5.65,7.6];
+  const transition=.65, starts=[0,.65,2.2,2.85,3.5], end=5.45;
+  const stops=[...starts];
+  const featureStarts=[.65,1.3,1.95];
   const cards=[...document.querySelectorAll('.works .work')];
   const runway=document.createElement('div'), stage=document.createElement('div');
   runway.className='film-runway';stage.className='film-stage';shots[0].before(runway);runway.append(stage);
   shots.forEach(s=>{s.classList.add('film-shot');stage.append(s)});
   const words=(zh,en,ko)=>`<span class="lang-zh">${zh}</span><span class="lang-en">${en}</span><span class="lang-ko">${ko}</span>`;
   const controls=document.createElement('div');controls.className='film-controls';
-  controls.innerHTML=`<div class="film-chapters">${[['開場','Intro','시작'],['作品','Stories','작품'],['之間','Studio','소개'],['足跡','Numbers','기록'],['故事','Feature','이야기']].map((a,i)=>`<button data-chapter="${i}">${String(i+1).padStart(2,'0')} ${words(...a)}</button>`).join('')}</div><input class="film-progress" type="range" min="0" max="2520" step="1" value="0" aria-label="故事播放進度 / Story timeline" aria-orientation="vertical"><div class="film-controls-right"><span class="film-position">0%</span><button class="film-mode">${words('閱讀模式','Reading mode','읽기 모드')}</button></div>`;
+  controls.innerHTML=`<div class="film-chapters">${[['開場','Intro','시작'],['作品','Stories','작품'],['之間','Studio','소개'],['足跡','Numbers','기록'],['故事','Feature','이야기']].map((a,i)=>`<button data-chapter="${i}">${String(i+1).padStart(2,'0')} ${words(...a)}</button>`).join('')}</div><input class="film-progress" type="range" min="0" max="${Math.round(end*100)}" step="1" value="0" aria-label="故事播放進度 / Story timeline" aria-orientation="vertical"><div class="film-controls-right"><span class="film-position">0%</span><button class="film-mode">${words('閱讀模式','Reading mode','읽기 모드')}</button></div>`;
   document.body.append(controls);
   const timelineToggle=document.createElement('button');timelineToggle.className='timeline-toggle';timelineToggle.innerHTML=words('故事軸 ＋','Timeline +','타임라인 +');timelineToggle.setAttribute('aria-expanded','false');controls.prepend(timelineToggle);
   const hiringShortcut=document.createElement('button');hiringShortcut.className='timeline-hiring';hiringShortcut.innerHTML=words('人才招募 ↗','Join us ↗','채용 ↗');controls.append(hiringShortcut);
@@ -92,16 +92,16 @@
   }
   function count(p){values[0].textContent=Math.round(200*p)+'+';values[1].querySelector('.lang-zh').textContent=Math.round(2800*p).toLocaleString('en-US')+'萬';values[1].querySelector('.lang-en').textContent=(28*p).toFixed(p===1?0:1)+'M';values[1].querySelector('.lang-ko').textContent=Math.round(2800*p).toLocaleString('en-US')+'만';values[2].textContent=Math.round(2*p)+'×';values[3].textContent=Math.round(4*p);}
   let reading=reduced.matches, unit=innerHeight, current=0, pending=0;
-  let displayedPosition=0,lastPaintTime=0;
   let viewportWidth=0,cardWidth=0,cardStride=0,lastMeshProgress=-1;
   let scrollFactor=1;
+  // Cap a full panel push at about 273 px on desktop, independent of monitor height.
+  function scrollScale(width,height){return Math.min(width<=700?.85:1,(width<=700?560:420)/height)}
   function position(){return clamp(-runway.getBoundingClientRect().top/(unit*scrollFactor*end))*end}
-  // A longer glide with bounded lag; native touch momentum stays in control.
-  function easeTimeline(value,target,elapsed,mobile){
-    const maxLag=mobile?.26:.30;
-    const gap=Math.max(-maxLag,Math.min(maxLag,target-value));
-    if(Math.abs(gap)<.00025)return target;
-    return target-gap*Math.exp(-elapsed/(mobile?160:200));
+  // Adjacent panels share one moving edge, with no opacity crossfade or dead zone.
+  function panelOffset(t,arrive,leave){
+    const enter=clamp((t-arrive+transition)/transition);
+    const exit=leave===null?0:clamp((t-leave)/transition);
+    return 1-enter-exit;
   }
   // Wheel input moves the document itself, including the sections after the film.
   // Touch keeps the browser's own momentum; never layer two inertias together.
@@ -157,24 +157,22 @@
   }
   function paint(now=performance.now()){
     if(pending)cancelAnimationFrame(pending);pending=0;
-    const wheelFrame=tickWheel(now);
+    tickWheel(now);
     updateLogoShadow();document.body.classList.toggle("past-film",runway.getBoundingClientRect().bottom<100);topButton.classList.toggle('on-footer',footer.getBoundingClientRect().top<topButton.getBoundingClientRect().bottom);
-    if(reading){lastPaintTime=0;return}
-    const target=position(),mobile=viewportWidth<=700;
-    const elapsed=lastPaintTime?Math.max(1,Math.min(50,now-lastPaintTime)):1000/60;
-    displayedPosition=wheelFrame||reduced.matches||target===0||target===end?target:easeTimeline(displayedPosition,target,elapsed,mobile);
-    const t=displayedPosition;current=starts.reduce((last,start,i)=>t>=start?i:last,0);
-    shots.forEach((shot,i)=>{const enter=i?smooth((t-starts[i])/.5):1, exit=i<4?smooth((t-starts[i+1])/.5):0;const opacity=enter*(1-exit);pose(shot,(1-enter)*unit*.25-exit*unit*.25,opacity);shot.classList.toggle('is-visible',opacity>.001);shot.classList.toggle('is-current',i===current);shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));});
-    if(mobile){
-      const exit=smooth((t-starts[1])/.5);
-      pose(shots[0],-Math.min(t*.48,1)*unit,1-exit);
-      shots[0].style.setProperty('--mobile-exit-dark',smooth((t-.1)/1.8)*.9);
-      pose(document.querySelector('.cover-title'),0,1,'scale(1)');
-    }else{
-      shots[0].style.removeProperty('--mobile-exit-dark');
-      pose(document.querySelector('.cover-title'),-t*12,1,`scale(${1+Math.min(t,2)*.055})`);
-    }
-    const local=t-starts[1]-.5;
+    if(reading)return;
+    const t=position();
+    current=starts.reduce((last,start,i)=>t>=start-(i?transition/2:0)?i:last,0);
+    shots.forEach((shot,i)=>{
+      const y=i===0?-clamp(t/transition):panelOffset(t,starts[i],i<4?starts[i+1]-transition:null);
+      const visible=Math.abs(y)<1;
+      pose(shot,y*unit,1);
+      shot.classList.toggle('is-visible',visible);shot.classList.toggle('is-current',i===current);
+      shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));
+    });
+    shots[0].style.removeProperty('--mobile-exit-dark');
+    pose(document.querySelector('.cover-title'),0,1);
+    // Keep all five covers continuous within a much shorter work reel.
+    const local=clamp((t-starts[1])/.9)*6.4;
     paintBackgrounds(local);
     // Native scroll maps directly to a continuous, closely spaced strip.
     const travel=local/1.24+Math.max(0,local-4.96)*1.5;
@@ -192,20 +190,30 @@
     tiles.forEach((tile,i)=>{const delay=((i%8)+Math.floor(i/8))*.018;const orange=smooth((local-5.38-delay)/.3),black=smooth((local-5.7-delay)/.3);tile.style.backgroundColor=black>0?`rgb(${Math.round(255*(1-black))} ${Math.round(145*(1-black))} ${Math.round(66*(1-black))})`:`rgba(255,145,66,${orange})`;tile.style.transform=`perspective(600px) rotateY(${orange>0&&orange<1?(1-orange)*90:black>0&&black<1?(1-black)*90:0}deg)`;tile.style.backgroundImage=black===1?'none':'';tile.style.borderColor=`rgba(255,255,255,${.18*(1-black)})`});
     }
     const mp=smooth((local-6.1)/.3);pose(more,(1-mp)*80,mp);more.inert=mp<.7;
-    const a=t-starts[2];letters(aboutLetters,a-.25);collage.forEach((el,i)=>{const p=smooth((a-1.15-i*.4)/.65);pose(el,(1-p)*(250+i*60),p,`rotate(${(1-p)*(i%2?12:-9)}deg)`)});const cp=smooth((a-2.65)/.7);pose(copy,(1-cp)*100,cp);shots[2].style.setProperty("--copy-progress",cp);
-    const n=smooth((t-starts[3]-.3)/1.7);count(n);if(current===3&&n===1&&!burstPlayed){burstPlayed=true;burst()}if(n<.75)burstPlayed=false;if(n<1||current!==3)confetti.replaceChildren();
-    const f=t-starts[4];letters(featureLetters,f-.1);
-    const dock=smooth((f-1.65)/1);intro.style.setProperty('--title-dock',dock);
-    const push=smooth((f-featureStarts[0])/.9);
-    pose(intro,-push*unit,1);
-    const reveal=smooth((f-1.2)/1.1);
-    pose(document.querySelector('.plane-front'),(1-reveal)*unit*.7,reveal);pose(document.querySelector('.plane-back'),(1-reveal)*100,reveal,`scale(${1.14-reveal*.14})`);
-    visuals.forEach((visual,i)=>{const vstart=featureStarts[i], enter=smooth((f-vstart)/.9), exit=i<2?smooth((f-featureStarts[i+1])/.9):0;pose(visual,i===0?(1-enter)*unit:0,i===0?1-exit:enter*(1-exit));visual.inert=enter<.8||exit>.2;const text=smooth((f-vstart-.8)/.85);pose(visual.querySelector('p'),i===2?0:(1-text)*80-exit*90,text,i===2?`scale(${.5+text*.5})`:'');});
+    const a=clamp((t-starts[2]+transition)/transition)*3.4;
+    letters(aboutLetters,a-.25);collage.forEach((el,i)=>{const p=smooth((a-1.15-i*.4)/.65);pose(el,(1-p)*(250+i*60),p,`rotate(${(1-p)*(i%2?12:-9)}deg)`)});
+    const cp=smooth((a-2.65)/.7);pose(copy,(1-cp)*100,cp);shots[2].style.setProperty('--copy-progress',cp);
+    const n=smooth((t-starts[3]+transition)/transition);count(n);
+    if(current===3&&n===1&&!burstPlayed){burstPlayed=true;burst()}
+    if(n<.75)burstPlayed=false;if(n<1||current!==3)confetti.replaceChildren();
+    const f=t-starts[4], reveal=clamp((f+transition)/transition);
+    letters(featureLetters,reveal*1.5);
+    intro.style.setProperty('--title-dock',clamp(f/transition));
+    pose(intro,-clamp(f/transition)*unit,1);
+    pose(document.querySelector('.plane-front'),(1-reveal)*unit*.3,1);
+    pose(document.querySelector('.plane-back'),0,1);
+    visuals.forEach((visual,i)=>{
+      const y=panelOffset(f,featureStarts[i],i<2?featureStarts[i]:null);
+      pose(visual,y*unit,1);visual.inert=Math.abs(y)>.5;
+      visual.setAttribute('aria-hidden',String(Math.abs(y)>.5));
+      const text=smooth((f-featureStarts[i]+transition*.65)/(transition*.65));
+      pose(visual.querySelector('p'),(1-text)*35,text);
+    });
     range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
-    if(wheelGlide.active||displayedPosition!==target){lastPaintTime=now;schedule()}else lastPaintTime=0;
+    if(wheelGlide.active)schedule();
   }
   function schedule(){if(!pending)pending=requestAnimationFrame(paint)}
-  function seek(t,behavior='instant'){stopWheel();window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches){displayedPosition=position();lastPaintTime=0;paint()}}
+  function seek(t,behavior='instant'){stopWheel();window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches)paint()}
   function go(target,behavior='smooth'){stopWheel();const i=shots.indexOf(target);if(!reading&&i>=0)seek(stops[i],behavior);else target.scrollIntoView({behavior:reduced.matches?'instant':behavior})}
   function resize(){
     stopWheel();
@@ -214,12 +222,12 @@
     if(viewportWidth===width&&width<=700)return;
     const t=position(),box=runway.getBoundingClientRect(),preserve=!reading&&box.top<0&&box.bottom>=unit;
     viewportWidth=width;unit=stage.clientHeight||innerHeight;
-    scrollFactor=width<=700?.62:1;
+    scrollFactor=scrollScale(width,unit);
     cardWidth=cards[0].offsetWidth;cardStride=cardWidth+(width<=700?24:48);
     runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);
     if(preserve)seek(t);schedule();
   }
-  function setMode(value){stopWheel();backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=stage.clientHeight||innerHeight;scrollFactor=viewportWidth<=700?.62:1;runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);seek(starts[saved]+(saved?.65:0))}}
+  function setMode(value){stopWheel();backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=stage.clientHeight||innerHeight;scrollFactor=scrollScale(viewportWidth,unit);runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);seek(stops[saved])}}
   mode.addEventListener('click',()=>setMode(!reading));reduced.addEventListener('change',()=>setMode(reduced.matches));range.addEventListener('input',()=>seek(Number(range.value)/100));controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.addEventListener('click',()=>{if(i===3){burstPlayed=false;burst(b)}go(shots[i]);schedule()}));addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);
   const menu=document.getElementById('chapter-menu'), opener=document.querySelector('.menu-open');
   opener.addEventListener('click',()=>{stopWheel();if(opener.classList.contains('splitting'))return;opener.classList.add('splitting');setTimeout(()=>{menu.showModal();document.body.classList.add('menu-visible');opener.classList.remove('splitting')},reduced.matches?0:280)});

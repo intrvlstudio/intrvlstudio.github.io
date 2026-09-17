@@ -191,7 +191,7 @@ body.orken-concept .nav.nav-intro>.lang-toggle{position:absolute;right:4vw;top:1
 .hero-final .hero-droplets{z-index:4;transform:translate3d(calc(var(--hero-x,0px)*1.25),calc(var(--hero-y,0px)*.75),0)}
 /* Match the tagline to the wordmark and separate both from the artwork. */
 .orken-concept .cover-meta>div:first-child{width:max-content;max-width:100%;position:relative;isolation:isolate}
-.orken-concept .cover-meta>div:first-child::before{content:'';position:absolute;inset:-25% -30%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.48) 0%,rgba(0,0,0,.28) 40%,rgba(0,0,0,0) 72%)}
+.orken-concept .cover-meta>div:first-child::before{content:'';position:absolute;inset:-25% -30%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.20) 0%,rgba(0,0,0,.10) 40%,rgba(0,0,0,0) 72%)}
 .orken-concept .cover .cover-title::before{display:none}
 .orken-concept .cover .cover-tagline{color:#fff;width:0;min-width:100%;max-width:none;letter-spacing:.12em;font-weight:700}
 html[lang="zh-TW"] .cover .cover-tagline>.lang-zh{display:flex;justify-content:space-between;letter-spacing:0;width:100%}
