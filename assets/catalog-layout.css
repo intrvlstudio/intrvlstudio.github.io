@@ -23,4 +23,12 @@
 @media(max-width:700px){.catalog-page .catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 18px}.catalog-page .making{padding:35px 20px;gap:25px}.catalog-page .making-grid{grid-template-columns:1fr;gap:35px}.catalog-page .phone{width:min(100%,300px)}.catalog-page .making .section-title{font-size:36px}.catalog-page .catalog .work-caption small{font-size:9px;gap:6px}}
 @media(prefers-reduced-motion:reduce){.catalog-page .phone-placeholder{animation:none}}
 .catalog-page .catalog .work:nth-child(n) .image-placeholder{background:#555}
+.catalog-page .catalog .work-image img{display:block;width:100%;height:100%;object-fit:contain}
+.catalog-page .process-frame{overflow:hidden}.catalog-page .process-stage{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.catalog-page .process-stage[hidden]{display:none}
+.catalog-page .process-progress{display:block}.catalog-page .process-progress-fill{background:#ff9142;transition:width .4s}
+.catalog-page .phone-strip{display:block;width:100%;max-width:none;animation:comic-flow 18s ease-in-out infinite alternate}
+.construction{min-height:340px;background:#181818;color:#ff9142;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;gap:8px}
+.construction svg{width:85%;max-width:400px;height:200px;fill:none;stroke:currentColor;stroke-width:4}.construction strong{font-size:42px;letter-spacing:.18em}.construction>span{font-size:10px;letter-spacing:.16em}.construction-track{width:200%;height:15px;background:repeating-linear-gradient(120deg,#ff9142 0 18px,#181818 18px 36px);animation:construction-belt 4s linear infinite}.construction-track:first-child{position:absolute;top:0}.construction-track:last-child{position:absolute;bottom:0}.crane-hook{animation:crane-work 3s ease-in-out infinite alternate;transform-origin:285px 38px}
+@keyframes construction-belt{to{transform:translateX(42px)}}@keyframes crane-work{to{transform:translateY(10px) rotate(4deg)}}@keyframes comic-flow{0%,15%{transform:translateY(0)}85%,100%{transform:translateY(min(0px,calc(440px - 100%)))}}
+@media(prefers-reduced-motion:reduce){.construction-track,.crane-hook,.catalog-page .phone-strip{animation:none}.catalog-page .process-progress-fill{transition:none}}
 .catalog-page .making-col:nth-child(2){display:flex;flex-direction:column;align-items:center;gap:20px;margin:0;border:0;min-width:0}.catalog-page .phone{transform:none;margin:0 auto;border-radius:26px;flex-shrink:0}.catalog-page .phone-notch{width:40px;height:4px;margin:0 auto 14px}

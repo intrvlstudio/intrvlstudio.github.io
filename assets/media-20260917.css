@@ -1,4 +1,5 @@
 /* Delivered artwork remains in its original colors. */
+.film-enabled .works .work .work-image{height:auto;aspect-ratio:1}
 .hero-art>picture{display:contents}
 @media(max-width:700px){.orken-concept .scene-layers.hero-art{inset:0}.hero-art img{object-fit:cover;object-position:center center}}
 .orken-concept .cover::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:url('brand-2026/stage-logo-cut.svg') center/cover no-repeat}
@@ -66,3 +67,4 @@ html .orken-concept .cover{background:#ff9142}
   .film-enabled .works .work{width:74vw;max-width:340px}
   .work-mesh{contain:layout paint}
 }
+.hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}.hero-actions .hero-cta{width:auto;max-width:none;white-space:nowrap}.hero-actions button.hero-cta{background:none;border:0;border-bottom:2px solid currentColor;color:inherit;font-family:inherit;cursor:pointer}.studio-tour-stop{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:1000;background:#191919;color:#fff;border:1px solid #ff9142;border-radius:30px;padding:12px 22px;cursor:pointer}.studio-tour-stop[hidden]{display:none}@media(max-width:700px){.hero-actions{gap:16px;flex-wrap:nowrap}.hero-actions .hero-cta{font-size:11px;gap:8px;padding:12px 0}.hero-actions .hero-cta>span:last-child{font-size:18px}}

@@ -1,1 +1,4 @@
-document.querySelectorAll('[data-process]').forEach(button=>button.addEventListener('click',()=>{document.querySelector('[data-process-frame]').dataset.processFrame=button.dataset.process;document.querySelectorAll('[data-process]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)))}));
+(()=>{const frame=document.querySelector('[data-process-frame]'),buttons=[...document.querySelectorAll('[data-process]')],reduced=matchMedia('(prefers-reduced-motion:reduce)');let step=1,timer;
+function show(n){step=n;frame.dataset.processFrame=n;frame.querySelectorAll('[data-stage]').forEach(img=>img.hidden=Number(img.dataset.stage)!==n);buttons.forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.process)===n)));document.querySelector('.process-progress-fill').style.width=n*20+'%'}
+function restart(){clearInterval(timer);if(!reduced.matches&&!document.hidden)timer=setInterval(()=>show(step%5+1),2400)}
+buttons.forEach(b=>b.addEventListener('click',()=>{show(Number(b.dataset.process));restart()}));document.addEventListener('visibilitychange',restart);reduced.addEventListener('change',restart);show(1);restart();})();
