@@ -4,7 +4,7 @@
   if(reloaded){history.replaceState(null,'','#top');scrollTo({top:0,behavior:'instant'})}
   const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const shots=['.cover','.works','.about','.numbers','.story-scene'].map(s=>document.querySelector(s));
-  const transition=.65, workDuration=2.7, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=starts[4]+2.55;
+  const transition=.65, workDuration=3.3, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=starts[4]+2.55;
   const stops=[...starts];
   const featureStarts=[.85,1.7,2.55], featureTransition=.85;
   const cards=[...document.querySelectorAll('.works .work')];
@@ -14,6 +14,9 @@
     connector.innerHTML='<svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 8 32 20 20 32 8 20Z"/><path d="M20 0v5m0 30v5M0 20h5m30 0h5M16 20h8m-4-4v8"/></svg>';
     document.querySelector('.works-grid').append(connector);return connector;
   });
+  const storyLead=document.createElement('div');
+  storyLead.className='story-lead';storyLead.innerHTML='<span>故事開始</span><i aria-hidden="true"></i>';
+  document.querySelector('.works-grid').append(storyLead);
   const runway=document.createElement('div'), stage=document.createElement('div');
   runway.className='film-runway';stage.className='film-stage';shots[0].before(runway);runway.append(stage);
   shots.forEach(s=>{s.classList.add('film-shot');stage.append(s)});
@@ -184,11 +187,12 @@
       shot.classList.toggle('is-visible',visible);shot.classList.toggle('is-current',i===current);
       shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));
     });
-    shots[0].style.removeProperty('--mobile-exit-dark');
+    shots[0].style.setProperty('--stage-brightness',1-smooth(t/transition));
     pose(document.querySelector('.cover-title'),0,1);
     // Give the wide-spaced covers three times the reading distance; keep other panels quick.
-    const local=clamp((t-starts[1])/workDuration)*6.4;
-    paintBackgrounds(local);
+    const entry=1.24*(innerWidth/2+cardWidth/2+24)/cardStride;
+    const local=clamp((t-starts[1])/workDuration)*(6.4+entry)-entry;
+    paintBackgrounds(Math.max(0,local));
     // Native scroll maps directly to a continuous, closely spaced strip.
     const travel=local/1.24+Math.max(0,local-4.96)*1.5;
     cards.forEach((card,i)=>{
@@ -200,6 +204,9 @@
       card.classList.toggle('is-current',visible);
       card.inert=!visible;card.setAttribute('aria-hidden',String(!visible));
     });
+    const leadWidth=Math.min(560,innerWidth*.78);
+    storyLead.style.width=leadWidth+'px';
+    storyLead.style.transform=`translate3d(${-travel*cardStride-cardWidth/2-24-leadWidth}px,-50%,0)`;
     cardConnectors.forEach((connector,i)=>{
       const x=(i+.5-travel)*cardStride;
       connector.style.transform=`translate3d(calc(-50% + ${x}px),-50%,0)`;
