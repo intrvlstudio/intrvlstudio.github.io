@@ -103,6 +103,50 @@
     if(Math.abs(gap)<.00025)return target;
     return target-gap*Math.exp(-elapsed/(mobile?160:200));
   }
+  // Wheel input moves the document itself, including the sections after the film.
+  // Touch keeps the browser's own momentum; never layer two inertias together.
+  const wheelGlide={active:false,value:0,target:0,time:0,direction:0};
+  function easeWheel(value,target,elapsed){
+    if(Math.abs(target-value)<.5)return target;
+    return target+(value-target)*Math.exp(-elapsed/320);
+  }
+  function wheelDestination(value,target,delta,height,max){
+    const base=(target-value)*delta<0?value:target;
+    const destination=base+delta*1.2;
+    return Math.max(0,Math.min(max,value+height*1.5,Math.max(value-height*1.5,destination)));
+  }
+  function stopWheel(){wheelGlide.active=false;wheelGlide.time=0}
+  function tickWheel(now){
+    if(!wheelGlide.active)return false;
+    wheelGlide.target=Math.min(wheelGlide.target,Math.max(0,root.scrollHeight-innerHeight));
+    const elapsed=wheelGlide.time?Math.max(1,Math.min(50,now-wheelGlide.time)):1000/60;
+    wheelGlide.time=now;
+    wheelGlide.value=easeWheel(wheelGlide.value,wheelGlide.target,elapsed);
+    scrollTo({top:wheelGlide.value,behavior:'instant'});
+    if(wheelGlide.value===wheelGlide.target)stopWheel();
+    return true;
+  }
+  function nativeWheelTarget(target){
+    for(let el=target instanceof Element?target:null;el&&el!==document.body;el=el.parentElement){
+      if(el.matches('dialog,input,textarea,select,[contenteditable]:not([contenteditable="false"]),[data-native-scroll]'))return true;
+      if(el.scrollHeight>el.clientHeight+1&&/auto|scroll/.test(getComputedStyle(el).overflowY))return true;
+    }
+    return false;
+  }
+  addEventListener('wheel',event=>{
+    if(event.defaultPrevented||!event.cancelable||event.ctrlKey||event.metaKey||event.shiftKey||!event.deltaY||Math.abs(event.deltaX)>Math.abs(event.deltaY)||reading||reduced.matches||document.querySelector('dialog[open]')||nativeWheelTarget(event.target)||/hidden|clip/.test(getComputedStyle(document.body).overflowY)){stopWheel();return}
+    const delta=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
+    const direction=Math.sign(delta);
+    if(!wheelGlide.active||direction!==wheelGlide.direction){wheelGlide.value=scrollY;wheelGlide.target=scrollY;wheelGlide.time=0}
+    wheelGlide.target=wheelDestination(wheelGlide.value,wheelGlide.target,delta,innerHeight,Math.max(0,root.scrollHeight-innerHeight));
+    if(wheelGlide.target===wheelGlide.value){stopWheel();return}
+    event.preventDefault();wheelGlide.active=true;wheelGlide.direction=direction;schedule();
+  },{passive:false});
+  addEventListener('pointerdown',stopWheel,{passive:true});
+  addEventListener('touchstart',stopWheel,{passive:true});
+  addEventListener('keydown',event=>{if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' ','Escape'].includes(event.key))stopWheel()});
+  addEventListener('blur',stopWheel);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopWheel()});
   function updateLogoShadow(){
     const logo=document.querySelector('.emblem-menu');
     const y=logo.getBoundingClientRect().top+logo.offsetHeight/2;
@@ -113,11 +157,12 @@
   }
   function paint(now=performance.now()){
     if(pending)cancelAnimationFrame(pending);pending=0;
+    const wheelFrame=tickWheel(now);
     updateLogoShadow();document.body.classList.toggle("past-film",runway.getBoundingClientRect().bottom<100);topButton.classList.toggle('on-footer',footer.getBoundingClientRect().top<topButton.getBoundingClientRect().bottom);
     if(reading){lastPaintTime=0;return}
     const target=position(),mobile=viewportWidth<=700;
     const elapsed=lastPaintTime?Math.max(1,Math.min(50,now-lastPaintTime)):1000/60;
-    displayedPosition=reduced.matches||target===0||target===end?target:easeTimeline(displayedPosition,target,elapsed,mobile);
+    displayedPosition=wheelFrame||reduced.matches||target===0||target===end?target:easeTimeline(displayedPosition,target,elapsed,mobile);
     const t=displayedPosition;current=starts.reduce((last,start,i)=>t>=start?i:last,0);
     shots.forEach((shot,i)=>{const enter=i?smooth((t-starts[i])/.5):1, exit=i<4?smooth((t-starts[i+1])/.5):0;const opacity=enter*(1-exit);pose(shot,(1-enter)*unit*.25-exit*unit*.25,opacity);shot.classList.toggle('is-visible',opacity>.001);shot.classList.toggle('is-current',i===current);shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));});
     if(mobile){
@@ -157,12 +202,13 @@
     pose(document.querySelector('.plane-front'),(1-reveal)*unit*.7,reveal);pose(document.querySelector('.plane-back'),(1-reveal)*100,reveal,`scale(${1.14-reveal*.14})`);
     visuals.forEach((visual,i)=>{const vstart=featureStarts[i], enter=smooth((f-vstart)/.9), exit=i<2?smooth((f-featureStarts[i+1])/.9):0;pose(visual,i===0?(1-enter)*unit:0,i===0?1-exit:enter*(1-exit));visual.inert=enter<.8||exit>.2;const text=smooth((f-vstart-.8)/.85);pose(visual.querySelector('p'),i===2?0:(1-text)*80-exit*90,text,i===2?`scale(${.5+text*.5})`:'');});
     range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
-    if(displayedPosition!==target){lastPaintTime=now;schedule()}else lastPaintTime=0;
+    if(wheelGlide.active||displayedPosition!==target){lastPaintTime=now;schedule()}else lastPaintTime=0;
   }
   function schedule(){if(!pending)pending=requestAnimationFrame(paint)}
-  function seek(t,behavior='instant'){window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches){displayedPosition=position();lastPaintTime=0;paint()}}
-  function go(target,behavior='smooth'){const i=shots.indexOf(target);if(!reading&&i>=0)seek(stops[i],behavior);else target.scrollIntoView({behavior:reduced.matches?'instant':behavior})}
+  function seek(t,behavior='instant'){stopWheel();window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches){displayedPosition=position();lastPaintTime=0;paint()}}
+  function go(target,behavior='smooth'){stopWheel();const i=shots.indexOf(target);if(!reading&&i>=0)seek(stops[i],behavior);else target.scrollIntoView({behavior:reduced.matches?'instant':behavior})}
   function resize(){
+    stopWheel();
     const width=document.documentElement.clientWidth;
     // Mobile browser chrome changes height during a swipe: never seek in response.
     if(viewportWidth===width&&width<=700)return;
@@ -173,10 +219,10 @@
     runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);
     if(preserve)seek(t);schedule();
   }
-  function setMode(value){backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=stage.clientHeight||innerHeight;scrollFactor=viewportWidth<=700?.62:1;runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);seek(starts[saved]+(saved?.65:0))}}
+  function setMode(value){stopWheel();backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=stage.clientHeight||innerHeight;scrollFactor=viewportWidth<=700?.62:1;runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);seek(starts[saved]+(saved?.65:0))}}
   mode.addEventListener('click',()=>setMode(!reading));reduced.addEventListener('change',()=>setMode(reduced.matches));range.addEventListener('input',()=>seek(Number(range.value)/100));controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.addEventListener('click',()=>{if(i===3){burstPlayed=false;burst(b)}go(shots[i]);schedule()}));addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);
   const menu=document.getElementById('chapter-menu'), opener=document.querySelector('.menu-open');
-  opener.addEventListener('click',()=>{if(opener.classList.contains('splitting'))return;opener.classList.add('splitting');setTimeout(()=>{menu.showModal();document.body.classList.add('menu-visible');opener.classList.remove('splitting')},reduced.matches?0:280)});
+  opener.addEventListener('click',()=>{stopWheel();if(opener.classList.contains('splitting'))return;opener.classList.add('splitting');setTimeout(()=>{menu.showModal();document.body.classList.add('menu-visible');opener.classList.remove('splitting')},reduced.matches?0:280)});
   function closeMenu(){if(!menu.open||menu.classList.contains('closing'))return;menu.classList.add('closing');setTimeout(()=>{menu.close();menu.classList.remove('closing')},reduced.matches?0:420)}
   document.querySelector('.menu-close').addEventListener('click',closeMenu);menu.addEventListener('cancel',event=>{event.preventDefault();closeMenu()});menu.addEventListener('close',()=>document.body.classList.remove('menu-visible'));
   document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{const target=document.getElementById(link.getAttribute('href').slice(1));if(!target)return;event.preventDefault();if(menu.open)closeMenu();go(target);history.replaceState(null,'',link.getAttribute('href'));if(menu.contains(link)){target.tabIndex=-1;setTimeout(()=>target.focus({preventScroll:true}),450)}}));
