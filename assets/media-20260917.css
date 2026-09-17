@@ -1,3 +1,26 @@
+/* Homepage composition: keep the cast clear above a compact, lower-center lockup. */
+.orken-concept #top.cover{align-items:end;padding:90px 5vw max(24px,4svh)}
+.orken-concept #top .cover-meta{align-self:end;align-items:center;justify-content:flex-end;padding:0;min-height:0;max-width:100%;gap:0}
+.orken-concept #top .cover-title{margin:0 auto 10px;line-height:1}
+.orken-concept #top .cover-title-logo{width:auto;height:clamp(80px,14svh,150px);max-width:80vw}
+.orken-concept #top .cover-tagline{font-size:clamp(11px,1.1vw,15px);line-height:1.6}
+.orken-concept #top .hero-actions{justify-content:center;gap:20px}
+.orken-concept #top .hero-cta{margin-top:12px;padding:8px 12px}
+.orken-concept #top .cover-footer{position:static;display:flex;width:auto;justify-content:center;flex-wrap:wrap;margin:14px 0 0;padding:0;gap:12px 28px}
+.orken-concept #top .hero-edge{bottom:6px;left:5vw;right:5vw;justify-content:center;gap:16px}
+/* Four characters per row spread the opening story title across its backdrop. */
+.orken-concept #feature .feature-title{inset:auto;left:50%;top:calc(50% * (1 - var(--title-dock,0)));width:88%;max-width:none;font-size:min(17vw,31svh);line-height:1.3;letter-spacing:.14em}
+html[lang="zh-TW"] .orken-concept #feature .feature-title>.lang-zh{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:none;width:100%;text-align:center;letter-spacing:0;row-gap:.12em}
+.orken-concept #feature .feature-title>.lang-en,.orken-concept #feature .feature-title>.lang-ko{font-size:min(9vw,16svh);letter-spacing:.08em;line-height:1.45}
+@media(max-width:700px){
+  .orken-concept #top.cover{padding:80px 5vw max(22px,4svh)}
+  .orken-concept #top .cover-title-logo{height:clamp(48px,7svh,64px);width:auto;max-width:80vw}
+  .orken-concept #top .hero-actions{gap:12px;flex-wrap:wrap}
+  .orken-concept #top .hero-cta{font-size:11px;padding:8px;gap:8px}
+  .orken-concept #top .cover-footer{font-size:8px;gap:8px 18px;margin-top:12px}
+  .orken-concept #feature .feature-title{width:90%;font-size:min(19vw,25svh);line-height:1.45}
+  html[lang="zh-TW"] .orken-concept #feature .feature-title>.lang-zh{row-gap:.45em}
+}
 /* Delivered artwork remains in its original colors. */
 .film-enabled .works .work .work-image{height:auto;aspect-ratio:1}
 .hero-art>picture{display:contents}
