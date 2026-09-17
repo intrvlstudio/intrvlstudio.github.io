@@ -8,6 +8,12 @@
   const stops=[...starts];
   const featureStarts=[.65,1.3,1.95];
   const cards=[...document.querySelectorAll('.works .work')];
+  const cardConnectors=cards.slice(1).map(()=>{
+    const connector=document.createElement('div');
+    connector.className='work-connector';connector.setAttribute('aria-hidden','true');
+    connector.innerHTML='<svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 8 32 20 20 32 8 20Z"/><path d="M20 0v5m0 30v5M0 20h5m30 0h5M16 20h8m-4-4v8"/></svg>';
+    document.querySelector('.works-grid').append(connector);return connector;
+  });
   const runway=document.createElement('div'), stage=document.createElement('div');
   runway.className='film-runway';stage.className='film-stage';shots[0].before(runway);runway.append(stage);
   shots.forEach(s=>{s.classList.add('film-shot');stage.append(s)});
@@ -185,6 +191,11 @@
       card.classList.toggle('is-current',visible);
       card.inert=!visible;card.setAttribute('aria-hidden',String(!visible));
     });
+    cardConnectors.forEach((connector,i)=>{
+      const x=(i+.5-travel)*cardStride;
+      connector.style.transform=`translate3d(calc(-50% + ${x}px),-50%,0)`;
+      connector.style.visibility=viewportWidth>700&&Math.abs(x)<viewportWidth/2+cardStride/2?'visible':'hidden';
+    });
     const meshProgress=Math.max(0,Math.min(1.2,local-5.38));
     if(meshProgress!==lastMeshProgress){lastMeshProgress=meshProgress;
     tiles.forEach((tile,i)=>{const delay=((i%8)+Math.floor(i/8))*.018;const orange=smooth((local-5.38-delay)/.3),black=smooth((local-5.7-delay)/.3);tile.style.backgroundColor=black>0?`rgb(${Math.round(255*(1-black))} ${Math.round(145*(1-black))} ${Math.round(66*(1-black))})`:`rgba(255,145,66,${orange})`;tile.style.transform=`perspective(600px) rotateY(${orange>0&&orange<1?(1-orange)*90:black>0&&black<1?(1-black)*90:0}deg)`;tile.style.backgroundImage=black===1?'none':'';tile.style.borderColor=`rgba(255,255,255,${.18*(1-black)})`});
@@ -223,7 +234,9 @@
     const t=position(),box=runway.getBoundingClientRect(),preserve=!reading&&box.top<0&&box.bottom>=unit;
     viewportWidth=width;unit=stage.clientHeight||innerHeight;
     scrollFactor=scrollScale(width,unit);
-    cardWidth=cards[0].offsetWidth;cardStride=cardWidth+(width<=700?24:48);
+    cardWidth=cards[0].offsetWidth;
+    cardStride=width<=700?cardWidth+24:Math.max(width,cardWidth+160);
+    cardConnectors.forEach(connector=>{connector.style.width=Math.max(0,cardStride-cardWidth-48)+'px'});
     runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);
     if(preserve)seek(t);schedule();
   }

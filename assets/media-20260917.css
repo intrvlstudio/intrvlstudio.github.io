@@ -20,12 +20,17 @@
 .reel-backdrop{isolation:isolate;z-index:0}
 .film-enabled .works::before{display:none}
 .film-enabled .works-grid{z-index:3}
+.work-connector{display:none;pointer-events:none}
+.film-enabled .work-connector{position:absolute;left:50%;top:50%;height:40px;display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.48);will-change:transform}
+.work-connector::before,.work-connector::after{content:'';flex:1;height:1px;background:currentColor}
+.work-connector svg{display:block;width:40px;height:40px;flex:none;stroke:currentColor;stroke-width:1;overflow:visible}
 .film-enabled .more-works{z-index:4}
 .film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-size:contain;background-position:center bottom}
 .collab-grid .member,.collab-grid .member-mascot,.collab-grid .member-mascot svg{rotate:0deg;transform:none}
 .orken-concept .cover{background:#9ddfeb}
 .orken-concept .cover .cover-title-logo{height:clamp(150px,26.5vh,265px);width:auto;max-width:86vw}
 @media(max-width:700px){
+  .film-enabled .work-connector{display:none}
   .orken-concept .cover .cover-title-logo{width:250px;height:auto;max-width:78vw}
   .orken-concept .cover-meta>div:first-child::before{display:none}
   .orken-concept .cover .cover-title{box-shadow:none;text-shadow:none}
