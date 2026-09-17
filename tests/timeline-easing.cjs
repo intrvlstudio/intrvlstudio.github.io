@@ -21,13 +21,17 @@ for(let i=1;i<starts.length;i++){
     assert(incoming>=-1e-9&&incoming<=1+1e-9);
   }
 }
-// Each story finishes its text reveal and holds before the next image enters.
+// Incoming and outgoing visuals move at one speed, without a centered hold.
 const featureSetup=source.match(/const featureStarts=.*?;/)[0];
 const feature=vm.runInNewContext(featureSetup+';({featureStarts,featureTransition})');
 feature.featureStarts.forEach((arrive,i)=>{
   const next=i<2?feature.featureStarts[i+1]-feature.featureTransition:end-starts[4];
-  assert(next-arrive>=.4-1e-9,'A complete visual must hold before replacement');
-  assert(next>arrive+.15,'All floating letters finish before replacement');
+  near(next,arrive);
+  if(i<2){
+    const at=t=>1-Math.max(0,Math.min(1,(t-arrive+feature.featureTransition)/feature.featureTransition))-Math.max(0,Math.min(1,(t-next)/feature.featureTransition));
+    const step=.001;
+    near((at(arrive)-at(arrive-step))/step,(at(arrive+step)-at(arrive))/step);
+  }
 });
 // The black front starts below the image and ends above it, covering text too.
 const exitFn=source.match(/function featureExit\(panel,progress\)\{[\s\S]*?\n  \}/)[0];
@@ -40,7 +44,7 @@ featureExit(panel,1);assert(edge+30<=0);
 // Every section anchor lands on a full panel; final visual is ready for native flow.
 starts.forEach((start,i)=>near(i?panelOffset(start,start,i<4?starts[i+1]-transition:null):0,0));
 near(panelOffset(end-starts[4],1.95,null),0);
-assert(end<10,'Story holds should keep the timeline compact');
+assert(end<10,'Keep the story timeline compact');
 assert(!source.includes('easeTimeline'),'Do not add a second easing after native/wheel scroll');
 assert(!source.includes('scale(${1+Math.min(t,2)'),'No scroll zoom on the stage logo');
-console.log('Connected scroll: shared panel edges, story holds and full gradient coverage, anchor landings and shorter travel verified.');
+console.log('Connected scroll: shared panel edges, continuous story motion and full gradient coverage, anchor landings and shorter travel verified.');

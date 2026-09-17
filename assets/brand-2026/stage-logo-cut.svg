@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <g transform="translate(-480 -380) scale(4.2)" fill="#f6b276">
+    <path d="M151.854 263 55.3371 95.9273H124.214L151.854 143.799 203.807 53.9873 303 1.72394Z"/>
+  </g>
+  <g transform="translate(820 380) rotate(-12) scale(4.6)" fill="#dc6c29">
+    <path d="M38.2805 66.3006 0 0H203.807Z"/>
+    <path d="M151.854 263 55.3371 95.9273H124.214L151.854 143.799 203.807 53.9873 303 1.72394Z"/>
+  </g>
+</svg>

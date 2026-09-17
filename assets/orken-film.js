@@ -4,9 +4,9 @@
   if(reloaded){history.replaceState(null,'','#top');scrollTo({top:0,behavior:'instant'})}
   const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const shots=['.cover','.works','.about','.numbers','.story-scene'].map(s=>document.querySelector(s));
-  const transition=.65, workDuration=2.7, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=starts[4]+4.45;
+  const transition=.65, workDuration=2.7, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=starts[4]+2.55;
   const stops=[...starts];
-  const featureStarts=[1.15,2.45,3.75], featureTransition=.85;
+  const featureStarts=[.85,1.7,2.55], featureTransition=.85;
   const cards=[...document.querySelectorAll('.works .work')];
   const cardConnectors=cards.slice(1).map(()=>{
     const connector=document.createElement('div');
@@ -72,7 +72,7 @@
   const animated=new Set();
   function pose(el,y=0,opacity=1,extra=''){animated.add(el);el.style.transform=`translate3d(0,${y}px,0) ${extra}`;el.style.opacity=opacity;}
   function split(selector){return [...document.querySelectorAll(selector+' > span')].map(parent=>{
-    const label=parent.textContent;parent.setAttribute('aria-label',label);parent.textContent='';
+    const label=parent.textContent;parent.setAttribute('aria-label',label);parent.style.setProperty('--letter-count',[...label].length);parent.textContent='';
     return [...label].map((letter,i)=>{const el=document.createElement('span');el.className='motion-letter';el.textContent=letter===' '?'\u00a0':letter;el.setAttribute('aria-hidden','true');parent.append(el);return {el,delay:((i*7+3)%11)/11,travel:120+((i*53)%190)};});
   });}
   const aboutLetters=split('.about-title'), featureLetters=split('.feature-title');
@@ -227,13 +227,13 @@
     visuals.forEach((visual,i)=>{
       const enter=clamp((f-featureStarts[i]+featureTransition)/featureTransition);
       const exit=i<2?clamp((f-featureStarts[i+1]+featureTransition)/featureTransition):0;
-      pose(visual,(1-enter-exit*.12)*unit,1);
+      pose(visual,(1-enter-exit)*unit,1);
       featureExit(visual,exit);
       visual.inert=enter<.7||exit>.3;
       visual.setAttribute('aria-hidden',String(enter<.7||exit>.3));
-      const text=clamp((f-featureStarts[i]+.4)/.55);
+      const text=clamp((f-featureStarts[i]+.75)/.65);
       floatingLetters(visualLetters[i],text);
-      if(i===2)floatingLetters(featureLinkLetters,clamp((f-featureStarts[i]-.05)/.45));
+      if(i===2)floatingLetters(featureLinkLetters,clamp((f-featureStarts[i]+.45)/.4));
     });
     range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
     if(wheelGlide.active)schedule();

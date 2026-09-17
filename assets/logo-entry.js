@@ -100,13 +100,11 @@
       const seal = smooth((time-assemblyEnd)/70);
       hookParts.style.opacity = seal < 1 ? 1 : 0;
       hookWhole.style.opacity = seal;
-      // Blue guide: shoot diagonally up from the lower-left into a hard stop.
-      const a = Math.pow(clamp((time-arrowDelay)/180), 1.6);
-      const ap = bezier([[-x*2,y*1.2],[-x*1.4,y*.8],[-x*.18,y*.08],[0,0]], a);
-      arrow.style.transform = `translate(${ap[0]}px,${ap[1]}px) rotate(${-24*(1-a)}deg) scale(${1+1.2*(1-a)})`;
+      // Switch the upper-left triangle on in place; it has no entrance trajectory.
+      arrow.style.transform = 'none';
       arrow.style.opacity = time < arrowDelay ? 0 : 1;
       // Abrupt electrical flicker, with no geometric flip or fade.
-      let flickerTime = (time-(parkingEnd+220))/playbackRate;
+      let flickerTime = (time-arrowDelay)/playbackRate;
       let bulb = {opacity:1, color:'#fff'};
       if (flickerTime >= 0) {
         for (const state of flicker) {
