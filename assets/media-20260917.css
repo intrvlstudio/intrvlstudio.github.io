@@ -29,7 +29,10 @@
 .collab-grid .member,.collab-grid .member-mascot,.collab-grid .member-mascot svg{rotate:0deg;transform:none}
 .orken-concept .cover{background:#9ddfeb}
 .orken-concept .cover .cover-title-logo{height:clamp(150px,26.5vh,265px);width:auto;max-width:86vw}
+.team .team-grid .member .member-mascot svg{width:85%!important;height:85%!important;max-width:255px}
+.team .team-grid .member .image-placeholder{width:51%;height:55.25%}
 @media(max-width:700px){
+  .team .team-grid .member .member-mascot svg{max-width:170px}
   .film-enabled .work-connector{display:none}
   .orken-concept .cover .cover-title-logo{width:250px;height:auto;max-width:78vw}
   .orken-concept .cover-meta>div:first-child::before{display:none}
