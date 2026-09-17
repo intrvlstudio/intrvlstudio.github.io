@@ -4,9 +4,9 @@
   if(reloaded){history.replaceState(null,'','#top');scrollTo({top:0,behavior:'instant'})}
   const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const shots=['.cover','.works','.about','.numbers','.story-scene'].map(s=>document.querySelector(s));
-  const transition=.65, workDuration=2.7, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=transition*7+workDuration;
+  const transition=.65, workDuration=2.7, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=starts[4]+4.45;
   const stops=[...starts];
-  const featureStarts=[.65,1.3,1.95];
+  const featureStarts=[1.15,2.45,3.75], featureTransition=.85;
   const cards=[...document.querySelectorAll('.works .work')];
   const cardConnectors=cards.slice(1).map(()=>{
     const connector=document.createElement('div');
@@ -76,6 +76,15 @@
     return [...label].map((letter,i)=>{const el=document.createElement('span');el.className='motion-letter';el.textContent=letter===' '?'\u00a0':letter;el.setAttribute('aria-hidden','true');parent.append(el);return {el,delay:((i*7+3)%11)/11,travel:120+((i*53)%190)};});
   });}
   const aboutLetters=split('.about-title'), featureLetters=split('.feature-title');
+  const visualLetters=visuals.map((visual,i)=>split('.visual-'+String.fromCharCode(97+i)+' p'));
+  const featureLinkLetters=split('.visual-c a');
+  function floatingLetters(groups,t){groups.flat().forEach(({el,delay,travel})=>{
+    const p=smooth((t-delay*.38)/.62);
+    pose(el,(1-p)*travel,p,`scale(${.4+.6*p}) rotate(${(1-p)*(delay-.5)*12}deg)`);
+  })}
+  function featureExit(panel,progress){
+    panel.style.setProperty('--exit-edge',`${130-260*progress}%`);
+  }
   function letters(groups,t){groups.flat().forEach(({el,delay,travel})=>{const p=smooth((t-delay*.7)/.7);pose(el,(1-p)*travel,p)})}
   const confetti=document.createElement('div');confetti.className='milestone-confetti';confetti.setAttribute('aria-hidden','true');values[1].append(confetti);
   let burstPlayed=false;
@@ -208,17 +217,23 @@
     if(current===3&&n===1&&!burstPlayed){burstPlayed=true;burst()}
     if(n<.75)burstPlayed=false;if(n<1||current!==3)confetti.replaceChildren();
     const f=t-starts[4], reveal=clamp((f+transition)/transition);
-    letters(featureLetters,reveal*1.5);
-    intro.style.setProperty('--title-dock',clamp(f/transition));
-    pose(intro,-clamp(f/transition)*unit,1);
-    pose(document.querySelector('.plane-front'),(1-reveal)*unit*.3,1);
+    floatingLetters(featureLetters,reveal);
+    const introExit=clamp((f-featureStarts[0]+featureTransition)/featureTransition);
+    intro.style.setProperty('--title-dock',clamp(f/featureStarts[0]));
+    pose(intro,-introExit*unit*.12,1);
+    featureExit(intro,introExit);
+    pose(document.querySelector('.plane-front'),(1-reveal)*unit*.3-clamp(f/.5)*unit*.12,1);
     pose(document.querySelector('.plane-back'),0,1);
     visuals.forEach((visual,i)=>{
-      const y=panelOffset(f,featureStarts[i],i<2?featureStarts[i]:null);
-      pose(visual,y*unit,1);visual.inert=Math.abs(y)>.5;
-      visual.setAttribute('aria-hidden',String(Math.abs(y)>.5));
-      const text=smooth((f-featureStarts[i]+transition*.65)/(transition*.65));
-      pose(visual.querySelector('p'),(1-text)*35,text);
+      const enter=clamp((f-featureStarts[i]+featureTransition)/featureTransition);
+      const exit=i<2?clamp((f-featureStarts[i+1]+featureTransition)/featureTransition):0;
+      pose(visual,(1-enter-exit*.12)*unit,1);
+      featureExit(visual,exit);
+      visual.inert=enter<.7||exit>.3;
+      visual.setAttribute('aria-hidden',String(enter<.7||exit>.3));
+      const text=clamp((f-featureStarts[i]+.4)/.55);
+      floatingLetters(visualLetters[i],text);
+      if(i===2)floatingLetters(featureLinkLetters,clamp((f-featureStarts[i]-.05)/.45));
     });
     range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
     if(wheelGlide.active)schedule();

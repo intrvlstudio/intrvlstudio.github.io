@@ -1,4 +1,12 @@
 /* Delivered artwork remains in its original colors. */
+/* Each incoming story covers the preceding image while black rises over every layer. */
+.film-enabled .story-scene{background:#000}
+.film-enabled .feature-intro,.film-enabled .feature-visual{isolation:isolate;overflow:hidden}
+.film-enabled .feature-intro::after,.film-enabled .feature-visual::after{content:'';position:absolute;inset:0;z-index:10;pointer-events:none;background:linear-gradient(to bottom,transparent calc(var(--exit-edge,130%) - 30%),#000 calc(var(--exit-edge,130%) + 30%))}
+.orken-concept .feature-visual p{left:7vw;right:7vw;top:50%;translate:0 -50%;font-family:'Noto Sans TC',Manrope,'Noto Sans KR',sans-serif;font-size:clamp(38px,5.6vw,88px);font-weight:900;letter-spacing:.035em;line-height:1.35;text-wrap:balance;text-shadow:0 3px 28px #0008}
+.orken-concept .feature-visual a{font-weight:900;font-size:clamp(18px,1.8vw,26px)}
+.story-scene .motion-letter{transform-origin:50% 100%}
+@media(max-width:700px){.orken-concept .feature-visual p{left:7vw;right:7vw;font-size:clamp(30px,8vw,56px);line-height:1.5;letter-spacing:.025em}}
 .studio-blocks>div{background-size:cover!important;background-position:center!important}
 .studio-blocks>div:first-child{background-image:url('media-20260917/packing-wide.png')}
 .studio-blocks>div:nth-child(2){background-image:url('media-20260917/booth-wide.png')}
@@ -26,13 +34,24 @@
 .work-connector svg{display:block;width:40px;height:40px;flex:none;stroke:currentColor;stroke-width:1;overflow:visible}
 .film-enabled .more-works{z-index:4}
 .film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-size:contain;background-position:center bottom}
+/* Compensate for the original PNG's transparent margins; visible art is 82vw / 75vw. */
+.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-image:url('media-20260917/feature-person-updated.png');background-size:100% auto;background-position:center top;inset:auto;left:-26.7vw;top:calc(16vh - 13.1vw);width:128.5vw;height:161.5vw;max-width:none}
+@media(min-width:701px){html .orken-concept .cover{background:#000}}
+@media(max-width:700px){.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{left:-20.15vw;top:calc(50% - 77vw);width:117.5vw;height:147.65vw}}
 .collab-grid .member,.collab-grid .member-mascot,.collab-grid .member-mascot svg{rotate:0deg;transform:none}
 .orken-concept .cover{background:#9ddfeb}
 .orken-concept .cover .cover-title-logo{height:clamp(150px,26.5vh,265px);width:auto;max-width:86vw}
 .team .team-grid .member .member-mascot svg{width:85%!important;height:85%!important;max-width:255px}
 .team .team-grid .member .image-placeholder{width:51%;height:55.25%}
+/* Size the characters independently, keeping their feet on the same baseline. */
+.team .team-grid .member-piann .member-mascot svg{width:100%!important;height:100%!important;max-width:300px}
+.team .team-grid .member-page .member-mascot svg{width:34%!important;height:34%!important;max-width:102px}
+.team .team-grid .member-m3 .member-mascot svg{width:48%!important;height:48%!important;max-width:144px}
 @media(max-width:700px){
   .team .team-grid .member .member-mascot svg{max-width:170px}
+  .team .team-grid .member-piann .member-mascot svg{max-width:200px}
+  .team .team-grid .member-page .member-mascot svg{max-width:68px}
+  .team .team-grid .member-m3 .member-mascot svg{max-width:96px}
   .film-enabled .work-connector{display:none}
   .orken-concept .cover .cover-title-logo{width:250px;height:auto;max-width:78vw}
   .orken-concept .cover-meta>div:first-child::before{display:none}

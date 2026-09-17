@@ -21,19 +21,26 @@ for(let i=1;i<starts.length;i++){
     assert(incoming>=-1e-9&&incoming<=1+1e-9);
   }
 }
-// Story A/B/C also push each other with the same shared edge.
-for(let i=0;i<3;i++){
-  const arrive=(i+1)*transition;
-  for(let step=0;step<=100;step++){
-    const t=arrive-transition+transition*step/100;
-    const outgoing=i===0?-Math.max(0,Math.min(1,t/transition)):panelOffset(t,i*transition,i*transition);
-    near(outgoing+1,panelOffset(t,arrive,i<2?arrive:null));
-  }
-}
+// Each story finishes its text reveal and holds before the next image enters.
+const featureSetup=source.match(/const featureStarts=.*?;/)[0];
+const feature=vm.runInNewContext(featureSetup+';({featureStarts,featureTransition})');
+feature.featureStarts.forEach((arrive,i)=>{
+  const next=i<2?feature.featureStarts[i+1]-feature.featureTransition:end-starts[4];
+  assert(next-arrive>=.4-1e-9,'A complete visual must hold before replacement');
+  assert(next>arrive+.15,'All floating letters finish before replacement');
+});
+// The black front starts below the image and ends above it, covering text too.
+const exitFn=source.match(/function featureExit\(panel,progress\)\{[\s\S]*?\n  \}/)[0];
+const featureExit=vm.runInNewContext('('+exitFn+')');
+let edge;
+const panel={style:{setProperty:(name,value)=>{edge=parseFloat(value)}}};
+featureExit(panel,0);assert(edge-30>=100);
+featureExit(panel,.5);near(edge,0);
+featureExit(panel,1);assert(edge+30<=0);
 // Every section anchor lands on a full panel; final visual is ready for native flow.
 starts.forEach((start,i)=>near(i?panelOffset(start,start,i<4?starts[i+1]-transition:null):0,0));
 near(panelOffset(end-starts[4],1.95,null),0);
-assert(end<8,'The longer work reel should still avoid the old 25-screen timeline');
+assert(end<10,'Story holds should keep the timeline compact');
 assert(!source.includes('easeTimeline'),'Do not add a second easing after native/wheel scroll');
 assert(!source.includes('scale(${1+Math.min(t,2)'),'No scroll zoom on the stage logo');
-console.log('Connected scroll: shared panel edges, story pushes, anchor landings and shorter travel verified.');
+console.log('Connected scroll: shared panel edges, story holds and full gradient coverage, anchor landings and shorter travel verified.');
