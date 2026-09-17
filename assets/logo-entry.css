@@ -1,0 +1,14 @@
+.logo-entry{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;overflow:hidden;background:#101110;pointer-events:none}
+.logo-entry-dock{width:clamp(150px,24vw,280px);will-change:transform}
+.logo-entry svg{display:block;width:100%;height:auto;overflow:visible;transform-origin:center;will-change:transform}
+.logo-entry-hook,.logo-entry-arrow{transform-origin:151.5px 131.5px;opacity:0;will-change:transform}
+@media(prefers-reduced-motion:reduce){.logo-entry{display:none}}
+/* The intro's final frame and the persistent navigation share the same mark. */
+body .nav.nav-intro{position:sticky;top:0;left:0;right:0;height:76px;min-height:76px;z-index:30;background:#101110;color:#fff;border-bottom:1px solid #ffffff20;pointer-events:auto}
+body .nav.nav-intro .nav-brand{position:absolute;left:50%;top:16px;transform:translateX(-50%);padding:0;background:none;line-height:0}
+body .nav.nav-intro .nav-brand-logo{width:50px;height:auto;max-height:none;filter:none}
+body .nav.nav-intro>.lang-toggle{margin-left:auto}
+body .nav.nav-intro>.nav-links{gap:16px;max-width:calc(50% - 50px)}
+body .nav.nav-intro .lang-toggle .active{background:#fff;color:#101110}
+.intro-playing .nav-intro .nav-brand{visibility:hidden}
+@media(max-width:800px){body .nav.nav-intro:has(>.nav-links){height:112px;flex-wrap:wrap;padding:15px 6vw 10px}body .nav.nav-intro>.nav-links{order:3;max-width:none;width:100%;justify-content:space-between;gap:8px;align-self:flex-end}body .nav.nav-intro>.nav-links a{font-size:12px}}

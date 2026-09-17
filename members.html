@@ -16,6 +16,7 @@
 <title>INTRVL 內部空間 — INTRVL Studio</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="stylesheet" href="assets/forms.css">
 <link rel="alternate icon" type="image/png" href="assets/icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -802,6 +803,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <span class="nav-count" id="docCount"></span>
         </button>
 
+        <button class="nav-item" data-view="forms"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">員工表單</span></button>
         <button class="nav-item" data-view="apps">
           <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
           <span class="nav-label">APP</span>
@@ -979,6 +981,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
       </div>
     </section>
 
+    <section class="view" id="view-forms"><div id="formsTool"></div></section>
     <!-- ============ 文件下載 ============ -->
     <section class="view" id="view-docs">
       <div class="section-head">
@@ -1365,6 +1368,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
 </div>
 
 <script type="module">
+import { initForms } from "./assets/forms.js";
 import {
   auth, signOut, onAuthStateChanged, isAdmin,
   db, collection, doc, getDoc, getDocs, getDocsFromCache,
@@ -2593,6 +2597,7 @@ onAuthStateChanged(auth, (user) => {
   loadPublic().then(routeFromHash);   // 載入完成後，依網址 hash 開到對應項目（分享連結）
 
   isAdmin(user.uid).then(async (ok) => {
+    initForms(ok);
     if (ok) {
       document.body.classList.add('is-admin');
       $('setRole').textContent = '管理員';
