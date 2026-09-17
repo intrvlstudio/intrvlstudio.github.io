@@ -24,6 +24,8 @@
 .film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-size:contain;background-position:center bottom}
 .collab-grid .member,.collab-grid .member-mascot,.collab-grid .member-mascot svg{rotate:0deg;transform:none}
 @media(max-width:700px){
+  .orken-concept .cover-meta>div:first-child::before{display:none}
+  .orken-concept .cover .cover-title{box-shadow:none;text-shadow:none}
   .film-enabled .cover::after{display:block;background:#000;opacity:var(--mobile-exit-dark,0);z-index:5;pointer-events:none}
   .work-background{filter:blur(6px);scale:1.04}
   .film-enabled .works .work{width:74vw;max-width:340px}
