@@ -4,7 +4,7 @@
   if(reloaded){history.replaceState(null,'','#top');scrollTo({top:0,behavior:'instant'})}
   const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const shots=['.cover','.works','.about','.numbers','.story-scene'].map(s=>document.querySelector(s));
-  const transition=.65, starts=[0,.65,2.2,2.85,3.5], end=5.45;
+  const transition=.65, workDuration=2.7, starts=[0,transition,transition*2+workDuration,transition*3+workDuration,transition*4+workDuration], end=transition*7+workDuration;
   const stops=[...starts];
   const featureStarts=[.65,1.3,1.95];
   const cards=[...document.querySelectorAll('.works .work')];
@@ -177,8 +177,8 @@
     });
     shots[0].style.removeProperty('--mobile-exit-dark');
     pose(document.querySelector('.cover-title'),0,1);
-    // Keep all five covers continuous within a much shorter work reel.
-    const local=clamp((t-starts[1])/.9)*6.4;
+    // Give the wide-spaced covers three times the reading distance; keep other panels quick.
+    const local=clamp((t-starts[1])/workDuration)*6.4;
     paintBackgrounds(local);
     // Native scroll maps directly to a continuous, closely spaced strip.
     const travel=local/1.24+Math.max(0,local-4.96)*1.5;

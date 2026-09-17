@@ -33,7 +33,7 @@ for(let i=0;i<3;i++){
 // Every section anchor lands on a full panel; final visual is ready for native flow.
 starts.forEach((start,i)=>near(i?panelOffset(start,start,i<4?starts[i+1]-transition:null):0,0));
 near(panelOffset(end-starts[4],1.95,null),0);
-assert(end<6,'Intro through feature should no longer need 25 screens of scrolling');
+assert(end<8,'The longer work reel should still avoid the old 25-screen timeline');
 assert(!source.includes('easeTimeline'),'Do not add a second easing after native/wheel scroll');
 assert(!source.includes('scale(${1+Math.min(t,2)'),'No scroll zoom on the stage logo');
 console.log('Connected scroll: shared panel edges, story pushes, anchor landings and shorter travel verified.');
