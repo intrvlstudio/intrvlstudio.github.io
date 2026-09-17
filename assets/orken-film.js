@@ -93,7 +93,8 @@
   function count(p){values[0].textContent=Math.round(200*p)+'+';values[1].querySelector('.lang-zh').textContent=Math.round(2800*p).toLocaleString('en-US')+'萬';values[1].querySelector('.lang-en').textContent=(28*p).toFixed(p===1?0:1)+'M';values[1].querySelector('.lang-ko').textContent=Math.round(2800*p).toLocaleString('en-US')+'만';values[2].textContent=Math.round(2*p)+'×';values[3].textContent=Math.round(4*p);}
   let reading=reduced.matches, unit=innerHeight, current=0, pending=false;
   let viewportWidth=0,cardWidth=0,cardStride=0,lastMeshProgress=-1;
-  function position(){return clamp(-runway.getBoundingClientRect().top/(unit*end))*end}
+  let scrollFactor=1;
+  function position(){return clamp(-runway.getBoundingClientRect().top/(unit*scrollFactor*end))*end}
   function updateLogoShadow(){
     const logo=document.querySelector('.emblem-menu');
     const y=logo.getBoundingClientRect().top+logo.offsetHeight/2;
@@ -106,7 +107,16 @@
     if(reading)return;
     const t=position();current=starts.reduce((last,start,i)=>t>=start?i:last,0);
     shots.forEach((shot,i)=>{const enter=i?smooth((t-starts[i])/.5):1, exit=i<4?smooth((t-starts[i+1])/.5):0;const opacity=enter*(1-exit);pose(shot,(1-enter)*unit*.25-exit*unit*.25,opacity);shot.classList.toggle('is-visible',opacity>.001);shot.classList.toggle('is-current',i===current);shot.inert=i!==current;shot.setAttribute('aria-hidden',String(i!==current));});
-    pose(document.querySelector('.cover-title'),-t*12,1,`scale(${1+Math.min(t,2)*.055})`);
+    const mobile=viewportWidth<=700;
+    if(mobile){
+      const exit=smooth((t-starts[1])/.5);
+      pose(shots[0],-Math.min(t*.48,1)*unit,1-exit);
+      shots[0].style.setProperty('--mobile-exit-dark',smooth((t-.1)/1.8)*.9);
+      pose(document.querySelector('.cover-title'),0,1,'scale(1)');
+    }else{
+      shots[0].style.removeProperty('--mobile-exit-dark');
+      pose(document.querySelector('.cover-title'),-t*12,1,`scale(${1+Math.min(t,2)*.055})`);
+    }
     const local=t-starts[1]-.5;
     paintBackgrounds(local);
     // Native scroll maps directly to a continuous, closely spaced strip.
@@ -137,7 +147,7 @@
     range.value=Math.round(t*100);controls.querySelector('.film-position').textContent=Math.round(t/end*100)+'%';controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.setAttribute('aria-current',String(i===current)));controls.hidden=runway.getBoundingClientRect().bottom<unit*.35;
   }
   function schedule(){if(!pending){pending=true;requestAnimationFrame(paint)}}
-  function seek(t,behavior='instant'){window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches)paint()}
+  function seek(t,behavior='instant'){window.scrollTo({top:scrollY+runway.getBoundingClientRect().top+unit*scrollFactor*t,behavior:reduced.matches?'instant':behavior});if(behavior==='instant'||reduced.matches)paint()}
   function go(target,behavior='smooth'){const i=shots.indexOf(target);if(!reading&&i>=0)seek(stops[i],behavior);else target.scrollIntoView({behavior:reduced.matches?'instant':behavior})}
   function resize(){
     const width=document.documentElement.clientWidth;
@@ -145,11 +155,12 @@
     if(viewportWidth===width&&width<=700)return;
     const t=position(),box=runway.getBoundingClientRect(),preserve=!reading&&box.top<0&&box.bottom>=unit;
     viewportWidth=width;unit=stage.clientHeight||innerHeight;
+    scrollFactor=width<=700?.62:1;
     cardWidth=cards[0].offsetWidth;cardStride=cardWidth+(width<=700?24:48);
-    runway.style.setProperty('--film-length',`${(end+1)*unit}px`);
+    runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);
     if(preserve)seek(t);schedule();
   }
-  function setMode(value){backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=innerHeight;runway.style.setProperty('--film-length',`${(end+1)*unit}px`);seek(starts[saved]+(saved?.65:0))}}
+  function setMode(value){backgrounds.forEach(({video})=>video.pause());confetti.replaceChildren();const saved=current;reading=value;root.classList.toggle('film-enabled',!reading);root.classList.toggle('film-reading',reading);mode.innerHTML=reading?words('滾動演出','Scroll mode','스크롤 모드'):words('閱讀模式','Reading mode','읽기 모드');controls.hidden=false;[...animated,...cards].forEach(el=>{el.style.transform='';el.style.opacity=''});[...shots,...cards,...visuals,more].forEach(el=>{el.inert=false;el.removeAttribute('aria-hidden')});if(reading){count(1);shots[saved].scrollIntoView({behavior:'instant'})}else{unit=stage.clientHeight||innerHeight;scrollFactor=viewportWidth<=700?.62:1;runway.style.setProperty('--film-length',`${end*unit*scrollFactor+unit}px`);seek(starts[saved]+(saved?.65:0))}}
   mode.addEventListener('click',()=>setMode(!reading));reduced.addEventListener('change',()=>setMode(reduced.matches));range.addEventListener('input',()=>seek(Number(range.value)/100));controls.querySelectorAll('[data-chapter]').forEach((b,i)=>b.addEventListener('click',()=>{if(i===3){burstPlayed=false;burst(b)}go(shots[i]);schedule()}));addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);
   const menu=document.getElementById('chapter-menu'), opener=document.querySelector('.menu-open');
   opener.addEventListener('click',()=>{if(opener.classList.contains('splitting'))return;opener.classList.add('splitting');setTimeout(()=>{menu.showModal();document.body.classList.add('menu-visible');opener.classList.remove('splitting')},reduced.matches?0:280)});
