@@ -176,3 +176,45 @@ html .orken-concept .cover{background:#ff9142}
   .orken-concept #top.cover{padding-top:170px}
   .film-enabled:has(#top.is-current) .film-controls:not(.is-expanded){top:310px}
 }
+
+/* A pixel star overlaps the game CTA without intercepting clicks. */
+.orken-concept #top .hero-actions a.hero-cta:not(.studio-play){overflow:visible}
+.orken-concept #top .hero-actions a.hero-cta:not(.studio-play)::before{
+  content:"";position:absolute;left:-13px;top:-19px;width:32px;height:32px;
+  pointer-events:none;transform-origin:50% 65%;
+  background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath fill='%236b3b12' d='M7 0h2v3h1v2h5v1h1v3h-2v2h-2v4h-2v-1H9v-1H7v1H6v1H4v-4H2V9H0V6h1V5h5V3h1z'/%3E%3Cpath fill='%23ffc52e' d='M7 2h2v3h1v1h5v2h-2v2h-2v3h-1v-1H9v-1H7v1H6v1H5v-3H3V8H1V6h5V5h1z'/%3E%3Cpath fill='%23fff4a3' d='M7 3h1v3H7v1H3V6h3V5h1z'/%3E%3Cpath fill='%23e99816' d='M13 7h2v1h-2v2h-2v3h-1v-2H9v-1h2V8h2z'/%3E%3C/svg%3E");
+  animation:game-star-wiggle 3.6s ease-in-out infinite;
+}
+@keyframes game-star-wiggle{
+  0%,65%,100%{transform:rotate(-8deg)}
+  72%{transform:rotate(13deg) translateY(-2px)}
+  79%{transform:rotate(-13deg)}
+  86%{transform:rotate(8deg) translateY(-1px)}
+  93%{transform:rotate(-5deg)}
+}
+@media(max-width:700px){
+  /* Keep a small visible tab and a usable touch target at the viewport edge. */
+  html.film-enabled body.orken-concept .film-controls:not(.is-expanded),
+  html.film-reading body.orken-concept .film-controls:not(.is-expanded){
+    top:50%!important;right:0;bottom:auto;left:auto;transform:translateY(-50%);
+    width:30px;min-width:0;height:44px;padding:0;gap:0;
+    border:0;border-radius:7px 0 0 7px;background:rgba(17,17,17,.65);box-shadow:none;
+  }
+  .film-controls:not(.is-expanded) .timeline-toggle{
+    position:relative;display:block;width:30px;height:44px;min-height:44px;
+    margin:0;padding:0;border:0;background:transparent;color:#fff;
+  }
+  .film-controls:not(.is-expanded) .timeline-toggle>span{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;
+  }
+  .film-controls:not(.is-expanded) .timeline-toggle::after{
+    content:"";position:absolute;left:12px;top:18px;width:7px;height:7px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);
+  }
+  .film-controls .timeline-toggle:focus-visible{outline:2px solid #ff9142;outline-offset:-3px}
+  .orken-concept #top .hero-actions a.hero-cta:not(.studio-play)::before{width:28px;height:28px;left:-10px;top:-17px}
+}
+@media(prefers-reduced-motion:reduce){
+  .orken-concept #top .hero-actions a.hero-cta:not(.studio-play)::before{animation:none;transform:rotate(-8deg)}
+}
