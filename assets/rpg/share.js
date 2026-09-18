@@ -84,5 +84,15 @@ window.RPGShare = (() => {
     return send(await response.blob(), '成為我的作品吧-任務完成.png', '三本畫冊全完成，任務完成！');
   }
 
-  return { episode, complete };
+  async function celebration(sources) {
+    const [background,...cast]=await Promise.all(['assets/rpg/ending-schoolyard.svg',...sources].map(loadImage));
+    await document.fonts.load('36px PixelRPG');
+    const canvas=document.createElement('canvas');canvas.width=1440;canvas.height=810;
+    const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(background,0,0,1440,810);
+    ctx.textAlign='center';ctx.font='52px PixelRPG, sans-serif';ctx.fillStyle='#6c5369';ctx.fillText('第一張素描，故事才剛開始',724,133);ctx.fillStyle='#fff8e5';ctx.fillText('第一張素描，故事才剛開始',720,129);
+    cast.forEach((art,i)=>ctx.drawImage(art,85+i*250,240,260,440));
+    ctx.fillStyle='#70576b';ctx.font='26px PixelRPG, sans-serif';ctx.fillText('成為我的作品吧 · 前三話任務完成',720,762);
+    return send(await png(canvas),'成為我的作品吧-歡呼合照.png','第一張素描，故事才剛開始！');
+  }
+  return { episode, complete, celebration };
 })();

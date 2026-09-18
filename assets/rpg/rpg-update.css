@@ -69,11 +69,11 @@ body[data-screen="gameScreen"] #gameScreen #actorTargets{z-index:40}
 }
 
 /* The cat is an outline only; progress is the pink fill, not a timed fake meter. */
-#gameLoader:not([open]){display:none}
+#gameLoader[hidden]{display:none!important}
 #gameLoader{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#211c2fef;color:#fffbe9;text-align:center}
 #gameLoader::backdrop{background:#211c2f}
 #gameLoader .loader-inner{width:min(360px,84vw);display:grid;justify-items:center;gap:12px}
-#gameLoader svg{width:min(205px,38vh);height:auto;image-rendering:pixelated}
+#gameLoader svg{width:92px;height:104px;image-rendering:auto}
 #gameLoader .loader-fill{transform-box:fill-box;transform-origin:center bottom;transform:scaleY(var(--fill,0));transition:transform .28s steps(8,end)}
 #gameLoader .loader-copy{font:700 clamp(15px,2.8vw,24px)/1.6 PixelRPG,monospace}
 #gameLoader progress{width:100%;height:12px;accent-color:#f59fc9}
@@ -122,3 +122,43 @@ body[data-screen="gameScreen"] #gameScreen #actorTargets{z-index:40}
 .rpg-cursor{position:fixed;left:0;top:0;width:46px;height:46px;z-index:1100;pointer-events:none;background:url('glove-cursor.webp') left top/contain no-repeat;image-rendering:pixelated;transform:translate(var(--cursor-x,-100px),var(--cursor-y,-100px)) scaleY(var(--press,1));transform-origin:12px 4px;transition:scale .08s steps(2,end)}
 body:not([data-screen="gameScreen"]):not(:has(#talk[open])) .rpg-cursor{display:none}
 @media(pointer:coarse){.rpg-cursor{display:none}}
+
+/* Revision 2: native cursors are above even the browser's modal top layer. */
+@media(pointer:fine){html,body,body *,dialog::backdrop,body[data-screen="gameScreen"] *,body:has(#talk[open]) *{cursor:url('cursor-hand.svg') 10 3,auto!important}body.cursor-pressed,body.cursor-pressed *,body.cursor-pressed dialog::backdrop{cursor:url('cursor-hand-pressed.svg') 10 3,auto!important}}
+.rpg-cursor,.dialogue-stage{display:none!important}
+#talk [hidden]{display:none!important}
+#gameScreen #actorTargets{display:block!important;position:absolute;inset:0;pointer-events:none}
+#gameScreen #actorTargets .actor-target{display:block;position:absolute;pointer-events:auto;background:transparent;border:0;box-shadow:none;min-width:0;min-height:0;padding:0;transform:translate(-50%,-100%)}
+#gameLoader{background:#fff8f2;color:#77516a;z-index:2147483646;font-family:PixelRPG,'Microsoft JhengHei',sans-serif;box-shadow:none}
+#gameLoader .loader-inner{width:240px;gap:9px}
+#gameLoader .loader-fill{transition:transform .35s ease}
+#gameLoader #loadingCopy{font-size:16px}
+#gameLoader #loadingPercent{font:12px monospace;color:#a2758c}
+#gameLoader progress{width:100px;height:3px;appearance:none;border:0;background:#efdfe5}
+#gameLoader progress::-webkit-progress-bar{background:#efdfe5}
+#gameLoader progress::-webkit-progress-value{background:#d88baa;transition:width .3s}
+#gameLoader button{font:12px PixelRPG,sans-serif;padding:6px 10px;min-height:36px;border:1px solid #dec5d0;background:transparent;box-shadow:none;color:#77516a}
+.intro-audio{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0;font:12px PixelRPG,sans-serif}
+.intro-audio button{font-size:12px;padding:6px 10px;min-height:34px}
+.intro-audio input{width:100px;accent-color:#cc6f97}.intro-audio output{display:inline-block;min-width:3em}
+#mini[data-game="contract"] .contract .approve-stamp{transform:rotate(-10deg) scale(2.5);opacity:0;transition:none;pointer-events:none}
+#mini[data-game="contract"] .contract.approved .approve-stamp{opacity:1;animation:stamp-down .45s cubic-bezier(.2,.75,.3,1) both}
+@keyframes stamp-down{0%{opacity:0;transform:rotate(-16deg) scale(2.5)}22%{opacity:1}76%{transform:rotate(-10deg) scale(.94)}100%{transform:rotate(-10deg) scale(1)}}
+#endingScreen{display:block!important;height:auto!important;padding-bottom:24px}
+#endingScreen[hidden]{display:none!important}
+#endingScreen>h1{display:none}
+.ending-celebration{aspect-ratio:16/9;min-height:220px;padding:0;border:4px solid #665066;background:#cae5e8 url('ending-schoolyard.svg') center/cover no-repeat;display:block}
+.ending-celebration::before,.ending-celebration::after{display:none}
+.ending-celebration h2{top:8%;left:3%;right:3%;color:#fff8e5;text-shadow:2px 2px #6c5369;font:400 clamp(20px,3vw,36px)/1.55 PixelRPG,sans-serif;animation:title-float 3s ease-in-out infinite}
+.ending-celebration .celebration-cast{position:absolute;left:7%;bottom:6%;width:86%;height:63%;display:flex;gap:0;justify-content:center;align-items:end}
+.celebration-character{position:relative;width:20%;height:100%}
+.ending-celebration .celebration-cast .celebration-character img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:contain;animation:none;image-rendering:pixelated}
+.ending-celebration .pose-idle{visibility:visible;animation:pose-idle 3.4s steps(1,end) infinite!important}
+.ending-celebration .pose-cheer{visibility:hidden;animation:pose-cheer 3.4s steps(1,end) infinite!important}
+.celebration-character:nth-child(2) img{animation-delay:.12s!important}.celebration-character:nth-child(3) img{animation-delay:.24s!important}.celebration-character:nth-child(4) img{animation-delay:.36s!important}.celebration-character:nth-child(5) img{animation-delay:.48s!important}
+@keyframes pose-idle{0%,100%{visibility:visible}38%,90%{visibility:hidden}}
+@keyframes pose-cheer{0%,100%{visibility:hidden}38%,90%{visibility:visible}}
+@keyframes title-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+#endingScreen .ending-art{height:auto;min-height:0;aspect-ratio:auto;margin:24px 0}
+#endingScreen .ending-art img{display:block;width:min(100%,600px);height:auto;aspect-ratio:4/3;object-fit:contain;margin:auto}
+@media(prefers-reduced-motion:reduce){.ending-celebration h2{animation:none}.ending-celebration .pose-idle{animation:none!important;visibility:hidden}.ending-celebration .pose-cheer{animation:none!important;visibility:visible}}

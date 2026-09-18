@@ -37,15 +37,15 @@ html[lang="zh-TW"] .orken-concept #feature .feature-title>.lang-zh{display:grid;
 .orken-concept .feature-visual p>span{display:flex;justify-content:space-between;align-items:baseline;white-space:nowrap;font-size:min(clamp(30px,5.6vw,88px),calc((100vw - 2 * var(--cinema-gutter)) / var(--letter-count,10)));width:100%}
 .orken-concept .feature-visual p .motion-letter{flex:0 0 auto}
 .studio-blocks>div{background-size:cover!important;background-position:center!important}
-.studio-blocks>div:first-child{background-image:url('media-20260917/packing-wide.png')}
-.studio-blocks>div:nth-child(2){background-image:url('media-20260917/booth-wide.png')}
-.studio-blocks>div:nth-child(3){background-image:url('media-20260917/studio-cafe.png')}
-.film-enabled .feature-intro .plane-back,.film-reading .feature-intro .plane-back{inset:0;clip-path:none;background:url('media-20260917/feature-background.png') center/cover no-repeat}
-.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{inset:0;width:100%;height:100%;clip-path:none;background:url('media-20260917/feature-person.png') center/cover no-repeat}
-.visual-a .visual-block{background:url('media-20260917/visual-a.jpg') center/cover}
-.visual-b .visual-block{background:url('media-20260917/visual-b.jpg') center/cover}
-.visual-c .visual-block{background:url('media-20260917/visual-c.jpg') center/cover}
-.orken-concept .hiring{background:linear-gradient(#0009,#0009),url('media-20260917/hiring.jpg') center/cover}
+.studio-blocks>div:first-child{background-image:url('media-20260917/packing-wide.webp')}
+.studio-blocks>div:nth-child(2){background-image:url('media-20260917/booth-wide.webp')}
+.studio-blocks>div:nth-child(3){background-image:url('media-20260917/studio-cafe.webp')}
+.film-enabled .feature-intro .plane-back,.film-reading .feature-intro .plane-back{inset:0;clip-path:none;background:url('media-20260917/feature-background.webp') center/cover no-repeat}
+.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{inset:0;width:100%;height:100%;clip-path:none;background:url('media-20260917/feature-person.webp') center/cover no-repeat}
+.visual-a .visual-block{background:url('media-20260917/visual-a.webp') center/cover}
+.visual-b .visual-block{background:url('media-20260917/visual-b.webp') center/cover}
+.visual-c .visual-block{background:url('media-20260917/visual-c.webp') center/cover}
+.orken-concept .hiring{background:linear-gradient(#0009,#0009),url('media-20260917/hiring.webp') center/cover}
 .orken-concept .numbers{background:#191919;color:#fff}
 .work-image img{width:100%;height:100%;object-fit:cover;filter:none}
 .work-background{filter:blur(12px);scale:1.06}
@@ -64,7 +64,7 @@ html[lang="zh-TW"] .orken-concept #feature .feature-title>.lang-zh{display:grid;
 .film-enabled .more-works{z-index:4}
 .film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-size:contain;background-position:center bottom}
 /* Compensate for the original PNG's transparent margins; visible art is 82vw / 75vw. */
-.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-image:url('media-20260917/feature-person-updated.png');background-size:100% auto;background-position:center top;inset:auto;left:-26.7vw;top:calc(16vh - 13.1vw);width:128.5vw;height:161.5vw;max-width:none}
+.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{background-image:url('media-20260917/feature-person-updated.webp');background-size:100% auto;background-position:center top;inset:auto;left:-26.7vw;top:calc(16vh - 13.1vw);width:128.5vw;height:161.5vw;max-width:none}
 html .orken-concept .cover{background:#ff9142}
 @media(max-width:700px){.film-enabled .feature-intro .plane-front,.film-reading .feature-intro .plane-front{left:-20.15vw;top:calc(50% - 77vw);width:117.5vw;height:147.65vw}}
 .collab-grid .member,.collab-grid .member-mascot,.collab-grid .member-mascot svg{rotate:0deg;transform:none}
