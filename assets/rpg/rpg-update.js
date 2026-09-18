@@ -5,7 +5,7 @@
   for (const id of ['episodeCount','castBook','fullscreen','sfx','music','gameHelp','home','hudMenuToggle']) hud.append($('#'+id));
   $('#exitGame')?.remove(); $('#gameHelp').textContent='i';
   const home = () => game.entryHost ? game.entryHost.close() : location.assign('index.html');
-  $('#home').setAttribute('aria-label','儲存進度並回到官網首頁'); $('#home').onclick=home;
+  $('#home').setAttribute('aria-label','儲存並回到遊戲介紹頁'); $('#home').onclick=game.returnToIntro;
   document.querySelectorAll('a[href="index.html"]').forEach(a=>a.onclick=e=>{e.preventDefault();home()});
   const actors=document.createElement('canvas');actors.id='actorLayer';actors.width=1280;actors.height=768;actors.setAttribute('aria-hidden','true');$('#portalMarkers').after(actors);
   document.addEventListener('pointerdown',()=>document.body.classList.add('cursor-pressed'));
@@ -20,9 +20,10 @@
   });
   const instructions=document.createElement('button');instructions.id='introHelp';instructions.textContent='操作說明';instructions.onclick=()=>$('#gameHelp').click();$('#titleScreen .actions').append(instructions);
   const back=document.createElement('button');back.id='backToIntro';back.textContent='儲存並回遊戲介紹頁';back.onclick=game.returnToIntro;$('#gameTutorial .tutorial-actions').after(back);
-  icon('#music,#introMusic','music');icon('#sfx','sfx');icon('#gameHelp','information');icon('#home,.top a[href="index.html"]','home');
-  icon('#introHelp','how-to');icon('#backToIntro','game-start');icon('#newGame,#loadingRetry','refresh');
-  icon('#panelClose,#miniExit,#tutorialClose,#homeGuideClose,#homeHintClose','close',true);
+  icon('#music','music');icon('#sfx','sfx');icon('#gameHelp','information');icon('#home','game-start');
+  icon('#castBook','character-information');icon('#episodeCount','achievement');icon('#fullscreen','fullscreen');
+  icon('#backToIntro','game-start');icon('#newGame','refresh');
+  icon('#panelClose,#miniExit,#tutorialClose,#homeGuideClose','close',true);
   const syncAudio=()=>{const on=!game.music.paused;$('#introMusic').textContent=on?'♫ 音樂播放中':'♫ 播放音樂';$('#introMusic').setAttribute('aria-pressed',String(on));$('#loadingSound').textContent=on?'♫ 音樂 50% · 點按靜音':'♫ 點按播放音樂';};
   $('#introMusic').onclick=$('#loadingSound').onclick=game.toggleMusic;
   $('#introVolume').oninput=e=>{game.music.volume=Number(e.target.value)/100;$('#volumeValue').textContent=e.target.value+'%'};
@@ -71,10 +72,4 @@
       if(reason&&reason!==observedGauge){observedGauge=reason;let previous=Number(reason.value);new MutationObserver(()=>{const next=Number(reason.value);if(next<previous){reason.classList.remove('hit');void reason.offsetWidth;reason.classList.add('hit')}previous=next}).observe(reason,{attributes:true,attributeFilter:['value']})}
     }
   }).observe(mini,{childList:true,subtree:true,attributes:true,attributeFilter:['data-game']});
-  const celebration=document.createElement('div');celebration.className='ending-celebration';
-  celebration.innerHTML='<h2>第一張素描，故事才剛開始</h2><div class="celebration-cast"></div>';
-  const cast=[['kaixiang','凱翔'],['siyu','思于'],['xiaotong','曉彤'],['yating','亞廷'],['chenghan','江承翰']];
-  for(const[id,name]of cast){const figure=document.createElement('div');figure.className='celebration-character';figure.setAttribute('aria-label',name+'微笑舉起雙手歡呼');figure.innerHTML=`<img class="pose-idle" loading="lazy" src="assets/rpg/ending-${id}-idle.svg" alt=""><img class="pose-cheer" loading="lazy" src="assets/rpg/ending-${id}-cheer.svg" alt="">`;celebration.querySelector('.celebration-cast').append(figure)}
-  $('#endingScreen').prepend(celebration);
-  const share=document.createElement('button');share.id='shareCelebration';share.textContent='分享歡呼合照';share.onclick=()=>RPGShare.celebration(cast.map(([id])=>`assets/rpg/ending-${id}-cheer.svg`)).catch(()=>{$('#readStatus').textContent='圖片暫時無法產生，請再試一次。'});$('#endingScreen .actions').prepend(share);
 })();
