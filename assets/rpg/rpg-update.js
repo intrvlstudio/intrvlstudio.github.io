@@ -13,6 +13,16 @@
   const controls=document.createElement('div');controls.className='intro-audio';
   controls.innerHTML='<button id="introMusic" aria-label="切換背景音樂">♫ 音樂</button><label for="introVolume">音量 <output id="volumeValue">50%</output></label><input id="introVolume" type="range" min="0" max="100" value="50" aria-label="音樂音量">';
   $('#titleScreen .actions').before(controls);
+  const icon=(selector,name,iconOnly=false)=>document.querySelectorAll(selector).forEach(button=>{
+    button.dataset.uiIcon=name;button.style.setProperty('--ui-image',`url('${new URL(`assets/rpg/ui/${name}.svg`,document.baseURI).href}')`);
+    if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',button.textContent.trim());
+    button.title=button.getAttribute('aria-label');if(iconOnly)button.classList.add('ui-icon-only');
+  });
+  const instructions=document.createElement('button');instructions.id='introHelp';instructions.textContent='操作說明';instructions.onclick=()=>$('#gameHelp').click();$('#titleScreen .actions').append(instructions);
+  const back=document.createElement('button');back.id='backToIntro';back.textContent='儲存並回遊戲介紹頁';back.onclick=game.returnToIntro;$('#gameTutorial .tutorial-actions').after(back);
+  icon('#music,#introMusic','music');icon('#sfx','sfx');icon('#gameHelp','information');icon('#home,.top a[href="index.html"]','home');
+  icon('#introHelp','how-to');icon('#backToIntro','game-start');icon('#newGame,#loadingRetry','refresh');
+  icon('#panelClose,#miniExit,#tutorialClose,#homeGuideClose,#homeHintClose','close',true);
   const syncAudio=()=>{const on=!game.music.paused;$('#introMusic').textContent=on?'♫ 音樂播放中':'♫ 播放音樂';$('#introMusic').setAttribute('aria-pressed',String(on));$('#loadingSound').textContent=on?'♫ 音樂 50% · 點按靜音':'♫ 點按播放音樂';};
   $('#introMusic').onclick=$('#loadingSound').onclick=game.toggleMusic;
   $('#introVolume').oninput=e=>{game.music.volume=Number(e.target.value)/100;$('#volumeValue').textContent=e.target.value+'%'};

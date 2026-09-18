@@ -124,6 +124,20 @@ body:not([data-screen="gameScreen"]):not(:has(#talk[open])) .rpg-cursor{display:
 @media(pointer:coarse){.rpg-cursor{display:none}}
 
 /* Revision 2: native cursors are above even the browser's modal top layer. */
+/* Supplied September UI: use the original SVG artwork, including mute variants. */
+[data-ui-icon]{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+[data-ui-icon]::before{content:'';display:inline-block;flex:0 0 30px;width:30px;height:30px;background:var(--ui-image) center/contain no-repeat;pointer-events:none}
+[data-ui-icon="music"][aria-pressed="false"]{--ui-image:url('ui/music-muted.svg')!important}
+[data-ui-icon="sfx"][aria-pressed="false"]{--ui-image:url('ui/sfx-muted.svg')!important}
+body[data-screen="gameScreen"] #gameScreen .hud button[data-ui-icon],button.ui-icon-only{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;font-size:0!important;gap:0;opacity:1!important}
+body[data-screen="gameScreen"] #gameScreen .hud button[data-ui-icon]::before,button.ui-icon-only::before{content:'';display:block!important;background:var(--ui-image) center/contain no-repeat;width:100%;height:100%;flex:0 0 100%;min-height:38px;filter:none}
+body[data-screen="gameScreen"] #gameScreen .hud button[data-ui-icon]::after,button.ui-icon-only::after{content:none!important}
+button.ui-icon-only{width:44px!important;height:44px!important;min-width:44px;min-height:44px}
+[data-ui-icon]:active::before{translate:0 1px}
+#backToIntro{display:flex;margin:14px auto 0;font-size:12px;padding:6px 12px}
+body[data-screen="titleScreen"] #backToIntro{display:none}
+.intro-audio [data-ui-icon]::before{width:25px;height:25px;flex-basis:25px}
+.top a[data-ui-icon]::before{width:28px;height:28px;flex-basis:28px}
 @media(pointer:fine){html,body,body *,dialog::backdrop,body[data-screen="gameScreen"] *,body:has(#talk[open]) *{cursor:url('cursor-hand.svg') 10 3,auto!important}body.cursor-pressed,body.cursor-pressed *,body.cursor-pressed dialog::backdrop{cursor:url('cursor-hand-pressed.svg') 10 3,auto!important}}
 .rpg-cursor,.dialogue-stage{display:none!important}
 #talk [hidden]{display:none!important}

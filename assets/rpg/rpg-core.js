@@ -95,7 +95,7 @@ function openTutorial(){stopWalk();closeMobileMenus();tutorialIndex=0;renderTuto
 function maybeShowTutorial(){if(document.body.dataset.introReady==='true'&&!tutorialSeen&&!active&&!document.querySelector('dialog[open]'))openTutorial()}
 function closeTutorial(){tutorialSeen=true;try{localStorage.setItem('bmp-rpg-tutorial-v1','done')}catch{}$('#gameTutorial').close()}
 $('#tutorialClose').onclick=$('#tutorialDone').onclick=closeTutorial;$('#gameTutorial').addEventListener('cancel',e=>{e.preventDefault();closeTutorial()});$('#tutorialNext').onclick=()=>{tutorialIndex=1;renderTutorial()};$('#tutorialPrev').onclick=()=>{tutorialIndex=0;renderTutorial()};$('#gameHelp').onclick=openTutorial;
-function exitGame(){stopWalk();if(!save()){toast('無法儲存進度，請先留在遊戲中。');return}active=false;clearMini();finishTyping();music.pause();queue=[];onEnd=null;viewScene=null;playingId=null;for(const dialog of all('dialog[open]'))dialog.close();screen('titleScreen');toast('已自動存檔，安心休息吧！')}
+function exitGame(){stopWalk();if(!save()){toast('無法儲存進度，請先留在遊戲中。');return}active=false;clearMini();finishTyping();queue=[];onEnd=null;viewScene=null;playingId=null;for(const dialog of all('dialog[open]'))dialog.close();screen('titleScreen');toast('已自動存檔，安心休息吧！')}
 $('#exitGame').onclick=exitGame;
 let tapAudio=null,tapEnabled=true;function playTapSound(){if(!tapEnabled)return;try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;tapAudio||=new Audio();if(tapAudio.state==='suspended')tapAudio.resume().catch(()=>{});const now=tapAudio.currentTime,o=tapAudio.createOscillator(),g=tapAudio.createGain();o.type='sine';o.frequency.setValueAtTime(720,now);o.frequency.exponentialRampToValueAtTime(460,now+.055);g.gain.setValueAtTime(.001,now);g.gain.exponentialRampToValueAtTime(.045,now+.006);g.gain.exponentialRampToValueAtTime(.001,now+.075);o.connect(g);g.connect(tapAudio.destination);o.start(now);o.stop(now+.08);o.onended=()=>{o.disconnect();g.disconnect()}}catch{}}
 document.addEventListener('click',e=>{if(!e.isTrusted||e.target.closest('#talk')||!e.target.closest('button,[role=button],#map')||e.target.closest('[disabled],[aria-disabled=true]'))return;queueMicrotask(()=>{if(!e.defaultPrevented)playTapSound()})},true);$('#sfx').onclick=()=>{tapEnabled=!tapEnabled;$('#sfx').setAttribute('aria-pressed',String(tapEnabled));$('#sfx').setAttribute('aria-label',tapEnabled?'關閉點按音效':'開啟點按音效')};
@@ -111,7 +111,13 @@ function paint(){if(document.body.dataset.screen==='titleScreen'&&!active)return
    c.save();c.imageSmoothingEnabled=false;if(scene==='campus'||scene==='poolHall')c.filter='drop-shadow(1px 0 #28212b) drop-shadow(-1px 0 #28212b)';
    if(sheet?.complete&&sheet.naturalWidth){const col=t.mark==='于'&&performance.now()-lastStep<180?[0,1,2,1][walkFrame%4]:1,row={front:0,back:1,left:2,right:3}[dir],frame=DATA.spriteFrames[who][row][col],scale=camera.actorHeight*(who==='思于'?.84:1)/Math.max(...DATA.spriteFrames[who].flat().map(f=>f[3])),w=Math.round(frame[2]*scale),h=Math.round(frame[3]*scale);c.drawImage(sheet,...frame,Math.round(cx-w/2),feet-h,w,h)}
    else if(img?.complete&&img.naturalWidth){const h=camera.actorHeight*(who==='思于'?.84:1),w=h*img.naturalWidth/img.naturalHeight;c.drawImage(img,cx-w/2,feet-h,w,h)}
-   else if(who==='泳隊隊員'){const team=ensureSprite('江承翰','front');if(team?.complete&&team.naturalWidth){const h=camera.actorHeight,w=h*team.naturalWidth/team.naturalHeight;c.drawImage(team,cx-w/2,feet-h,w,h)}}
+   else if(who==='泳隊隊員'){
+     // Restore the original anonymous, low-detail 12 x 16 pixel passerby.
+     const pixels=['....hhhh....','...hhhhhh...','..hhhhhhhh..','..hsssshsh..','..hskssksh..','...ssssss...','....ssss....','..cccccccc..','.sccccccccs.','.ssccccccss.','...cccccc...','...cccccc...','...pppppp...','...pp..pp...','...pp..pp...','..kkk..kkk..'];
+     const unit=camera.actorHeight/16,palette={h:'#493839',s:'#efbe98',k:'#25273f',c:t.color,p:'#3e4165'};
+     c.fillStyle='#30344d66';c.fillRect(cx-unit*5,feet-2,unit*10,4);
+     pixels.forEach((row,y)=>[...row].forEach((pixel,x)=>{if(pixel!=='.'){c.fillStyle=palette[pixel];c.fillRect(Math.round(cx-unit*6+x*unit),Math.round(feet-camera.actorHeight+y*unit),Math.ceil(unit),Math.ceil(unit))}}));
+   }
    c.restore();
  }
  const mapContext=c;c=$('#actorLayer').getContext('2d');c.clearRect(0,0,1280,768);
@@ -185,6 +191,6 @@ $('#rotateHint').addEventListener('cancel',e=>e.preventDefault());portrait.addEv
 $('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement){await document.exitFullscreen();return}if(!document.documentElement.requestFullscreen){toast('請將手機橫放；此瀏覽器會使用橫向網頁模式。');return}await document.documentElement.requestFullscreen();try{await window.screen.orientation?.lock?.('landscape')}catch{}}catch{toast('請將手機橫放，即可繼續遊玩。')}};
 // Keep native copy/callout/drag and double-tap UI out of the game. Pinch accessibility remains available.
 for(const name of ['contextmenu','selectstart','dragstart','dblclick'])document.addEventListener(name,e=>e.preventDefault());
-window.RPGGame={music,entryHost,startMusic,toggleMusic,introReady:maybeShowTutorial,inspect:()=>structuredClone({state,scenes,npcFacing,task:currentTask(),targets:targets(),goal:guideTarget(),cinematic,active}),routes:()=>targets().map(t=>({id:t.id,goals:t.to?[t.approach]:conversationGoals(t),path:planPath(t.to?[t.approach]:conversationGoals(t))}))};
+window.RPGGame={music,entryHost,startMusic,toggleMusic,returnToIntro:exitGame,introReady:maybeShowTutorial,inspect:()=>structuredClone({state,scenes,npcFacing,task:currentTask(),targets:targets(),goal:guideTarget(),cinematic,active}),routes:()=>targets().map(t=>({id:t.id,goals:t.to?[t.approach]:conversationGoals(t),path:planPath(t.to?[t.approach]:conversationGoals(t))}))};
 document.fonts.ready.then(paint);syncOrientation();const saved=load();if(saved){state=saved;$('#continue').hidden=false}else{try{if(localStorage.getItem('bmp-rpg-save-v2'))$('#versionNote').textContent='前三話已依完整分鏡重排，請開始新劇情。舊版存檔另行保留。'}catch{}}paint();
 })();

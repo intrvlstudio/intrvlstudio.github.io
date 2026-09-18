@@ -20,14 +20,17 @@
   campus.blocks = [];
   campus.obstacles = [];
   campus.spawn = [20,13];
-  campus.storyNpcs.brother = ['yating','亞廷',8,9,'廷'];
+  campus.storyNpcs.brother = ['yating','亞廷',8,8,'廷'];
   campus.storyNpcs.farewell = ['kai','凱翔',11,18,'凱'];
   campus.actorHeight = 76;
   const approaches = { studio: [7,8], cafe: [8,17], pool: [30,10], dorm: [30,20] };
+  // Door markers are visual anchors; walking still stops on the safe plaza below.
+  const doorsteps = {studio:[253,187],cafe:[270,466],pool:[984,250],dorm:[975,558]};
+  for(const scene of ['campus','poolHall'])for(const door of DATA.layout[scene].closedDoors||[])if(door.id==='shop-closed')door.marker=[151,706];
   for (const portal of campus.portals) {
     portal.approach = approaches[portal.id];
     portal.doorMarker = portal.marker;
-    portal.marker = [(portal.approach[0]+.5)*32, (portal.approach[1]+.5)*32-16];
+    portal.marker = doorsteps[portal.id];
   }
   Object.assign(DATA.layout.poolHall, {
     rects: structuredClone(campus.rects), blocks: [], obstacles: [], actorHeight: 76,
@@ -36,7 +39,7 @@
   for (const portal of DATA.layout.poolHall.portals) {
     portal.approach = portal.id === 'pool' ? [30,10] : [24,13];
     portal.doorMarker = portal.marker;
-    portal.marker = [(portal.approach[0]+.5)*32,(portal.approach[1]+.5)*32-16];
+    portal.marker = portal.id === 'pool' ? doorsteps.pool : [720,304];
   }
   Object.assign(DATA.layout.studio,{rects:[[13,10,5,8],[17,14,9,4],[22,11,5,8]],obstacles:[],actorHeight:92});
   Object.assign(DATA.layout.cafe,{rects:[[19,12,5,7],[23,18,4,3]],obstacles:[],actorHeight:88,npcs:[['ruby','曉彤',20,13,'彤']]});
