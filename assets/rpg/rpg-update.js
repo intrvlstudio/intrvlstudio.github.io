@@ -115,7 +115,7 @@
       if (paper && !paper.querySelector('.approve-stamp')) {
         const stamp = document.createElement('img');
         stamp.className = 'approve-stamp';
-        stamp.src = 'assets/rpg/approve-stamp.png';
+        stamp.src = 'assets/rpg/approve-stamp.webp';
         stamp.alt = 'Approve 貓咪合格印章';
         paper.append(stamp);
       }

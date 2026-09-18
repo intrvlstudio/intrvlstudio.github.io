@@ -119,6 +119,6 @@ body[data-screen="gameScreen"] #gameScreen #actorTargets{z-index:40}
 @media(max-height:600px){#talk .dialogue-stage{height:55px;margin-bottom:-4px}#talk .dialogue-stage img,#talk .dialogue-stage[data-layout] img{height:54px}}
 
 @media(pointer:fine){body[data-screen="gameScreen"],body[data-screen="gameScreen"] *,body:has(#talk[open]),body:has(#talk[open]) *{cursor:none!important}}
-.rpg-cursor{position:fixed;left:0;top:0;width:46px;height:46px;z-index:1100;pointer-events:none;background:url('glove-cursor.png') left top/contain no-repeat;image-rendering:pixelated;transform:translate(var(--cursor-x,-100px),var(--cursor-y,-100px)) scaleY(var(--press,1));transform-origin:12px 4px;transition:scale .08s steps(2,end)}
+.rpg-cursor{position:fixed;left:0;top:0;width:46px;height:46px;z-index:1100;pointer-events:none;background:url('glove-cursor.webp') left top/contain no-repeat;image-rendering:pixelated;transform:translate(var(--cursor-x,-100px),var(--cursor-y,-100px)) scaleY(var(--press,1));transform-origin:12px 4px;transition:scale .08s steps(2,end)}
 body:not([data-screen="gameScreen"]):not(:has(#talk[open])) .rpg-cursor{display:none}
 @media(pointer:coarse){.rpg-cursor{display:none}}
