@@ -1,1 +1,127 @@
-(()=>{const t=matchMedia("(prefers-reduced-motion: reduce)"),e=document.body.hasAttribute("data-logo-preview");let o,a;const n=t=>Math.max(0,Math.min(1,t)),r=t=>1-Math.pow(1-t,3),l=t=>(t=n(t))*t*t*(t*(6*t-15)+10),s=2400,c=3100,i=c,d=[20,20,40].flatMap(t=>[{duration:t,opacity:0,color:"#fff"},{duration:t,opacity:1,color:"#FF9142"},{duration:t,opacity:0,color:"#FF9142"},{duration:t,opacity:1,color:"#fff"}]),h=(t,e)=>{const o=1-e;return[0,1].map(a=>o*o*o*t[0][a]+3*o*o*e*t[1][a]+3*o*e*e*t[2][a]+e*e*e*t[3][a])};function y(){cancelAnimationFrame(a),o&&performance.mark("site-intro-ready"),o?.remove(),o=null,document.documentElement.classList.remove("intro-playing")}function p(){if(y(),t.matches)return;document.documentElement.classList.add("intro-playing"),o=document.createElement("div"),o.className="logo-entry",o.setAttribute("aria-hidden","true"),o.innerHTML='<div class="logo-entry-dock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 303 263" fill="#fff"><g class="logo-entry-light"><g class="logo-entry-hook"><g class="hook-parts"><path class="hook-left" d="M151.854 263L55.3371 95.9273H124.214L151.854 143.799Z"/><path class="hook-middle" d="M151.854 263L151.854 143.799L177.8305 98.89315L227.427 132.36197Z"/><path class="hook-tip" d="M227.427 132.36197L177.8305 98.89315L203.807 53.9873L303 1.72394Z"/></g><path class="hook-whole" d="M151.854 263L55.3371 95.9273H124.214L151.854 143.799L203.807 53.9873L303 1.72394L151.854 263Z"/></g><g class="logo-entry-arrow"><path d="M38.2805 66.3006L0 0H203.807L38.2805 66.3006Z"/></g></g></svg></div>',document.body.append(o);const p=o.querySelector(".logo-entry-hook"),u=p.querySelector(".hook-parts"),g=[...u.querySelectorAll("path")],m=p.querySelector(".hook-whole"),f=o.querySelector(".logo-entry-arrow"),M=f.querySelector("path"),L=o.querySelector(".logo-entry-dock");let w;a=requestAnimationFrame(function t(v){w??=v;const k=.65*(v-w),$=L.getBoundingClientRect().width,b=303*innerWidth/$,q=303*innerHeight/$,x=n(k/1400),E=1-Math.pow(1-x,1.5),S=h([[.7*b,.62*q],[.08*b,.52*q],[.03*-b,.34*q],[0,0]],E),A=.72,F=n((x-A)/.28),H=x<A?.7*b+(-36-.7*b)*r(x/A):-36*(1-l(F)),Z=l((k-s)/700),B=55*l(x)*(1-Z);p.style.transform=`translate(${H}px,${S[1]+B}px) rotate(${-45*(1-E)}deg) scale(${1+3.2*Math.pow(1-E,1.2)})`,p.style.opacity=n(k/80);const C=1-l((k-870)/810),I=x<A?3*(-36-.7*b)*Math.pow(1-x/A,2)/A:1080*F*F*Math.pow(1-F,2)/.28,P=1-Math.pow(1-Math.max(0,x-.002),1.5),R=h([[.7*b,.62*q],[.08*b,.52*q],[.03*-b,.34*q],[0,0]],P)[1],T=(S[1]-R)/.002,W=(180*Math.atan2(T,I)/Math.PI+45*(1-E))*C,N=n(.24*Math.hypot(I/b,T/q)+.65*F)*C,j=[[112,170],[177,164],[228,72]];g.forEach((t,e)=>{const[o,a]=j[e],n=[2e3,850,600][e],r=k<400?l(k/400):1-l((k-400)/n),s=[6,3,1][e]*(60+18*N)*r,c=48*(e-1)*r,i=1-N*(.58+.07*e),d=l((k-780)/510),h=W*Math.PI/180,y=(-s*Math.cos(h)-c*Math.sin(h))*(1-d),p=(-s*Math.sin(h)+c*Math.cos(h))*(1-d)+[240,150,80][e]*r*d;t.setAttribute("transform",`translate(${y} ${p}) translate(${o} ${a}) rotate(${W}) scale(${1+.28*N} ${i}) rotate(${-W}) translate(${-o} ${-a})`)});const z=l((k-s)/70);u.style.opacity=z<1?1:0,m.style.opacity=z,f.style.transform="none",f.style.opacity=k<i?0:1;let D=(k-i)/.65,G={opacity:1,color:"#fff"};if(D>=0)for(const t of d){if(D<t.duration){G=t;break}D-=t.duration}M.style.opacity=G.opacity,M.setAttribute("fill",G.color);const J=n((k-3780)/230),K=J*J*(3-2*J),O=r(n((k-4010)/590)),Q=K*(1-O),U=document.querySelector(".nav-intro .emblem-menu svg, .nav-intro .nav-brand-logo")?.getBoundingClientRect(),V=U?.width||50,X=U?U.left+U.width/2:innerWidth/2,Y=U?U.top+U.height/2:16+263*V/303/2,_=.4*innerHeight;L.style.position="absolute",L.style.left=X+"px",L.style.top=_+"px";const tt=Y-_;L.style.transform=`translate(-50%,calc(-50% + ${tt*O+Math.min(18,.07*$)*Q}px))`;const et=-1080*(1-E);L.querySelector("svg").style.transform=`rotate(${et}deg) scale(${1+.1*Q-(1-V/$)*O})`,e||(o.style.backgroundColor=`rgba(16,16,16,${1-l((k-4500)/550)})`),k<c+(e?1500:1950)?a=requestAnimationFrame(t):e||y()})}document.addEventListener("keydown",t=>{"Escape"!==t.key&&"Tab"!==t.key||y()}),t.addEventListener("change",y),addEventListener("pagehide",y),document.addEventListener("click",t=>{t.target.closest("[data-replay-logo]")&&p()}),p()})();
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const preview = document.body.hasAttribute('data-logo-preview');
+  const smooth = value => {
+    const t = Math.max(0, Math.min(1, value));
+    return t * t * (3 - 2 * t);
+  };
+  const pieces = [
+    {selector: '.hook-left', from: [-225, 255], start: 0},
+    {selector: '.hook-middle', from: [0, 325], start: 180},
+    {selector: '.hook-tip', from: [225, 255], start: 360}
+  ];
+  const pieceDuration = 2600;
+  const assemblyEnd = pieces.at(-1).start + pieceDuration;
+  const arrowDelay = assemblyEnd + 260;
+  const flicker = [
+    [0, 85, 0, '#fff'], [85, 155, 1, '#fff'],
+    [155, 215, 0, '#fff'], [215, 295, 1, '#FF9142'],
+    [295, 345, 0, '#FF9142'], [345, Infinity, 1, '#fff']
+  ];
+  const departAt = arrowDelay + 450;
+  const departDuration = 550;
+  const fadeAt = departAt + departDuration + 40;
+  const fadeDuration = 400;
+  let overlay, frame, ready = false, readyAt = Infinity, runId = 0;
+
+  function finish() {
+    runId++;
+    cancelAnimationFrame(frame);
+    if (overlay) performance.mark('site-intro-ready');
+    overlay?.remove();
+    overlay = null;
+    document.documentElement.classList.remove('intro-playing');
+  }
+
+  // Decode images visible when the curtain opens; lower sections keep lazy loading.
+  async function waitForFirstScreen(id) {
+    if (document.readyState === 'loading') {
+      await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, {once: true}));
+    }
+    const images = [
+      ...document.querySelectorAll('.hero-art img'),
+      ...document.querySelectorAll('.cover-title img')
+    ];
+    await Promise.all(images.map(image => image.decode().catch(() => {})));
+    if (id !== runId) return;
+    readyAt = performance.now();
+    performance.mark('site-first-screen-ready');
+    ready = true;
+  }
+
+  function play() {
+    finish();
+    if (reduced.matches) return;
+    const id = ++runId;
+    ready = false;
+    readyAt = Infinity;
+    document.documentElement.classList.add('intro-playing');
+    overlay = document.createElement('div');
+    overlay.className = 'logo-entry';
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML = `<div class="logo-entry-dock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 303 263" fill="#fff"><g class="logo-entry-light"><g class="logo-entry-hook"><g class="hook-parts"><path class="hook-left" d="M151.854 263L55.3371 95.9273H124.214L151.854 143.799Z"/><path class="hook-middle" d="M151.854 263L151.854 143.799L177.8305 98.89315L227.427 132.36197Z"/><path class="hook-tip" d="M227.427 132.36197L177.8305 98.89315L203.807 53.9873L303 1.72394Z"/></g><path class="hook-whole" d="M151.854 263L55.3371 95.9273H124.214L151.854 143.799L203.807 53.9873L303 1.72394L151.854 263Z"/></g><g class="logo-entry-arrow"><path d="M38.2805 66.3006L0 0H203.807L38.2805 66.3006Z"/></g></svg></div>`;
+    document.body.append(overlay);
+    const dock = overlay.querySelector('.logo-entry-dock');
+    const svg = dock.querySelector('svg');
+    const arrow = overlay.querySelector('.logo-entry-arrow');
+    const arrowFace = arrow.querySelector('path');
+    const whole = overlay.querySelector('.hook-whole');
+    const partsGroup = overlay.querySelector('.hook-parts');
+    const fragments = pieces.map(piece => ({...piece, node: overlay.querySelector(piece.selector)}));
+    let start;
+
+    function paint(now) {
+      start ??= now;
+      const time = now - start;
+      fragments.forEach(({node, from, start: begins}) => {
+        const progress = smooth((time - begins) / pieceDuration);
+        const arc = Math.sin(progress * Math.PI);
+        const x = from[0] * (1 - progress) + (from[0] < 0 ? -24 : from[0] > 0 ? 24 : 0) * arc;
+        const y = from[1] * (1 - progress) - 22 * arc;
+        node.setAttribute('transform', `translate(${x} ${y})`);
+        node.style.opacity = Math.min(1, Math.max(0, (time - begins) / 320));
+      });
+
+      // Replace the joined fragments only once every seam is exactly aligned.
+      const sealed = time >= assemblyEnd;
+      whole.style.opacity = sealed ? 1 : 0;
+      partsGroup.style.opacity = sealed ? 0 : 1;
+
+      const flash = time - arrowDelay;
+      const state = flicker.find(([from, to]) => flash >= from && flash < to);
+      arrow.style.opacity = flash < 0 ? 0 : 1;
+      arrowFace.style.opacity = state?.[2] ?? 1;
+      arrowFace.setAttribute('fill', state?.[3] ?? '#fff');
+
+      const target = document.querySelector('.nav-intro .emblem-menu svg, .nav-intro .nav-brand-logo')?.getBoundingClientRect();
+      const width = dock.getBoundingClientRect().width;
+      const targetWidth = target?.width || 50;
+      const targetX = target ? target.left + target.width / 2 : innerWidth / 2;
+      const targetY = target ? target.top + target.height / 2 : 16 + targetWidth * 263 / 303 / 2;
+      const originY = innerHeight * .4;
+      const departure = smooth((time - departAt) / departDuration);
+      dock.style.left = `${targetX}px`;
+      dock.style.top = `${originY}px`;
+      dock.style.transform = `translate(-50%, calc(-50% + ${(targetY - originY) * departure}px))`;
+      svg.style.transform = `scale(${1 - (1 - targetWidth / width) * departure})`;
+
+      // Keep the curtain in place if first-screen images are still decoding.
+      const fade = ready ? smooth((time - Math.max(fadeAt, readyAt - start)) / fadeDuration) : 0;
+      if (!preview) overlay.style.backgroundColor = `rgba(16, 16, 16, ${1 - fade})`;
+      if (preview || fade < 1) frame = requestAnimationFrame(paint);
+      else finish();
+    }
+    frame = requestAnimationFrame(paint);
+    waitForFirstScreen(id);
+  }
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' || event.key === 'Tab') finish();
+  });
+  reduced.addEventListener('change', finish);
+  addEventListener('pagehide', finish);
+  document.addEventListener('click', event => {
+    if (event.target.closest('[data-replay-logo]')) play();
+  });
+  play();
+})();

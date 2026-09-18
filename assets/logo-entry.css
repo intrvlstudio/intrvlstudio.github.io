@@ -1,7 +1,8 @@
 .logo-entry{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;overflow:hidden;background:#101110;pointer-events:none}
-.logo-entry-dock{width:clamp(150px,24vw,280px);will-change:transform}
+.logo-entry-dock{position:absolute;width:clamp(150px,24vw,280px);will-change:transform}
 .logo-entry svg{display:block;width:100%;height:auto;overflow:visible;transform-origin:center;will-change:transform}
-.logo-entry-hook,.logo-entry-arrow{transform-origin:151.5px 131.5px;opacity:0;will-change:transform}
+.logo-entry-hook,.logo-entry-arrow{transform-origin:151.5px 131.5px;will-change:transform}
+.logo-entry-arrow,.hook-whole{opacity:0}
 @media(prefers-reduced-motion:reduce){.logo-entry{display:none}}
 /* The intro's final frame and the persistent navigation share the same mark. */
 body .nav.nav-intro{position:sticky;top:0;left:0;right:0;height:76px;min-height:76px;z-index:30;background:#101110;color:#fff;border-bottom:1px solid #ffffff20;pointer-events:auto}
