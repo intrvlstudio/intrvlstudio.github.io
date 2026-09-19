@@ -1,0 +1,91 @@
+/* October 10 release button, countdown, and the supplied 8-bit tooltip. */
+.release-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.orken-concept #top .hero-actions a.release-cta.is-locked {
+  cursor: not-allowed;
+  color: #888;
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.orken-concept #top .hero-actions a.release-cta.is-locked:hover {
+  color: #888;
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.release-cta { position: relative; }
+
+.release-cta.is-locked::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 140%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 10px 14px;
+  white-space: nowrap;
+  border: 4px solid #000;
+  box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px #000;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.release-cta.is-locked::before {
+  content: '';
+  position: absolute;
+  bottom: calc(140% - 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 4px;
+  background-color: #000;
+  box-shadow: 0 4px 0 -2px #000, 0 8px 0 -4px #000;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.release-cta.is-locked:hover::after,
+.release-cta.is-locked:hover::before,
+.release-cta.is-locked:focus::after,
+.release-cta.is-locked:focus::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.release-countdown {
+  margin: 8px 0 0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #111;
+  text-align: center;
+}
+
+.release-countdown time { font-variant-numeric: tabular-nums; }
+.release-countdown[hidden] { display: none; }
+
+.release-tooltip-a11y {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
