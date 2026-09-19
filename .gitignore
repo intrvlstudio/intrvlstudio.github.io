@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Claude Code local preview/config
 .claude/
+
+# Local browser QA artifacts
+output/

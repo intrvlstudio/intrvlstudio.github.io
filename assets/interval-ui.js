@@ -12,7 +12,7 @@
   }
   let language = 'zh-TW';
   try { language = localStorage.getItem('intrvl_lang') || language; } catch {}
-  setLanguage(language);
+  if(!document.documentElement.dataset.singleLanguage)setLanguage(language);
   buttons.forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.lang)));
   const top = document.getElementById('scrollTop');
   const syncTop = () => top.classList.toggle('visible', scrollY > 600);

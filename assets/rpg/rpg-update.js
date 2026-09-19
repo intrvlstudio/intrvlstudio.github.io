@@ -31,9 +31,9 @@
   const loader=$('#gameLoader');let loading=false;
   const loadImage=src=>new Promise((resolve,reject)=>{const img=new Image(),timer=setTimeout(()=>reject(new Error(src)),15000);img.onload=()=>{clearTimeout(timer);resolve()};img.onerror=()=>{clearTimeout(timer);reject(new Error(src))};img.src=src;});
   async function loadIntro(){
-    if(loading)return;loading=true;$('#loadingRetry').hidden=true;const start=performance.now();
+    if(loading)return;loading=true;$('#loadingRetry').hidden=true;$('#introProgress').value=0;$('#loadingPercent').textContent='0%';loader.style.setProperty('--fill',0);const start=performance.now();
     let saved;try{saved=JSON.parse(localStorage.getItem('bmp-rpg-save-v3'))}catch{}
-    const critical=[DATA.art.assets.title,DATA.art.maps.studio,DATA.art.sheets.思于,DATA.art.sheets.曉彤,DATA.art.portraits.思于.neutral,DATA.art.portraits.思于.cry,DATA.art.portraits.曉彤.neutral,DATA.art.maps[saved?.scene]].filter(Boolean);
+    const critical=[DATA.art.assets.title,DATA.art.maps.studio,DATA.art.sheets.思于,DATA.art.sheets.曉彤,DATA.art.portraits.思于.neutral,DATA.art.portraits.思于.cry,DATA.art.portraits.曉彤.neutral,DATA.art.maps[saved?.scene==='poolHall'?'campus':saved?.scene],saved?.scene==='studio'&&saved?.f?.misunderstanding?DATA.art.maps.studioNight:null].filter(Boolean);
     const images=[...new Set(critical)];let done=0;
     const progress=()=>{const n=Math.round(++done/(images.length+1)*100);$('#introProgress').value=n;$('#loadingPercent').textContent=n+'%';loader.style.setProperty('--fill',n/100)};
     try{
