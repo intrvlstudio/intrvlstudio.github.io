@@ -41,7 +41,10 @@ const server = http.createServer((req,res) => {
       await page.locator(scenario.saved ? '#continue' : '#start').tap();
       await page.locator('#gameScreen').waitFor({state:'visible'});
       if (!scenario.saved) await page.locator('#talk').waitFor({state:'visible'});
-      if(scenario.rotate) await page.setViewportSize(viewport);
+      if(scenario.rotate) {
+        await page.setViewportSize(viewport);
+        await page.waitForFunction(() => Math.abs(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--play-width')) - innerWidth) < 1);
+      }
       const before = await page.evaluate(() => {
         const button = document.querySelector('#hudMenuToggle');
         const rect = button.getBoundingClientRect();
@@ -52,7 +55,8 @@ const server = http.createServer((req,res) => {
           expanded: button.getAttribute('aria-expanded')
         };
       });
-      await page.touchscreen.tap(before.x,before.y);
+      // Wait for a stable target while the visual viewport finishes rotating.
+      await page.locator('#hudMenuToggle').tap();
       const after = await page.evaluate(() => ({
         open: document.querySelector('#gameScreen .hud').classList.contains('menu-open'),
         expanded: document.querySelector('#hudMenuToggle').getAttribute('aria-expanded'),
