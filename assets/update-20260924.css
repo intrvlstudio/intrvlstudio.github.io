@@ -52,4 +52,13 @@
 .orken-concept .team .team-grid .member-mega .member-mascot svg{height:100%!important}
 .orken-concept .team .member-mega .mega-fallback{height:100%}
 
-html.lazy-bg .story-scene:not(.bg-in) .plane-back,html.lazy-bg .story-scene:not(.bg-in) .plane-front,html.lazy-bg .story-scene:not(.bg-in) .visual-block,html.lazy-bg .studio-blocks:not(.bg-in)>div,html.lazy-bg .hiring:not(.bg-in){background-image:none!important}
+html.lazy-bg .story-scene:not(.bg-in) .plane-back,html.lazy-bg .story-scene:not(.bg-in) .plane-front,html.lazy-bg .story-scene:not(.bg-in) .visual-block,html.lazy-bg .studio-blocks:not(.bg-in)>div,html.lazy-bg .hiring:not(.bg-in){background-image:none!important}/* Keep mobile cards sized by width even when a browser cannot resolve percentage
+   children against aspect-ratio. Reserve separate bands for names and roles. */
+@media(max-width:900px){
+ .orken-concept .team .team-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px;width:100%;min-width:0}
+ .orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{aspect-ratio:auto;min-width:0;width:100%;height:auto;padding:0;align-self:start}
+ .orken-concept .team .team-grid .member::before{content:'';display:block;position:static;inset:auto;width:100%;height:0;padding-top:140.185185%;border:0;border-radius:0;background:none;box-sizing:content-box}
+ .orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{position:absolute;top:22%;left:7%;width:86%;height:43%;min-height:0;margin:0;padding:0}
+ .orken-concept .team .team-grid .member .member-name{top:70%;left:6%;width:88%;font-size:clamp(17px,4.4vw,26px);line-height:1.1;white-space:nowrap;margin:0}
+ .orken-concept .team .team-grid .member .member-role{top:83%;left:8%;width:84%;font-size:clamp(9px,2.3vw,12px);line-height:1.25;min-height:0;margin:0;overflow-wrap:anywhere}
+}
