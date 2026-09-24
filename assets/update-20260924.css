@@ -63,7 +63,7 @@ html.lazy-bg .story-scene:not(.bg-in) .plane-back,html.lazy-bg .story-scene:not(
  .orken-concept .team .team-grid .member .member-role{top:83%;left:8%;width:84%;font-size:clamp(9px,2.3vw,12px);line-height:1.25;min-height:0;margin:0;overflow-wrap:anywhere}
 }
 .member-angela{--member-color:#eaa4b8}.member-unrevealed{--member-color:#ddd8d5}
-.orken-concept .team .team-grid .member-angela .member-mascot svg,.orken-concept .team .member-angela .angela-fallback{position:absolute;left:50%;bottom:-4%;transform:translateX(-50%) scale(.8);transform-origin:50% 50%;width:100%!important;height:125%!important;max-width:none;max-height:none;object-fit:contain}
+.orken-concept .team .team-grid .member-angela .member-mascot svg,.orken-concept .team .member-angela .angela-fallback{position:absolute;left:50%;bottom:-13%;transform:translateX(-50%) scale(.8);transform-origin:50% 50%;width:100%!important;height:125%!important;max-width:none;max-height:none;object-fit:contain}
 .orken-concept .team .member-unrevealed .unrevealed-mark{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(32px,5vw,64px);font-weight:700;color:#8b8581}
 .orken-concept .team .team-grid .member-unrevealed .member-name{font-size:clamp(13px,1.8vw,22px)}
 @media(max-width:900px){.orken-concept .team .team-grid .member-angela .member-role{font-size:clamp(8px,2.1vw,12px)}.orken-concept .team .team-grid .member-unrevealed .member-name{font-size:clamp(12px,3.2vw,22px)}}
