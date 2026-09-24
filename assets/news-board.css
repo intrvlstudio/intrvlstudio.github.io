@@ -1,6 +1,7 @@
 .news-layout,.news-layout *{box-sizing:border-box}
-.news-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start;width:100%;color:#fff;font-family:Manrope,'Noto Sans TC',system-ui,sans-serif;line-height:1.7}
-.news-layout .official-board,.news-layout .instagram-panel{min-width:0;padding:28px;background:#202020;border:1px solid #555;border-radius:18px}
+.news-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:32px;align-items:start;width:100%;color:#fff;font-family:Manrope,'Noto Sans TC',system-ui,sans-serif;line-height:1.7}
+.news-layout .official-board{min-width:0;padding:28px;background:#202020;border:1px solid #555;border-radius:18px}
+.news-layout .instagram-panel{min-width:0;width:100%;max-width:300px;padding:0;background:none;border:0;border-radius:0;justify-self:center}
 .news-layout .official-board{border-top:4px solid #ff9142;min-height:360px}
 .news-layout h3{font-family:inherit;font-size:24px;font-weight:800;line-height:1.4;letter-spacing:0;margin:0 0 22px;color:#fff}
 .news-layout .news-label{font-size:10px;letter-spacing:.2em;color:#ff9142;margin:0 0 8px}
@@ -19,9 +20,9 @@
 .news-layout .instagram-feed{min-width:0;min-height:220px}
 .news-layout .instagram-media{margin:0 0 22px!important;min-width:0!important;width:100%!important;max-width:100%!important}
 .news-layout .instagram-fallback{font-size:13px;line-height:1.7;margin:20px 0 0}
-.news-layout .instagram-preview-placeholder{padding:50px 20px;text-align:center;border:1px dashed #666;color:#aaa;border-radius:12px}
+.news-layout .instagram-preview-placeholder{padding:50px 20px;text-align:center;border:0;color:#aaa;border-radius:0}
 .community .activity-board.news-section{display:block;width:min(88%,1200px);margin:64px auto 0;padding:0;border:0;background:none;overflow:visible}
 .community .news-section>h2{font-size:clamp(30px,4vw,48px);margin:8px 0 32px}
 .community .news-section>.eyebrow{margin-bottom:0}
-@media(max-width:760px){.news-layout{grid-template-columns:1fr;gap:24px}.news-layout .official-board,.news-layout .instagram-panel{padding:22px 18px}.news-layout .news-card h4{font-size:23px}.news-layout .news-card{font-size:15px}.community .activity-board.news-section{margin-top:40px}}
-.news-layout .instagram-post-frame{position:static;display:block;width:100%;height:660px;border:0;border-radius:10px;background:#fff;margin:0 0 22px}.news-layout .instagram-post-frame:last-child{margin-bottom:0}@media(max-width:760px){.news-layout .instagram-post-frame{height:560px}}
+@media(max-width:760px){.news-layout{grid-template-columns:1fr;gap:24px}.news-layout .official-board{padding:22px 18px}.news-layout .news-card h4{font-size:23px}.news-layout .news-card{font-size:15px}.community .activity-board.news-section{margin-top:40px}}
+.news-layout .instagram-post-frame{position:static;display:block;width:100%;height:560px;max-width:300px;border:0;border-radius:0;background:transparent;margin:0}.news-layout .instagram-post-frame:last-child{margin-bottom:0}@media(max-width:760px){.news-layout .instagram-post-frame{height:560px}}

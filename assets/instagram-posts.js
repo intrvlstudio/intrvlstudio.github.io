@@ -7,8 +7,8 @@
  async function start(){
   if(started)return;started=true;
   let urls=[...feed.querySelectorAll('[data-instgrm-permalink]')].map(e=>e.dataset.instgrmPermalink);
-  try{const response=await fetch('assets/announcements.json',{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();const latest=[...new Set((data.posts||[]).map(p=>p.url).filter(url=>/^https:\/\/www\.instagram\.com\/(p|reel)\/[A-Za-z0-9_-]+\/$/.test(url)))].slice(0,2);if(latest.length)urls=latest}catch{/* Preserve the last known post. */}
-  render(urls);
+  try{const response=await fetch('assets/announcements.json',{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();const latest=[...new Set((data.posts||[]).map(p=>p.url).filter(url=>/^https:\/\/www\.instagram\.com\/(p|reel)\/[A-Za-z0-9_-]+\/$/.test(url)))].slice(0,1);if(latest.length)urls=latest}catch{/* Preserve the last known post. */}
+  render(urls.slice(0,1));
  }
  if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();start()}},{rootMargin:'600px'});observer.observe(feed)}else start();
 })();
