@@ -1,0 +1,23 @@
+{
+  "name": "之間工作室 INTRVL Studio",
+  "short_name": "INTRVL",
+  "start_url": "../../index.html",
+  "scope": "../../",
+  "display": "browser",
+  "background_color": "#252525",
+  "theme_color": "#252525",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
