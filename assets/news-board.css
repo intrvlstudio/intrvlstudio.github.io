@@ -1,18 +1,18 @@
 .news-layout,.news-layout *{box-sizing:border-box}
 .news-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:32px;align-items:start;width:100%;color:#fff;font-family:Manrope,'Noto Sans TC',system-ui,sans-serif;line-height:1.7}
-.news-layout .official-board{min-width:0;padding:28px;background:#202020;border:1px solid #555;border-radius:18px}
+.news-layout .official-board{min-width:0;padding:28px;background:#202020;border:1px solid #555;border-radius:4px}
 .news-layout .instagram-panel{min-width:0;width:100%;max-width:300px;padding:0;background:none;border:0;border-radius:0;justify-self:center}
 .news-layout .official-board{border-top:4px solid #ff9142;min-height:360px}
 .news-layout h3{font-family:inherit;font-size:24px;font-weight:800;line-height:1.4;letter-spacing:0;margin:0 0 22px;color:#fff}
 .news-layout .news-label{font-size:10px;letter-spacing:.2em;color:#ff9142;margin:0 0 8px}
 .news-layout .board-filter{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
-.news-layout .board-filter button{font:inherit;font-size:12px;border:1px solid #626262;border-radius:30px;background:transparent;color:#ddd;padding:6px 12px;cursor:pointer}
+.news-layout .board-filter button{font:inherit;font-size:12px;border:1px solid #626262;border-radius:4px;background:transparent;color:#ddd;padding:6px 12px;cursor:pointer}
 .news-layout .board-filter button.selected{background:#ff9142;color:#191919;border-color:#ff9142}
 .news-layout .board-items{display:block;max-height:none;overflow:visible;min-height:180px;padding:0;width:100%}
 .news-layout .board-empty{font-size:15px;line-height:1.8;color:#b7b7b7;padding:24px 0;margin:0}
 .news-layout .news-card{padding:24px 0;border-top:1px solid #555;overflow-wrap:anywhere;font-size:16px;text-align:left}
 .news-layout .news-card:first-child{padding-top:0;border-top:0}
-.news-layout .news-card img{display:block;width:100%;height:auto;max-height:none;border-radius:10px;object-fit:contain;margin:0 0 20px}
+.news-layout .news-card img{display:block;width:100%;height:auto;max-height:none;border-radius:4px;object-fit:contain;margin:0 0 20px}
 .news-layout .news-card time{font:12px/1.5 ui-monospace,monospace;color:#ffb67f}
 .news-layout .news-card h4{font:800 25px/1.45 Manrope,'Noto Sans TC',system-ui,sans-serif;color:#fff;margin:10px 0 14px;letter-spacing:0}
 .news-layout .news-card p{font:inherit;color:#ddd;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 18px}

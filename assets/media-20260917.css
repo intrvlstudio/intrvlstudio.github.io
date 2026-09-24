@@ -90,7 +90,7 @@ html .orken-concept .cover{background:#ff9142}
   .film-enabled .works .work{width:74vw;max-width:340px}
   .work-mesh{contain:layout paint}
 }
-.hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}.hero-actions .hero-cta{width:auto;max-width:none;white-space:nowrap}.hero-actions button.hero-cta{background:none;border:0;border-bottom:2px solid currentColor;color:inherit;font-family:inherit;cursor:pointer}.studio-tour-stop{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:1000;background:#191919;color:#fff;border:1px solid #ff9142;border-radius:30px;padding:12px 22px;cursor:pointer}.studio-tour-stop[hidden]{display:none}@media(max-width:700px){.hero-actions{gap:16px;flex-wrap:nowrap}.hero-actions .hero-cta{font-size:11px;gap:8px;padding:12px 0}.hero-actions .hero-cta>span:last-child{font-size:18px}}
+.hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}.hero-actions .hero-cta{width:auto;max-width:none;white-space:nowrap}.hero-actions button.hero-cta{background:none;border:0;border-bottom:2px solid currentColor;color:inherit;font-family:inherit;cursor:pointer}.studio-tour-stop{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:1000;background:#191919;color:#fff;border:1px solid #ff9142;border-radius:4px;padding:12px 22px;cursor:pointer}.studio-tour-stop[hidden]{display:none}@media(max-width:700px){.hero-actions{gap:16px;flex-wrap:nowrap}.hero-actions .hero-cta{font-size:11px;gap:8px;padding:12px 0}.hero-actions .hero-cta>span:last-child{font-size:18px}}
 /* Dim the complete opening stage while the works stage pushes it upward. */
 .film-enabled .cover{filter:brightness(var(--stage-brightness,1))}
 .story-lead{display:none}
@@ -114,7 +114,7 @@ html .orken-concept .cover{background:#ff9142}
   .film-enabled:has(#top.is-current) .film-controls:not(.is-expanded),.film-reading .film-controls:not(.is-expanded){top:64px}
 }
 /* Clear action hierarchy and white stage metadata. */
-.orken-concept #top .hero-actions a.hero-cta:not(.studio-play){position:relative;background:linear-gradient(145deg,#ff89d1 0%,#ef168d 48%,#cc006c 100%);color:#fff;border:1px solid #ffc6e7;border-radius:9px;box-shadow:inset 0 2px 0 #ffffff80,0 4px 0 #96054f,0 7px 20px #b6004930;font-weight:900;text-shadow:0 1px 2px #96054f;letter-spacing:.05em}
+.orken-concept #top .hero-actions a.hero-cta:not(.studio-play){position:relative;background:linear-gradient(145deg,#ff89d1 0%,#ef168d 48%,#cc006c 100%);color:#fff;border:1px solid #ffc6e7;border-radius:4px;box-shadow:inset 0 2px 0 #ffffff80,0 4px 0 #96054f,0 7px 20px #b6004930;font-weight:900;text-shadow:0 1px 2px #96054f;letter-spacing:.05em}
 .orken-concept #top .hero-actions a.hero-cta:not(.studio-play):hover{background:linear-gradient(145deg,#ffb1e1,#f437a4 50%,#da0779)}
 .orken-concept #top .hero-actions .studio-play{background:#111;color:#fff;border:1px solid #111;border-radius:0;font-weight:700}
 .orken-concept #top .hero-actions .studio-play:hover{background:#303030}
@@ -198,7 +198,7 @@ html .orken-concept .cover{background:#ff9142}
   html.film-reading body.orken-concept .film-controls:not(.is-expanded){
     top:50%!important;right:0;bottom:auto;left:auto;transform:translateY(-50%);
     width:30px;min-width:0;height:44px;padding:0;gap:0;
-    border:0;border-radius:7px 0 0 7px;background:rgba(17,17,17,.65);box-shadow:none;
+    border:0;border-radius:4px 0 0 4px;background:rgba(17,17,17,.65);box-shadow:none;
   }
   .film-controls:not(.is-expanded) .timeline-toggle{
     position:relative;display:block;width:30px;height:44px;min-height:44px;

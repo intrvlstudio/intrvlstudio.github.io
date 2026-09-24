@@ -19,7 +19,7 @@ body .nav.nav-intro .lang-toggle .active{background:#fff;color:#101110}
 .logo-entry-streak{position:absolute;left:50%;top:46%;width:min(62vw,640px);height:2px;background:linear-gradient(90deg,transparent,#ff9142,transparent);transform:translate(-50%,-50%) rotate(-24deg);animation:entry-streak 680ms cubic-bezier(.2,.8,.2,1) both;pointer-events:none}
 .logo-entry-ring{position:absolute;left:50%;top:46%;width:clamp(180px,28vw,340px);aspect-ratio:1;border:1px solid #ff914250;border-radius:50%;animation:entry-ring 820ms 100ms ease-out both;pointer-events:none}
 .logo-entry::after{content:'';position:absolute;left:0;bottom:0;width:35%;height:3px;background:#ff9142;transform:translateX(-110%);animation:entry-travel 900ms cubic-bezier(.4,0,.2,1) infinite}
-.logo-entry-skip{position:absolute;right:24px;bottom:24px;z-index:3;padding:10px 16px;border:1px solid #ffffff40;border-radius:999px;background:#20211f;color:#ddd;font:12px system-ui;cursor:pointer}
+.logo-entry-skip{position:absolute;right:24px;bottom:24px;z-index:3;padding:10px 16px;border:1px solid #ffffff40;border-radius:4px;background:#20211f;color:#ddd;font:12px system-ui;cursor:pointer}
 .logo-entry-skip:hover,.logo-entry-skip:focus-visible{color:#fff;border-color:#ff9142;outline:2px solid #ff9142;outline-offset:3px}
 .logo-entry-preview{pointer-events:none}.logo-entry-preview .logo-entry-skip{display:none}.logo-entry-preview::after{animation-iteration-count:1}
 @keyframes entry-streak{0%{opacity:0;scale:.15 1;translate:-90px 30px}30%{opacity:1}100%{opacity:0;scale:1.4 1;translate:90px -30px}}

@@ -1,8 +1,8 @@
 /* September artwork and reference card composition. */
 .orken-concept .team{background:#f4f4f4;color:#171817}
 .orken-concept .team .team-grid{gap:clamp(16px,4vw,60px);align-items:stretch;max-width:1320px}
-.orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{position:relative;isolation:isolate;background:#fff;border-radius:24px;padding:24px 16px 48px;box-sizing:border-box;overflow:visible}
-.orken-concept .team .member::before{content:'';position:absolute;inset:28px 24px;border:2px solid #cecece;border-radius:18px;z-index:-1;pointer-events:none}
+.orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{position:relative;isolation:isolate;background:#fff;border-radius:4px;padding:24px 16px 48px;box-sizing:border-box;overflow:visible}
+.orken-concept .team .member::before{content:'';position:absolute;inset:28px 24px;border:2px solid #cecece;border-radius:4px;z-index:-1;pointer-events:none}
 .orken-concept .team .member::after{content:'✦';position:absolute;bottom:16px;left:15px;background:#fff;color:#d7d7d7;font-size:28px;padding:3px;line-height:1}
 .orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{height:180px;margin:0 0 12px;isolation:isolate}
 .orken-concept .team .member-mascot::before{content:'';position:absolute;width:65%;max-width:155px;aspect-ratio:1;border-radius:50%;background:var(--member-color);bottom:18px;left:50%;transform:translateX(-50%);z-index:-1}
@@ -14,18 +14,18 @@
 .orken-concept .team .team-grid .member-mega .member-mascot svg{width:80%!important;height:160px!important;max-width:175px}
 .orken-concept .team .team-grid .member-name{font-size:clamp(22px,2.5vw,32px);color:#111;font-weight:800}
 .orken-concept .team .team-grid .member-role{color:#444;font-size:12px;margin-top:7px}
-.orken-concept .team .member-mascot:focus-visible{outline:3px solid #ff9142;outline-offset:5px;border-radius:12px}
+.orken-concept .team .member-mascot:focus-visible{outline:3px solid #ff9142;outline-offset:5px;border-radius:4px}
 .orken-concept .about .studio-blocks{display:block!important;overflow:hidden}
 .orken-concept .about .studio-blocks>div.about-main{position:absolute;inset:0;width:100%;height:100%;background:url('update-20260924/about-main.webp') center/cover no-repeat;transform:none!important;opacity:1!important}
 .orken-concept .visual-b .visual-block{background-image:url('update-20260924/visual-b-desktop.webp')}
 .orken-concept .visual-c .visual-block{background-image:url('update-20260924/visual-c-desktop.webp')}
 .public-announcement{padding:18px 0;border-bottom:1px solid #7775;color:inherit}
-.public-announcement img{display:block;width:100%;max-height:440px;object-fit:contain;border-radius:12px;margin-bottom:12px}
+.public-announcement img{display:block;width:100%;max-height:440px;object-fit:contain;border-radius:4px;margin-bottom:12px}
 .public-announcement h3{font-size:22px;margin:10px 0}.public-announcement p{white-space:pre-wrap;overflow-wrap:anywhere}.public-announcement time{font-size:12px;opacity:.7}
 @media(max-width:700px){
  .orken-concept .team .team-grid{gap:20px 12px}
- .orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{border-radius:18px;padding:18px 8px 38px}
- .orken-concept .team .member::before{inset:15px 10px;border-radius:12px}.orken-concept .team .member::after{font-size:20px;bottom:7px;left:5px}
+ .orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{border-radius:4px;padding:18px 8px 38px}
+ .orken-concept .team .member::before{inset:15px 10px;border-radius:4px}.orken-concept .team .member::after{font-size:20px;bottom:7px;left:5px}
  .orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{height:170px}
  .orken-concept .team .team-grid .member-piann .member-mascot svg{height:115px!important}
  .orken-concept .team .team-grid .member-m3 .member-mascot svg{height:100px!important}
@@ -39,7 +39,7 @@
 @media(max-width:700px){.orken-concept .team .member-mega .mega-fallback{height:120px}}
 .emblem-menu.on-white{filter:brightness(0)}
 /* Supplied card artwork: preserve the SVG's 540 × 757 proportions. */
-.orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{padding:0;aspect-ratio:540/757;background:transparent url('update-20260924/team-card.svg') center/100% 100% no-repeat;border-radius:0}
+.orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{padding:0;aspect-ratio:540/757;background:transparent url('update-20260924/team-card-sharp.svg?v=20260924-sharp') center/100% 100% no-repeat;border-radius:0}
 .orken-concept .team .member::before,.orken-concept .team .member::after{content:none}
 .orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{position:absolute;top:22%;left:7%;width:86%;height:43%;margin:0}
 .orken-concept .team .member-mascot::before{width:55%;bottom:14%}

@@ -387,7 +387,7 @@ html[lang="zh-TW"] .cover-tagline {
   position: relative;
   height: calc(100vh - 180px);
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 .cover-image img {
@@ -663,7 +663,7 @@ html[lang="zh-TW"] .about-pullquote-cite {
 .member {
   background: var(--bg);
   border: 1px solid var(--rule-soft);
-  border-radius: 16px;
+  border-radius: 4px;
   padding: 36px 32px 32px;
   position: relative;
   transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
@@ -931,7 +931,7 @@ html[lang="ko"] .numbers-label { font-family: var(--body-ko); }
   color: var(--mauve);
   background: var(--bg-alt);
   border: 1px solid var(--rule);
-  border-radius: 100px;
+  border-radius: 4px;
   padding: 4px 10px;
 }
 
@@ -1001,7 +1001,7 @@ html[lang="zh-TW"] .works-intro {
   overflow: hidden;
   cursor: pointer;
   background: var(--bg-alt);
-  border-radius: 10px;
+  border-radius: 4px;
   aspect-ratio: 3/4;
   text-decoration: none;
   color: inherit;
@@ -1189,7 +1189,7 @@ html[lang="ko"] .gallery-subhead {
   position: relative;
   height: 240px;
   width: auto;            /* width derives from the inline aspect-ratio */
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
   background: var(--gradient-soft);
 }
@@ -1293,7 +1293,7 @@ html[lang="ko"] .gallery-ph { font-family: var(--body-ko); }
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 4px;
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
 }
 
@@ -1376,7 +1376,7 @@ html[lang="zh-TW"] .debut-tag {
   overflow: hidden;
   background: var(--bg);
   box-shadow: 0 30px 80px -30px rgba(26,21,18,0.3);
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .debut-image img {
@@ -1391,7 +1391,7 @@ html[lang="zh-TW"] .debut-tag {
   left: -20px;
   background: var(--bg);
   border: 1px solid var(--ink);
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 12px 20px;
   font-size: 10px;
   letter-spacing: 0.25em;
@@ -1546,7 +1546,7 @@ html[lang="zh-TW"] .debut-spec-val {
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.04em;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: all 0.3s;
 }
 
@@ -1624,7 +1624,7 @@ html[lang="ko"] .making-col-label {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 5;
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
   background: var(--gradient-soft);
   box-shadow: 0 24px 60px -28px rgba(26, 21, 18, 0.35);
@@ -1719,7 +1719,7 @@ html[lang="ko"] .process-steps li { font-family: var(--body-ko); }
   margin: 0 auto;
   aspect-ratio: 9 / 19;
   background: #1b1614;
-  border-radius: 36px;
+  border-radius: 4px;
   padding: 12px;
   box-shadow: 0 36px 80px -30px rgba(26, 21, 18, 0.55),
               inset 0 0 0 2px rgba(255, 255, 255, 0.05);
@@ -1732,14 +1732,14 @@ html[lang="ko"] .process-steps li { font-family: var(--body-ko); }
   width: 36%;
   height: 18px;
   background: #1b1614;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 4px 4px;
   z-index: 3;
 }
 .phone-screen {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 26px;
+  border-radius: 4px;
   overflow: hidden;
   background: var(--bg-alt);
 }
@@ -1913,7 +1913,7 @@ html[lang="zh-TW"] .find-list dd {
   background: var(--bg-alt);
   padding: 40px;
   border: 1px solid var(--rule-soft);
-  border-radius: 16px;
+  border-radius: 4px;
 }
 
 .partnership-body {
@@ -1938,7 +1938,7 @@ html[lang="zh-TW"] .partnership-body { line-height: 1.95; }
   padding: 6px 14px;
   background: var(--bg);
   border: 1px solid var(--rule);
-  border-radius: 100px;
+  border-radius: 4px;
   font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--ink);
@@ -2019,7 +2019,7 @@ html[lang="ko"] .hiring-intro { font-family: var(--body-ko); line-height: 1.85; 
   flex-direction: column;
   background: var(--bg);
   border: 1px solid var(--rule-soft);
-  border-radius: 16px;
+  border-radius: 4px;
   padding: 36px 32px 32px;
   transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
 }
@@ -2031,7 +2031,7 @@ html[lang="ko"] .hiring-intro { font-family: var(--body-ko); line-height: 1.85; 
 .job-icon {
   width: 56px;
   height: 56px;
-  border-radius: 15px;
+  border-radius: 4px;
   background: var(--gradient-soft);
   display: flex;
   align-items: center;
@@ -2092,7 +2092,7 @@ html[lang="ko"] .job-skills-label { font-family: var(--body-ko); letter-spacing:
   padding: 6px 13px;
   background: var(--bg-alt);
   border: 1px solid var(--rule);
-  border-radius: 100px;
+  border-radius: 4px;
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -2111,7 +2111,7 @@ html[lang="ko"] .skill-tag { font-family: var(--body-ko); }
   background: var(--ink);
   color: var(--bg);
   border: 1px solid var(--ink);
-  border-radius: 6px;
+  border-radius: 4px;
   font-family: var(--body);
   font-weight: 600;
   font-size: 14px;
