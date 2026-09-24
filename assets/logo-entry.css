@@ -13,3 +13,21 @@ body .nav.nav-intro>.nav-links{gap:16px;max-width:calc(50% - 50px)}
 body .nav.nav-intro .lang-toggle .active{background:#fff;color:#101110}
 .intro-playing .nav-intro .nav-brand{visibility:hidden}
 @media(max-width:800px){body .nav.nav-intro:has(>.nav-links){height:112px;flex-wrap:wrap;padding:15px 6vw 10px}body .nav.nav-intro>.nav-links{order:3;max-width:none;width:100%;justify-content:space-between;gap:8px;align-self:flex-end}body .nav.nav-intro>.nav-links a{font-size:12px}}
+/* Fast assembly with a single orange accent and a directional reveal. */
+.logo-entry{background:#101110;pointer-events:auto;isolation:isolate;will-change:clip-path,opacity}
+.logo-entry-dock{z-index:2;width:clamp(130px,18vw,220px)}
+.logo-entry-streak{position:absolute;left:50%;top:46%;width:min(62vw,640px);height:2px;background:linear-gradient(90deg,transparent,#ff9142,transparent);transform:translate(-50%,-50%) rotate(-24deg);animation:entry-streak 680ms cubic-bezier(.2,.8,.2,1) both;pointer-events:none}
+.logo-entry-ring{position:absolute;left:50%;top:46%;width:clamp(180px,28vw,340px);aspect-ratio:1;border:1px solid #ff914250;border-radius:50%;animation:entry-ring 820ms 100ms ease-out both;pointer-events:none}
+.logo-entry::after{content:'';position:absolute;left:0;bottom:0;width:35%;height:3px;background:#ff9142;transform:translateX(-110%);animation:entry-travel 900ms cubic-bezier(.4,0,.2,1) infinite}
+.logo-entry-skip{position:absolute;right:24px;bottom:24px;z-index:3;padding:10px 16px;border:1px solid #ffffff40;border-radius:999px;background:#20211f;color:#ddd;font:12px system-ui;cursor:pointer}
+.logo-entry-skip:hover,.logo-entry-skip:focus-visible{color:#fff;border-color:#ff9142;outline:2px solid #ff9142;outline-offset:3px}
+.logo-entry-preview{pointer-events:none}.logo-entry-preview .logo-entry-skip{display:none}.logo-entry-preview::after{animation-iteration-count:1}
+@keyframes entry-streak{0%{opacity:0;scale:.15 1;translate:-90px 30px}30%{opacity:1}100%{opacity:0;scale:1.4 1;translate:90px -30px}}
+@keyframes entry-ring{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}28%{opacity:.7}100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
+@keyframes entry-travel{to{transform:translateX(390%)}}
+@media(prefers-reduced-motion:reduce){.logo-entry{display:none}.logo-entry *,.logo-entry::after{animation:none!important}}
+/* The settled logo anchors a terminal-style asset counter. */
+.logo-entry-counter{position:absolute;z-index:3;transform:translateX(-50%);min-width:190px;text-align:center;font-family:Consolas,'SFMono-Regular','Courier New',monospace;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:.08em}
+.logo-entry-counter[hidden]{display:none}
+.entry-code-label,.entry-code-status{display:block;color:#939a92;font-size:10px;line-height:1.8;letter-spacing:.12em}
+.entry-code-value{font-size:24px;line-height:1.8;color:#6d756b}.entry-code-value b{font-weight:400;color:#fff}.entry-code-value span{color:#ff9142}.entry-code-status{color:#ff9142}
