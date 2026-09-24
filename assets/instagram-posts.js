@@ -1,15 +1,14 @@
-// Progressive enhancement: official account links remain usable if embeds are blocked.
 (() => {
- const board=document.querySelector('.board-items');if(!board)return;
- function enhance(){board.querySelectorAll('a.announcement:not([data-embed-ready])').forEach(link=>{
-  link.dataset.embedReady='true';let url;try{url=new URL(link.href)}catch{return}
-  if(url.origin!=='https://www.instagram.com'||!/^\/(p|reel)\/[A-Za-z0-9_-]+\/?$/.test(url.pathname))return;
-  const button=document.createElement('button');button.className='instagram-load';button.textContent=({'zh-TW':'顯示貼文',en:'Show post',ko:'게시물 보기'})[document.documentElement.lang]||'顯示貼文';link.after(button);
-  button.addEventListener('click',()=>{const quote=document.createElement('blockquote');quote.className='instagram-media';quote.dataset.instgrmPermalink=url.origin+url.pathname;quote.dataset.instgrmVersion='14';const fallback=link.cloneNode(true);fallback.className='';quote.append(fallback);button.replaceWith(quote);
-   if(window.instgrm?.Embeds){window.instgrm.Embeds.process();return}
-   if(document.getElementById('instagram-embed-script'))return;
-   const script=document.createElement('script');script.id='instagram-embed-script';script.src='https://www.instagram.com/embed.js';script.async=true;script.onload=()=>window.instgrm?.Embeds?.process();document.body.append(script);
-  },{once:true});
- })}
- new MutationObserver(enhance).observe(board,{childList:true});enhance();
+ const feed=document.querySelector('.instagram-feed');if(!feed)return;
+ let started=false;
+ function render(urls){feed.replaceChildren();for(const url of urls){
+  const frame=document.createElement('iframe');frame.className='instagram-post-frame';frame.src=url+'embed/';frame.title='@intrvl_studio Instagram 貼文';frame.loading='eager';frame.setAttribute('allowfullscreen','');feed.append(frame);
+ }}
+ async function start(){
+  if(started)return;started=true;
+  let urls=[...feed.querySelectorAll('[data-instgrm-permalink]')].map(e=>e.dataset.instgrmPermalink);
+  try{const response=await fetch('assets/announcements.json',{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();const latest=[...new Set((data.posts||[]).map(p=>p.url).filter(url=>/^https:\/\/www\.instagram\.com\/(p|reel)\/[A-Za-z0-9_-]+\/$/.test(url)))].slice(0,2);if(latest.length)urls=latest}catch{/* Preserve the last known post. */}
+  render(urls);
+ }
+ if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();start()}},{rootMargin:'600px'});observer.observe(feed)}else start();
 })();
