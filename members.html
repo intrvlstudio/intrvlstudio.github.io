@@ -763,7 +763,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   .t-meta { display: -webkit-box; }
 }
 </style>
-</head>
+<link rel="stylesheet" href="assets/staff-brand.css?v=full-release"></head>
 <body class="checking">
 
 <div id="gate">
@@ -772,7 +772,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
   <!-- ============ 側邊欄 ============ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a href="index.html"><img src="assets/logo_h_en_short.svg" alt="INTRVL Studio"></a>
+      <a href="index.html"><img src="assets/update-20260924/intrvl-logo-horizontal-zh-orange-black.png" alt="INTRVL Studio"></a>
       <button class="menu-toggle" id="menuToggle" aria-label="選單">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -837,7 +837,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
     <!-- Headbanner -->
     <header class="topbar">
       <div class="topbar-text">
-        <p class="eyebrow">INTRVL 內部空間</p>
+        <img class="staff-brand-logo" src="assets/update-20260924/intrvl-logo-horizontal-zh-orange-white.png" alt="之間工作室"><p class="eyebrow">INTRVL 內部空間</p>
         <div class="topbar-date">
           <span class="year" id="dateYear"></span>
           <span class="md" id="dateMD"></span>
@@ -848,7 +848,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
           <span class="survival-label">生存天數</span>
           <span class="survival-value"><span class="survival-num" id="survivalDays">—</span><span class="survival-unit">天</span></span>
         </div>
-        <img class="topbar-mark" src="assets/icon_mark_white.svg" alt="INTRVL">
+        <img class="topbar-mark" src="assets/update-20260924/intrvl-logo-symbol-orange-white.png" alt="INTRVL">
       </div>
     </header>
 
@@ -1368,6 +1368,7 @@ body.is-admin .app-row .row-actions { display: inline-flex; }
 </div>
 
 <script type="module">
+import { initPublicNewsEntry } from "./assets/news-entry.js";
 import { initForms } from "./assets/forms.js";
 import {
   auth, signOut, onAuthStateChanged, isAdmin,
@@ -2597,6 +2598,7 @@ onAuthStateChanged(auth, (user) => {
   loadPublic().then(routeFromHash);   // 載入完成後，依網址 hash 開到對應項目（分享連結）
 
   isAdmin(user.uid).then(async (ok) => {
+    initPublicNewsEntry(ok);
     initForms(ok);
     if (ok) {
       document.body.classList.add('is-admin');

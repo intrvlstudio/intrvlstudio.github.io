@@ -1,0 +1,55 @@
+/* September artwork and reference card composition. */
+.orken-concept .team{background:#f4f4f4;color:#171817}
+.orken-concept .team .team-grid{gap:clamp(16px,4vw,60px);align-items:stretch;max-width:1320px}
+.orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{position:relative;isolation:isolate;background:#fff;border-radius:24px;padding:24px 16px 48px;box-sizing:border-box;overflow:visible}
+.orken-concept .team .member::before{content:'';position:absolute;inset:28px 24px;border:2px solid #cecece;border-radius:18px;z-index:-1;pointer-events:none}
+.orken-concept .team .member::after{content:'✦';position:absolute;bottom:16px;left:15px;background:#fff;color:#d7d7d7;font-size:28px;padding:3px;line-height:1}
+.orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{height:180px;margin:0 0 12px;isolation:isolate}
+.orken-concept .team .member-mascot::before{content:'';position:absolute;width:65%;max-width:155px;aspect-ratio:1;border-radius:50%;background:var(--member-color);bottom:18px;left:50%;transform:translateX(-50%);z-index:-1}
+.orken-concept .team .member-mascot::after{content:'';position:absolute;width:43%;height:7px;border-radius:50%;background:#dedfdb;bottom:-3px;left:50%;transform:translateX(-50%);z-index:-1}
+.member-piann{--member-color:#ff923d}.member-m3{--member-color:#4e5b43}.member-page{--member-color:#eb858a}.member-mega{--member-color:#ffe7c3}
+.orken-concept .team .team-grid .member-piann .member-mascot svg{width:100%!important;height:155px!important;max-width:230px}
+.orken-concept .team .team-grid .member-m3 .member-mascot svg{width:68%!important;height:140px!important;max-width:160px}
+.orken-concept .team .team-grid .member-page .member-mascot svg{width:60%!important;height:100px!important;max-width:130px}
+.orken-concept .team .team-grid .member-mega .member-mascot svg{width:80%!important;height:160px!important;max-width:175px}
+.orken-concept .team .team-grid .member-name{font-size:clamp(22px,2.5vw,32px);color:#111;font-weight:800}
+.orken-concept .team .team-grid .member-role{color:#444;font-size:12px;margin-top:7px}
+.orken-concept .team .member-mascot:focus-visible{outline:3px solid #ff9142;outline-offset:5px;border-radius:12px}
+.orken-concept .about .studio-blocks{display:block!important;overflow:hidden}
+.orken-concept .about .studio-blocks>div.about-main{position:absolute;inset:0;width:100%;height:100%;background:url('update-20260924/about-main.webp') center/cover no-repeat;transform:none!important;opacity:1!important}
+.orken-concept .visual-b .visual-block{background-image:url('update-20260924/visual-b-desktop.webp')}
+.orken-concept .visual-c .visual-block{background-image:url('update-20260924/visual-c-desktop.webp')}
+.public-announcement{padding:18px 0;border-bottom:1px solid #7775;color:inherit}
+.public-announcement img{display:block;width:100%;max-height:440px;object-fit:contain;border-radius:12px;margin-bottom:12px}
+.public-announcement h3{font-size:22px;margin:10px 0}.public-announcement p{white-space:pre-wrap;overflow-wrap:anywhere}.public-announcement time{font-size:12px;opacity:.7}
+@media(max-width:700px){
+ .orken-concept .team .team-grid{gap:20px 12px}
+ .orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{border-radius:18px;padding:18px 8px 38px}
+ .orken-concept .team .member::before{inset:15px 10px;border-radius:12px}.orken-concept .team .member::after{font-size:20px;bottom:7px;left:5px}
+ .orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{height:170px}
+ .orken-concept .team .team-grid .member-piann .member-mascot svg{height:115px!important}
+ .orken-concept .team .team-grid .member-m3 .member-mascot svg{height:100px!important}
+ .orken-concept .team .team-grid .member-page .member-mascot svg{height:76px!important}
+ .orken-concept .team .team-grid .member-mega .member-mascot svg{height:120px!important}
+ .orken-concept .team .member-role{font-size:10px}
+ .orken-concept .visual-b .visual-block{background-image:url('update-20260924/visual-b-mobile.webp')}
+ .orken-concept .visual-c .visual-block{background-image:url('update-20260924/visual-c-mobile.webp')}
+}
+.orken-concept .team .member-mega .mega-fallback{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:80%;max-width:175px;height:160px;object-fit:contain}
+@media(max-width:700px){.orken-concept .team .member-mega .mega-fallback{height:120px}}
+.emblem-menu.on-white{filter:brightness(0)}
+/* Supplied card artwork: preserve the SVG's 540 × 757 proportions. */
+.orken-concept .team .team-grid .member,.orken-concept .team .team-grid .member:hover{padding:0;aspect-ratio:540/757;background:transparent url('update-20260924/team-card.svg') center/100% 100% no-repeat;border-radius:0}
+.orken-concept .team .member::before,.orken-concept .team .member::after{content:none}
+.orken-concept .team .team-grid .member .member-mascot,.orken-concept .team .team-grid .member:hover .member-mascot{position:absolute;top:22%;left:7%;width:86%;height:43%;margin:0}
+.orken-concept .team .member-mascot::before{width:55%;bottom:14%}
+.orken-concept .team .team-grid .member .member-name{position:absolute;top:69%;left:0;width:100%;margin:0}
+.orken-concept .team .team-grid .member .member-role{position:absolute;top:80%;left:10%;width:80%;margin:0;font-size:clamp(9px,1vw,12px);min-height:0}
+/* Center the cat body rather than the wider SVG canvas reserved for the tail. */
+.orken-concept .team .team-grid .member-piann .member-mascot svg{height:100%!important;transform:translateX(calc(-33% - 5px))}
+.orken-concept .team .team-grid .member-m3 .member-mascot svg{height:90%!important}
+.orken-concept .team .team-grid .member-page .member-mascot svg{height:65%!important}
+.orken-concept .team .team-grid .member-mega .member-mascot svg{height:100%!important}
+.orken-concept .team .member-mega .mega-fallback{height:100%}
+
+html.lazy-bg .story-scene:not(.bg-in) .plane-back,html.lazy-bg .story-scene:not(.bg-in) .plane-front,html.lazy-bg .story-scene:not(.bg-in) .visual-block,html.lazy-bg .studio-blocks:not(.bg-in)>div,html.lazy-bg .hiring:not(.bg-in){background-image:none!important}

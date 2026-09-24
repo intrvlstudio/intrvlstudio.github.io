@@ -1,0 +1,8 @@
+:root{--gradient:linear-gradient(120deg,#222820,#454d3e);--mauve:#9b4b13}
+.topbar{background:linear-gradient(115deg,#222820 0%,#343e30 70%,#6c573e 100%);border-bottom:4px solid #ff9142;flex-wrap:wrap}
+.staff-brand-logo{width:210px;max-width:60%;height:auto;object-fit:contain;margin-right:auto}
+.topbar-mark{content:url('update-20260924/intrvl-logo-symbol-orange-white.png');object-fit:contain}
+.public-news-entry{display:inline-flex;align-items:center;gap:8px;margin:0 0 20px;padding:12px 18px;background:#ff9142;color:#171817;border-radius:12px;text-decoration:none;font-weight:700}
+@media(max-width:600px){.staff-brand-logo{width:165px;max-width:100%;margin-bottom:8px}.topbar{gap:16px}}
+.topbar-text .staff-brand-logo{max-width:100%;margin-bottom:18px}
+body:has(> .card){background:radial-gradient(ellipse at top right,#f5d2ae,transparent 60%),#f2f3ed}

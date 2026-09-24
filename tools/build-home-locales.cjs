@@ -35,7 +35,7 @@ const template=fs.readFileSync(path.join(__dirname,'home.template.html'),'utf8')
     for(const sel of ['.about-grid','.partnership']){const block=doc.querySelector(sel);if(block){const p=doc.createElement('p');p.className='capacity-proof';p.textContent=proof;block.append(p)}}
     const game=doc.querySelector('#latest-story-cta');game?.classList.add('game-entry');
     doc.querySelectorAll('.footer-bottom>div:first-child span').forEach(el=>{el.innerHTML=el.innerHTML.replace('© 2025','© <span data-copyright-year>2025–2026</span>')});
-    doc.querySelectorAll('script[src]').forEach(s=>{if(/interval-ui|orken-film|instagram-posts/.test(s.src))s.setAttribute('src',s.getAttribute('src').split('?')[0]+'?v=20260920')});
+    doc.querySelectorAll('script[src]').forEach(s=>{if(/interval-ui|orken-film|instagram-posts/.test(s.src))s.setAttribute('src',s.getAttribute('src').split('?')[0]+'?v=20260924-full')});
     const script=doc.createElement('script');script.src='assets/home-language.js?v=20260920';script.defer=true;doc.body.append(script);
     const css=doc.createElement('link');css.rel='stylesheet';css.href='assets/site-optimization.css?v=20260920';doc.head.append(css);
     return '<!DOCTYPE html>\n'+doc.documentElement.outerHTML;
