@@ -15,9 +15,15 @@
 .orken-concept .team .team-grid .member-name{font-size:clamp(22px,2.5vw,32px);color:#111;font-weight:800}
 .orken-concept .team .team-grid .member-role{color:#444;font-size:12px;margin-top:7px}
 .orken-concept .team .member-mascot:focus-visible{outline:3px solid #ff9142;outline-offset:5px;border-radius:4px}
-.orken-concept .about .studio-blocks{display:block!important;overflow:hidden;width:min(38vw,680px);height:auto;min-height:0;aspect-ratio:16/9}
+.orken-concept .about{position:relative;isolation:isolate;overflow:hidden}
+.orken-concept .about .studio-blocks{display:block!important;position:absolute;inset:0;overflow:hidden;width:100%;height:100%;min-height:0;max-width:none;aspect-ratio:auto;margin:0;z-index:0}
 .orken-concept .about .studio-blocks>div.about-main{position:absolute;inset:0;width:100%;height:100%;background:url('update-20260924/about-wide-20260925.webp') center/cover no-repeat;transform:none!important;opacity:1!important}
-@media(max-width:700px){.orken-concept .about .studio-blocks{width:100%;max-width:540px}}
+.orken-concept .about::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#0008,transparent 38%,#000c);opacity:1}
+.orken-concept .about-title,.orken-concept .about-grid{z-index:2;color:#fff;text-shadow:0 2px 18px #0009}
+.film-reading .orken-concept .about{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;min-height:100svh;box-sizing:border-box;gap:80px}
+.film-reading .orken-concept .about-title,.film-reading .orken-concept .about-grid{position:relative}
+.film-reading .orken-concept .about-grid{max-width:820px}
+.orken-concept .about-grid p{color:#fff}
 .orken-concept .visual-b .visual-block{background-image:url('update-20260924/visual-b-desktop.webp')}
 .orken-concept .visual-c .visual-block{background-image:url('update-20260924/visual-c-desktop.webp')}
 .public-announcement{padding:18px 0;border-bottom:1px solid #7775;color:inherit}
