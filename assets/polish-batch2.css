@@ -1,0 +1,47 @@
+/* 第二批優化：D 空狀態降級、E 作品列表資訊、F 留白節奏 */
+
+/* ---------- D：公告區沒有公告時，不顯示篩選鈕，空狀態改成追蹤入口 ---------- */
+.official-board.is-empty .board-filter { display: none; }
+.official-board.is-empty .board-items { min-height: 0; }
+.official-board .board-empty a { color: #ff9142; text-underline-offset: 4px; }
+.official-board .board-empty a:hover,
+.official-board .board-empty a:focus-visible { color: #ffb27a; }
+
+/* ---------- D：團隊區兩張「尚未出場」合併成一張招募卡，整張可點，連到徵才區 ---------- */
+.member-hiring-link { color: inherit; text-decoration: none; }
+.member-hiring-link::after { content: ""; position: absolute; inset: 0; z-index: 3; }
+.member-hiring-link:focus-visible { outline: none; }
+.member-hiring-link:focus-visible::after { outline: 3px solid #ff9142; outline-offset: -8px; }
+.orken-concept .team .member-hiring .unrevealed-mark { transition: color .2s; }
+.orken-concept .team .member-hiring:hover .unrevealed-mark,
+.orken-concept .team .member-hiring:focus-within .unrevealed-mark { color: #ff9142; }
+
+/* ---------- E：作品列表每張卡片加上年份與角色配對（取自 works.json 與首頁），有實體書的加標籤 ---------- */
+.catalog-page .catalog .work-caption .work-year {
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  color: #e4e4e4;
+  font: 500 12px/1.6 Manrope, "Noto Sans TC", "Noto Sans KR", sans-serif;
+  letter-spacing: .02em;
+}
+.catalog-page .catalog .work-caption b.tag-book {
+  color: #ff9142;
+  font-weight: 700;
+}
+
+/* ---------- F：留白節奏。區段之間的空白統一成同一個尺寸「間」 ----------
+   區段之間的空白 = 上一區下內距 + 下一區上內距，所以各區取 --ma-間 的一半。
+   量測基準（改前）：
+   - 桌機：新聞、團隊、合作區上下內距都是 100px；徵才卡片外距是 30／90px，所以相鄰區段的空白分別是 200／130／190px
+   - 手機：新聞 100px、團隊與合作 65px、徵才外距 30／90px，空白分別是 165／95／155px
+   改後：桌機統一 200px，手機統一 130px。
+   其他尺寸（小間 24、中間 64、大間 120）等之後整理區塊內部間距時再加入。 */
+:root { --ma-xl: 200px; }
+@media (max-width: 700px) {
+  :root { --ma-xl: 130px; }
+}
+body.orken-concept .community,
+body.orken-concept .section.team,
+body.orken-concept .section.contact { padding-block: calc(var(--ma-xl) / 2); }
+body.orken-concept .section.hiring { margin-block: calc(var(--ma-xl) / 2); }

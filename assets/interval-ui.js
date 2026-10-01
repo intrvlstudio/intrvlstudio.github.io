@@ -24,7 +24,10 @@
   const board = document.querySelector('.board-items');
   if (!board) return;
   const empty = board.innerHTML;
+  const official = board.closest('.official-board');
   function render() {
+    // 完全沒有公告時才隱藏篩選鈕；只是目前分類沒有內容時要保留，否則使用者回不去其他分類
+    if (official) official.classList.toggle('is-empty', !publicPosts.length);
     board.replaceChildren();
     publicPosts.filter(post => category === 'all' || post.category === category).forEach(post => board.append(window.INTRVLNews.renderPost(post)));
     if (!board.childElementCount) board.innerHTML = empty;
