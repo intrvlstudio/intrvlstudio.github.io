@@ -85,7 +85,13 @@
     const whole = overlay.querySelector('.hook-whole');
     const partsGroup = overlay.querySelector('.hook-parts');
     const fragments = pieces.map(piece => ({...piece, node: overlay.querySelector(piece.selector)}));
-    let start, destination, count=0, completeAt=Infinity;
+    let start, destination, destinationRead=false, count=0, completeAt=Infinity;
+    // 動畫期間不讀取版面：每幀讀 getBoundingClientRect 會在頁面載入中反覆強迫整頁重排（Lighthouse 的 Forced reflow）。
+    // 寬度先用 CSS 公式估計，再由 ResizeObserver 校正；目標位置等到要出發時才讀一次。
+    let vw=innerWidth, vh=innerHeight;
+    addEventListener('resize',()=>{vw=innerWidth;vh=innerHeight;positioned=false},{passive:true});
+    let dockWidth=Math.min(220,Math.max(130,vw*.18)), positioned=false, lastDigits='', lastStatus='';
+    if('ResizeObserver' in window)new ResizeObserver(entries=>{const w=entries[0]?.contentRect.width;if(w&&Math.abs(w-dockWidth)>.5){dockWidth=w;positioned=false}}).observe(dock);
 
     function paint(now) {
       start ??= now;
@@ -110,28 +116,35 @@
       arrow.style.transform=`translate(${(1-flash)*-70}px,${(1-flash)*-28}px)`;
       arrowFace.setAttribute('fill', time<countAt+100?'#FF9142':'#fff');
       overlay.classList.toggle('is-waiting', !ready&&time>=countAt);
-      destination ??= document.querySelector('.nav-intro .emblem-menu svg, .nav-intro .nav-brand-logo')?.getBoundingClientRect();
-      const target = destination;
-      const width = dock.getBoundingClientRect().width;
-      const targetWidth = target?.width || 50;
-      const targetX = target ? target.left + target.width / 2 : innerWidth / 2;
-      const targetY = target ? target.top + target.height / 2 : 16 + targetWidth * 263 / 303 / 2;
-      const originY = innerHeight * .46;
+      const width = dockWidth;
+      const originY = vh * .46;
       // Count in the center before moving the assembled mark to navigation.
       const elapsed=Math.max(0,time-countAt);
-      counter.style.left=`${innerWidth/2}px`;
-      counter.style.top=`${originY+width*263/303/2+18}px`;
+      if(!positioned){
+        counter.style.left=`${vw/2}px`;
+        counter.style.top=`${originY+width*263/303/2+18}px`;
+        dock.style.left=`${vw/2}px`;
+        dock.style.top=`${originY}px`;
+        positioned=true;
+      }
       const limit=ready?100:Math.min(95,10+(total?completed/total:0)*80+elapsed/250);
       count=Math.max(count,Math.floor(Math.min(100,stagedCount(elapsed),limit)));
-      digits.textContent=String(count).padStart(3,'0');counter.setAttribute('aria-valuenow',String(count));
-      status.textContent=count===100?'READY;':time>=maxHold?'CONTINUING…':'LOADING'+'.'.repeat(Math.floor(elapsed/240)%4)+'_';
+      const digitText=String(count).padStart(3,'0');
+      if(digitText!==lastDigits){lastDigits=digitText;digits.textContent=digitText;counter.setAttribute('aria-valuenow',String(count))}
+      const statusText=count===100?'READY;':time>=maxHold?'CONTINUING…':'LOADING'+'.'.repeat(Math.floor(elapsed/240)%4)+'_';
+      if(statusText!==lastStatus){lastStatus=statusText;status.textContent=statusText}
       if(count===100&&completeAt===Infinity)completeAt=time;
       const departAt=Math.min(completeAt+180,maxHold);
       const departure=smooth((time-departAt)/departDuration);
       const retract=smooth((time-departAt)/180);
-      dock.style.left=`${innerWidth/2+(targetX-innerWidth/2)*departure}px`;
-      dock.style.top=`${originY}px`;
-      dock.style.transform=`translate(-50%, calc(-50% + ${(targetY-originY)*departure}px))`;
+      // 目標位置只在要出發時讀一次，此時頁面已大致載入完成，也比一開始讀取更準確
+      if(!destinationRead&&time>=departAt){destinationRead=true;destination=document.querySelector('.nav-intro .emblem-menu svg, .nav-intro .nav-brand-logo')?.getBoundingClientRect()}
+      const target = destination;
+      const targetWidth = target?.width || 50;
+      const targetX = target ? target.left + target.width / 2 : vw / 2;
+      const targetY = target ? target.top + target.height / 2 : 16 + targetWidth * 263 / 303 / 2;
+      // 只動 transform，不再改 left，動畫期間不觸發版面計算
+      dock.style.transform=`translate(calc(-50% + ${(targetX-vw/2)*departure}px), calc(-50% + ${(targetY-originY)*departure}px))`;
       svg.style.transform=`scale(${1-(1-targetWidth/width)*departure})`;
       counter.hidden=time<countAt||retract>=1;
       counter.style.opacity=1-retract;

@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 
 const [baseArg, outArg] = process.argv.slice(2);
 if (!baseArg || !outArg) { console.error('用法：node tools/capture-submission-shots.mjs <網址> <輸出資料夾>'); process.exit(2); }
@@ -23,10 +23,11 @@ function findBrowser() {
 
 const port = 9300 + Math.floor(Math.random() * 500);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'intrvl-shots-'));
+const killTree = p => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(p.pid), '/T', '/F']); else p.kill(); } catch { /* 已結束 */ } };
 const browser = spawn(findBrowser(), [`--remote-debugging-port=${port}`, '--headless=new', '--disable-gpu', '--hide-scrollbars', `--user-data-dir=${profile}`, 'about:blank'], { stdio: 'ignore' });
 
 let ws;
-const done = async code => { try { ws?.close(); } catch {} browser.kill(); await sleep(400); try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} process.exit(code); };
+const done = async code => { try { ws?.close(); } catch {} killTree(browser); await sleep(400); try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} process.exit(code); };
 
 try {
   let page;
