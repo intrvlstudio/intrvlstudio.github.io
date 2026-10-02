@@ -21,7 +21,10 @@
 2. 左側 **Build → Authentication → Get started**。
 3. 在 **Sign-in method** 分頁啟用 **Email/Password**。
 4. 在 **Users** 分頁點 **Add user**，為每位工作室成員建立帳號（Email + 密碼）。
-   - 不開放公開註冊，所以只有你手動加入的人能登入。
+   - ⚠️ 光是「手動加人」**不等於**不開放註冊。`apiKey` 是公開的，預設任何人都能直接呼叫
+     Firebase 註冊 API 建立帳號。請務必到 **Authentication → Settings → User actions**，
+     **取消勾選「Enable create (sign-up)」**，這樣才只有你在 Console 加的人能登入。
+     （做法與檢查方式見下方〈帳號安全檢查清單〉。）
 5. **專案設定（齒輪 → Project settings）→ Your apps → 點 `</>` (Web)** 註冊一個 Web App，
    複製 `firebaseConfig` 物件。
 6. 打開 `assets/auth.js`，把 `firebaseConfig` 裡的值換成你複製的設定。
@@ -56,7 +59,7 @@
 | `projects` | 專案內容 | `title`、`desc`（≤500）、`url`（http(s) 或空）、`thumb`（25×25 小圖 data URL）、`kind`（BL/BG/空）、`status`（producing/planning/done）、`year`、`createdAt` |
 | `documents` | 文件下載 | `docType`、`title`、`desc`（≤2000）、`url`、`createdAt` |
 | `apps` | APP | `icon`（方形圖示 data URL）、`name`、`desc`、`usage`（使用說明）、`downloadUrl`、`createdAt` |
-| `staff` | 員工完整檔案（僅管理員可讀寫） | `empNo`、`name`、`alias`、`email`、`status`、`jobTitle`、`mobile`、`address`、`birthday`、`nationalId`、`passport`、`hireDate`、`leaveDate`、`loginPassword`、`note`、`avatar`、`updatedAt` |
+| `staff` | 員工完整檔案（僅管理員可讀寫） | `empNo`、`name`、`alias`、`email`、`status`、`jobTitle`、`mobile`、`address`、`birthday`、`nationalId`、`passport`、`hireDate`、`leaveDate`、`note`、`avatar`、`updatedAt`（**不存任何密碼**，登入密碼只由 Firebase Authentication 管理） |
 | `profiles` | 員工公開小卡（資料卡同步用） | 文件 ID＝員工 email（小寫）；`name`、`alias`、`avatar`、`jobTitle`、`updatedAt`。管理員可寫，員工本人只能讀自己那筆 |
 | `admins` | 管理員名單 | 文件 ID＝管理員的 UID，只能在 Console 手動建立 |
 | `links` | （舊版快速連結，保留相容，目前介面已不使用） | — |
@@ -99,7 +102,29 @@
   與後端規則雙重把關，避免惡意連結被當成可點擊項目。
 - `members.html` 這個檔案本身仍是公開靜態檔，但它現在只剩版面骨架、**不含任何
   機密內容**，所以即使有人看原始碼也拿不到資料。
-- 永遠不要把任何成員密碼寫進這些檔案。
+- 永遠不要把任何成員密碼寫進這些檔案，**也不要存進 Firestore**（`staff` 不再有密碼欄位，
+  規則也會拒絕寫入）。這個 repo 是公開的，推上去的內容會永久留在 git 歷史裡，
+  一旦誤放過密碼，就必須視為外洩並**立刻換掉該密碼**，光是刪檔案沒有用。
+- 成員頁面（`login.html`、`members.html`、`news-admin.html`）因為 GitHub Pages 無法送 HTTP
+  標頭，改用 `<meta>` 設定**內容安全政策（CSP）**與**防嵌入**：
+  限制腳本／連線只能去 Firebase、Google 字體與分析的網域，被放進別人網頁的 iframe 時整頁隱藏。
+  **新增外部資源（CDN、字體、SDK）時，要同步更新這三頁的 CSP 白名單**，
+  並執行 `node tests/security.cjs` 檢查，漏改會直接報出缺哪個網域。
+
+## 帳號安全檢查清單（每季檢查一次）
+
+這些設定**都不在 git 裡**，只能在 Firebase Console 手動確認：
+
+1. **停用公開註冊**：Authentication → Settings → **User actions** → 取消勾選
+   **Enable create (sign-up)** → Save。
+2. **檢查 Users 清單**：Authentication → Users，確認每個帳號都是你認識的人。
+   出現不認識的 Email，代表曾被陌生人註冊，請刪除並檢查 `admins` 名單沒被動過。
+3. **新帳號用隨機長密碼**，不要用「前綴＋編號」這種可預測的格式。員工第一次登入後
+   請他自己改密碼（Users 清單對該帳號可寄出重設密碼信）。
+4. **管理員與所有員工帳號都換成強密碼**；管理員的 Google／GitHub／Firebase 帳號開啟兩步驟驗證。
+5. **Authorized domains**：Authentication → Settings 只留 `localhost`、`intrvl-studio.firebaseapp.com`、
+   `intrvl-studio.web.app`、`intrvlstudio.github.io`，有不認識的網域就移除。
+6. **Firestore 規則是否為最新**：Console → Rules 的內容要和 `firestore.rules` 一致。
 
 ## 員工表單
 
