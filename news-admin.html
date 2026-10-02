@@ -4,7 +4,14 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg?v=20260924" sizes="any">
 <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png?v=20260924" sizes="180x180">
 <link rel="manifest" href="assets/favicon/site.webmanifest?v=20260924">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>官網活動消息 — 之間工作室</title><link rel="stylesheet" href="assets/news-admin.css?v=20260924-sharp"><link rel="stylesheet" href="assets/ui-corners.css?v=20260924-sharp"></head>
+<meta charset="utf-8">
+<!-- 安全防護（GitHub Pages 無法送 HTTP 標頭，改用 meta）：
+     1) CSP：限制腳本/連線/表單可去的網域，被注入的程式碼也傳不出資料
+     2) 防嵌入：被放進別人網頁的 iframe 時整頁隱藏，避免點擊劫持
+     新增外部資源（字體、SDK、分析等）時，要同步更新下方網域白名單。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://www.google.com; media-src 'self' data: blob:; connect-src 'self' https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://www.google.com; frame-src 'self' https://intrvl-studio.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<style id="frame-guard">html{display:none!important}</style>
+<script>if(self===top){var g=document.getElementById('frame-guard');g.parentNode.removeChild(g)}else{try{top.location=self.location}catch(e){}}</script><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>官網活動消息 — 之間工作室</title><link rel="stylesheet" href="assets/news-admin.css?v=20260924-sharp"><link rel="stylesheet" href="assets/ui-corners.css?v=20260924-sharp"></head>
 <body><header><a href="members.html">← 員工後臺</a><img src="assets/update-20260924/intrvl-logo-horizontal-zh-orange-white.png" alt="之間工作室"><span>官網活動消息</span></header><main>
 <p id="auth-status" role="status">正在確認管理員權限…</p><a id="login-link" href="login.html" hidden>登入員工帳號</a>
 <section id="editor" hidden><h1>發佈活動與近況</h1><p>發佈後將顯示於官網，請填寫可公開的內容。</p>

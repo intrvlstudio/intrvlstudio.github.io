@@ -8,7 +8,10 @@
    2. 左側 Build → Authentication → 點「Get started」
         → Sign-in method 分頁 → 啟用「Email/Password」
    3. Users 分頁 → 「Add user」，手動為每位工作室成員建立帳號
-        （Email + 密碼）。不開放公開註冊 = 只有你加的人能登入。
+        （Email + 密碼）。
+        ⚠️ 還要到 Authentication → Settings → User actions，
+        取消勾選「Enable create (sign-up)」，否則任何人都能用公開的
+        apiKey 自行註冊帳號，通過「已登入」這道門檻去讀成員內容。
    4. 專案設定（齒輪圖示 → Project settings）→ 往下到「Your apps」
         → 點 </> (Web) 註冊一個 Web App → 複製 firebaseConfig
         貼到下方取代占位字串。
@@ -44,6 +47,7 @@ import {
   setDoc,
   deleteDoc,
   updateDoc,
+  deleteField,
   query,
   orderBy,
   serverTimestamp
@@ -114,6 +118,7 @@ export {
   setDoc,
   deleteDoc,
   updateDoc,
+  deleteField,
   query,
   orderBy,
   serverTimestamp,
