@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -36,10 +36,11 @@ const base = `http://127.0.0.1:${server.address().port}/`;
 
 const port = 9300 + Math.floor(Math.random() * 500);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'intrvl-motion-'));
+const killTree = p => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(p.pid), '/T', '/F']); else p.kill(); } catch { /* 已結束 */ } };
 const browser = spawn(findBrowser(), [`--remote-debugging-port=${port}`, '--headless=new', '--disable-gpu', '--mute-audio', `--user-data-dir=${profile}`, 'about:blank'], { stdio: 'ignore' });
 
 let ws;
-const cleanup = async () => { try { ws?.close(); } catch {} browser.kill(); server.close(); await sleep(400); try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} };
+const cleanup = async () => { try { ws?.close(); } catch {} killTree(browser); server.close(); await sleep(400); try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} };
 
 try {
   let page;
