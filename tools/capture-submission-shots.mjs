@@ -23,11 +23,26 @@ function findBrowser() {
 
 const port = 9300 + Math.floor(Math.random() * 500);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'intrvl-shots-'));
-const killTree = p => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(p.pid), '/T', '/F']); else p.kill(); } catch { /* 已結束 */ } };
+// Windows 的 Edge 會先啟動一個「啟動器」行程，再由它啟動真正的瀏覽器後結束，所以 spawn 回傳的 pid 殺不到瀏覽器。
+// 正確做法：用除錯協定的 Browser.close 讓瀏覽器自己結束，再依 user-data-dir 兜底清掉殘留的行程。
+async function shutdownBrowser(child, port, profile) {
+  try {
+    const info = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
+    const w = new WebSocket(info.webSocketDebuggerUrl);
+    await new Promise(r => { w.addEventListener('open', () => { w.send(JSON.stringify({ id: 1, method: 'Browser.close' })); r(); }); w.addEventListener('error', r); });
+    await sleep(800);
+  } catch { /* 瀏覽器已經結束 */ }
+  try {
+    if (process.platform === 'win32') {
+      const dir = profile.replace(/'/g, "''");
+      spawnSync('powershell', ['-NoProfile', '-Command', `Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -and $_.CommandLine.Contains('${dir}') } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }`]);
+    } else child.kill();
+  } catch { /* 忽略 */ }
+}
 const browser = spawn(findBrowser(), [`--remote-debugging-port=${port}`, '--headless=new', '--disable-gpu', '--hide-scrollbars', `--user-data-dir=${profile}`, 'about:blank'], { stdio: 'ignore' });
 
 let ws;
-const done = async code => { try { ws?.close(); } catch {} killTree(browser); await sleep(400); try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} process.exit(code); };
+const done = async code => { try { ws?.close(); } catch {} await shutdownBrowser(browser, port, profile); await sleep(400); try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} process.exit(code); };
 
 try {
   let page;
