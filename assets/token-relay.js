@@ -6,7 +6,10 @@
   const REDEEM = 'https://lin.ee/jkrRSV8C/wttw';
   const IG = 'https://www.instagram.com/intrvl_studio/', WEBTOON_IG = 'https://www.instagram.com/linewebtoontw/';
   const WEEK = { zh: '日一二三四五六', en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], ko: '일월화수목금토' };
-  const t = (zh, en, ko) => `<span class="lang-zh">${zh}</span><span class="lang-en">${en}</span><span class="lang-ko">${ko}</span>`;
+  /* 每個首頁網址只含單一語言（見 assets/home-language.js）：只輸出 <html lang> 對應的那一種，不再塞三語後靠 CSS 隱藏 */
+  const LOCALE = { 'zh-TW': 'zh', en: 'en', ko: 'ko' }[document.documentElement.lang] || 'zh';
+  const pick = (zh, en, ko) => ({ zh, en, ko })[LOCALE];
+  const t = (zh, en, ko) => `<span class="lang-${LOCALE}">${pick(zh, en, ko)}</span>`;
   const at = date => new Date(`${date}T${TIME}:00+08:00`);
   const stamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const gcal = date => {
@@ -40,7 +43,7 @@
     const card = document.createElement('article');
     card.className = 'relay-card';
     card.id = 'token-relay';
-    card.setAttribute('aria-label', '台漫搶代幣接力賽');
+    card.setAttribute('aria-label', pick('台漫搶代幣接力賽', 'Taiwan Comics Token Relay', '대만 만화 코인 릴레이'));
     card.innerHTML = `
       <p class="relay-tag">${t('置頂活動', 'PINNED EVENT', '고정 이벤트')}　LINE WEBTOON × INTRVL</p>
       <h4>${t('台漫搶代幣接力賽', 'Taiwan Comics Token Relay', '대만 만화 코인 릴레이')}</h4>
