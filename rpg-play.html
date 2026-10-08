@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fff8f2">
+<title>Be My Portfolio RPG Game Official</title>
+<link rel="canonical" href="https://intrvlstudio.github.io/be-my-portfolio-rpg/">
+<link rel="icon" href="/assets/favicon/favicon.ico?v=20260924" sizes="16x16 32x32 48x48">
+<style>html,body{margin:0;height:100%;background:#fff8f2;overflow:hidden}</style>
+</head>
+<body>
+<!-- Portrait phones are sent here by be-my-portfolio-rpg/. The game runs in an iframe that is turned 90deg. -->
+<script src="/assets/rpg-entry.js?v=20261006-official"></script>
+<script>
+(function () {
+  var game = new URL('be-my-portfolio-rpg/' + location.search + location.hash, location.href);
+  if (game.searchParams.get('rotate') === '0') { location.replace(game.href); return; }
+  history.replaceState(null, '', game.pathname + game.search + game.hash);
+  RPGEntryOpen(game, { standalone: true });
+})();
+</script>
+<noscript><p style="font:16px sans-serif;padding:24px"><a href="/be-my-portfolio-rpg/">開啟遊戲</a></p></noscript>
+</body>
+</html>

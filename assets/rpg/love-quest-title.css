@@ -1,0 +1,59 @@
+/* A campaign skin scoped to the introduction; gameplay retains its own palette. */
+body[data-screen="titleScreen"]{--ink:#51315f;--ink-soft:#775681;--blush:#ff91b8;--panel:#fffbed;--marker:#ffeb78;background:radial-gradient(ellipse at 100% 2%,#ace7d2 0 21%,transparent 21.1%),radial-gradient(ellipse at 0 100%,#bca5ed 0 22%,transparent 22.1%),repeating-linear-gradient(0deg,transparent 0 38px,#fff6 39px 40px),repeating-linear-gradient(90deg,transparent 0 38px,#fff6 39px 40px),#ffdbeb;color:#51315f;color-scheme:light}
+body[data-screen="titleScreen"] main{max-width:1440px;background:transparent;border:0;box-shadow:none;padding:max(18px,env(safe-area-inset-top)) max(26px,env(safe-area-inset-right)) max(22px,env(safe-area-inset-bottom)) max(22px,env(safe-area-inset-left))}
+body[data-screen="titleScreen"] #titleScreen{gap:clamp(20px,4vw,64px);grid-template-columns:minmax(0,1.28fr) minmax(0,1fr);overflow:visible}
+#titleScreen .title-art{position:relative;height:auto;max-height:100%;aspect-ratio:4/3;border:3px solid #51315f;border-radius:18px!important;box-shadow:7px 8px 0 #51315f;background:#bca5ed;padding:42px 10px 10px;overflow:hidden}
+#titleScreen .title-art::before{content:'LOVE QUEST.exe'!important;display:block!important;position:absolute;top:7px;left:10px;right:10px;height:27px;border:2px solid #51315f;border-radius:8px;background:#fffbed;color:#51315f;font:16px/23px PixelRPG,monospace;padding-left:10px;text-align:left}
+#titleScreen .title-art::after{content:'';position:absolute;right:53px;top:17px;width:9px;height:9px;background:#ff91b8;border:1px solid #51315f;box-shadow:15px 0 0 #ffeb78,30px 0 0 #ace7d2}
+#titleScreen .title-art img{border-radius:7px;object-fit:contain;background:#fffbed}
+#titleScreen .title-copy{position:relative;gap:14px;background:#fffbed;border:3px solid #51315f;border-radius:18px!important;padding:26px;box-shadow:7px 8px 0 #51315f;color:#51315f}
+#titleScreen .quest-eyebrow{font:12px/1.4 PixelRPG,monospace;letter-spacing:2px;color:#775681}
+#titleScreen .quest-heading{font:clamp(28px,3.4vw,48px)/1.15 PixelRPG,'Microsoft JhengHei',sans-serif;letter-spacing:1px;color:#51315f;margin:0}
+#titleScreen .quest-heading span{display:block;margin-top:4px;color:#b34573;font-size:.74em}
+#titleScreen #introDescription{font-size:clamp(13px,1.3vw,17px);line-height:1.5;color:#51315f}
+#titleScreen .actions{gap:10px}
+#titleScreen #start{background:#ffeb78!important;color:#51315f!important;border:2px solid #51315f!important;border-radius:10px!important;box-shadow:3px 4px 0 #51315f;font-family:PixelRPG,'Microsoft JhengHei',sans-serif;min-height:52px;font-size:20px}
+#titleScreen #continue{background:#ace7d2;color:#51315f;border:2px solid #51315f;border-radius:10px!important}
+#titleScreen .intro-tools{gap:8px;justify-content:space-between}
+#titleScreen .intro-tools button.ui-icon-only{display:flex;flex:1;flex-direction:column;gap:5px;width:auto;height:auto;min-height:62px;padding:7px 2px!important;color:#51315f!important;background:#f0e8ff!important;border:2px solid #51315f!important;border-radius:10px!important;box-shadow:2px 3px 0 #51315f;font-size:0}
+#titleScreen .intro-tools button::after{content:none!important}
+#titleScreen .intro-tools button::before{position:static!important;transform:none!important;margin:0!important;width:24px;height:24px;flex:none}
+#titleScreen .intro-tools button.ui-icon-only{display:flex!important;align-items:center;justify-content:center;flex-direction:row;min-height:44px;height:44px!important;gap:7px}
+#titleScreen .intro-audio{align-items:center;gap:12px;color:#51315f}
+#titleScreen #introMusic{background:#ffdbeb!important;color:#51315f!important;border:2px solid #51315f!important;border-radius:9px!important;min-width:44px;min-height:44px}
+#titleScreen .intro-audio label{position:static;width:auto;height:auto;clip-path:none;overflow:visible;font-size:12px;white-space:nowrap}
+#titleScreen .intro-audio input{flex:1;min-width:36px;width:90px;accent-color:#b34573}
+#titleScreen #versionNote,#titleScreen #resumeSummary{color:#775681;opacity:1}
+#titleScreen button:focus-visible{outline:3px solid #b34573;outline-offset:4px}
+@media(orientation:landscape) and (max-height:600px){
+ body[data-screen="titleScreen"] main{padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(14px,env(safe-area-inset-bottom))}
+ body[data-screen="titleScreen"] #titleScreen{gap:20px;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+ #titleScreen .title-art{height:auto;aspect-ratio:4/3}
+ #titleScreen .title-copy{gap:8px;padding:14px 18px}
+ #titleScreen .quest-eyebrow{font-size:10px}
+ #titleScreen .quest-heading{font-size:28px}
+ #titleScreen .quest-heading span{display:inline;margin-left:8px;font-size:20px}
+ #titleScreen #introDescription{font-size:13px}
+ #titleScreen #start{min-height:44px;font-size:17px}
+ #titleScreen .intro-tools button.ui-icon-only{min-height:44px;flex-direction:row;gap:4px}
+ #titleScreen .intro-tools button::before{width:19px;height:19px}
+ #titleScreen #versionNote{font-size:10px}
+}
+@media(orientation:portrait){
+ body[data-screen="titleScreen"] main{padding:16px 20px 22px}
+ body[data-screen="titleScreen"] #titleScreen{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:18px;max-width:540px}
+ #titleScreen .title-art{height:100%;aspect-ratio:auto;min-height:0;padding-top:38px}
+ #titleScreen .title-copy{padding:16px 18px;gap:9px}
+ #titleScreen .quest-heading{font-size:30px}
+ #titleScreen .quest-heading span{display:inline;margin-left:10px;font-size:23px}
+ #titleScreen .quest-eyebrow{font-size:10px}
+ #titleScreen .intro-tools button.ui-icon-only{min-height:48px;flex-direction:row}
+ #titleScreen .intro-tools button::before{width:20px;height:20px}
+}
+@media(max-height:360px) and (orientation:landscape){
+ #titleScreen .quest-eyebrow{display:none}
+ #titleScreen .title-copy{gap:5px;padding:10px 12px}
+ #titleScreen .quest-heading{font-size:23px}
+ #titleScreen .quest-heading span{font-size:18px}
+ #titleScreen #introDescription{font-size:12px}
+}

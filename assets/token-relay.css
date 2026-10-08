@@ -1,0 +1,32 @@
+/* 布告欄置頂活動卡（assets/token-relay.js） */
+.news-layout .relay-card{margin:0 0 26px;padding:22px;border:1px solid #ff9142;border-radius:4px;background:linear-gradient(135deg,#2b2119,#202020 60%);font-size:15px}
+.news-layout .relay-tag{margin:0;font-size:11px;letter-spacing:.14em;color:#ff9142}
+.news-layout .relay-card h4{font:800 24px/1.4 Manrope,'Noto Sans TC',system-ui,sans-serif;color:#fff;margin:6px 0 4px;letter-spacing:0}
+.news-layout .relay-period{margin:0 0 16px;color:#bbb;font-size:13px}
+.news-layout .relay-next{margin:0 0 14px;color:#ddd;font-size:14px}
+.news-layout .relay-next strong{display:block;font-size:20px;color:#ffb67f;font-weight:800}
+.news-layout .relay-cta{margin:0 0 18px}
+.news-layout .relay-card a.relay-all{display:inline-block;padding:12px 20px;border-radius:999px;background:#ff9142;color:#191919;font-weight:800;text-decoration:none;font-size:15px}
+.news-layout .relay-card a.relay-all:hover,.news-layout .relay-card a.relay-all:focus-visible{background:#ffb67f}
+.news-layout .relay-cta small{display:block;margin-top:8px;color:#aaa;font-size:12px}
+.news-layout .relay-list{list-style:none;margin:0 0 16px;padding:0;border-top:1px solid #444}
+.news-layout .relay-list li{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #444}
+.news-layout .relay-list li.is-next{background:#ff91421a;margin:0 -10px;padding:10px}
+.news-layout .relay-list li.is-past{opacity:.45}
+.news-layout .relay-day{font:700 11px/1 ui-monospace,monospace;color:#191919;background:#ff9142;border-radius:3px;padding:4px 6px}
+.news-layout .relay-list li.is-past .relay-day{background:#777}
+.news-layout .relay-time small{margin-left:6px;font:11px Manrope,'Noto Sans TC',sans-serif;color:#aaa}
+.news-layout .relay-date{font-weight:800;color:#fff;min-width:88px}
+.news-layout .relay-date small{font-weight:400;color:#aaa;font-size:12px}
+.news-layout .relay-time{font:13px ui-monospace,monospace;color:#ffb67f}
+.news-layout .relay-add{margin-left:auto;display:flex;gap:6px}
+.news-layout .relay-card .relay-add a{padding:5px 10px;border:1px solid #666;border-radius:4px;color:#ddd;text-decoration:none;font-size:12px}
+.news-layout .relay-card .relay-add a:hover,.news-layout .relay-card .relay-add a:focus-visible{border-color:#ff9142;color:#ff9142}
+.news-layout .relay-done{margin-left:auto;font-size:12px;color:#aaa}
+.news-layout .relay-rules{margin:0 0 12px}
+.news-layout .relay-rules summary{cursor:pointer;color:#ffb67f;font-weight:700;padding:4px 0}
+.news-layout .relay-rules h5{margin:14px 0 4px;font-size:15px;color:#fff}
+.news-layout .relay-rules p{margin:0;color:#ccc;line-height:1.8;font-size:14px}
+.news-layout .relay-links{display:flex;gap:18px;flex-wrap:wrap;margin:0;font-size:13px}
+@media(max-width:760px){.news-layout .relay-card{padding:18px 14px}.news-layout .relay-add{margin-left:0;width:100%}.news-layout .relay-card .relay-add a{flex:1;text-align:center;padding:12px 10px}.news-layout .relay-card a.relay-all{display:block;text-align:center}}
+.news-layout .relay-hint{margin:-6px 0 14px;font-size:12px;line-height:1.6;color:#999}

@@ -1,0 +1,554 @@
+{
+  "version": "public-20261008",
+  "works": [
+    {
+      "id": "steal",
+      "title": "扒進你心裡",
+      "year": "2026",
+      "setting": "跨國相遇 / 浪漫喜劇",
+      "synopsis": "習慣在街頭遊走的扒手修，遇上做事一板一眼的嚴凱文。一個擅長逃跑，一個認定目標就不放手；截然不同的兩人，讓追逐逐漸變成一場跨國戀愛。",
+      "read": "https://www.webtoons.com/zh-hant/bl-gl/stealyourheart/list?title_no=10934",
+      "cover": {
+        "id": "steal-cover",
+        "label": "正式封面",
+        "role": "cover",
+        "thumb": "/assets/work-edition-20261008/steal-cover-348399230289-thumb.webp",
+        "screen": "/assets/work-edition-20261008/steal-cover-348399230289-screen.webp",
+        "full": "/assets/work-edition-20261008/steal-cover-348399230289-full.webp",
+        "width": 1067,
+        "height": 1600,
+        "fullBytes": 190034
+      },
+      "hero": {
+        "id": "steal-hero",
+        "label": "主視覺・本次選用",
+        "role": "hero",
+        "thumb": "/assets/work-edition-20261008/steal-hero-e99ed41b3dc9-thumb.webp",
+        "screen": "/assets/work-edition-20261008/steal-hero-e99ed41b3dc9-screen.webp",
+        "full": "/assets/work-edition-20261008/steal-hero-e99ed41b3dc9-full.webp",
+        "width": 900,
+        "height": 1600,
+        "fullBytes": 833814
+      },
+      "characters": [
+        {
+          "name": "修・沃爾佩",
+          "description": "看似輕浮、內心柔軟的扒手。喜歡餵流浪貓，也擅長觀察陌生人；自由自在的生活，遇上了難以甩開的凱文。",
+          "art": {
+            "id": "steal-character-0",
+            "label": "修・沃爾佩・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/steal-character-0-eefaea9737f3-thumb.webp",
+            "screen": "/assets/work-edition-20261008/steal-character-0-eefaea9737f3-screen.webp",
+            "full": "/assets/work-edition-20261008/steal-character-0-eefaea9737f3-full.webp",
+            "width": 397,
+            "height": 1200,
+            "fullBytes": 134012
+          }
+        },
+        {
+          "name": "嚴凱文",
+          "description": "重視秩序與執行的富家子弟。習慣精準安排生活，一旦認定目標，就會用自己的方式全力以赴。",
+          "art": {
+            "id": "steal-character-1",
+            "label": "嚴凱文・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/steal-character-1-15ed00d21793-thumb.webp",
+            "screen": "/assets/work-edition-20261008/steal-character-1-15ed00d21793-screen.webp",
+            "full": "/assets/work-edition-20261008/steal-character-1-15ed00d21793-full.webp",
+            "width": 354,
+            "height": 1200,
+            "fullBytes": 77976
+          }
+        }
+      ],
+      "gallery": [
+        {
+          "id": "steal-comic-ep1",
+          "label": "第 1 話節選・初次靠近",
+          "role": "comic",
+          "thumb": "/assets/work-edition-20261008/steal-comic-ep1-93ea5fa28c92-thumb.webp",
+          "screen": "/assets/work-edition-20261008/steal-comic-ep1-93ea5fa28c92-screen.webp",
+          "full": "/assets/work-edition-20261008/steal-comic-ep1-93ea5fa28c92-full.webp",
+          "width": 690,
+          "height": 1140,
+          "fullBytes": 102538
+        },
+        {
+          "id": "steal-comic-ep2",
+          "label": "第 2 話節選・再次碰面",
+          "role": "comic",
+          "thumb": "/assets/work-edition-20261008/steal-comic-ep2-fd537216ed14-thumb.webp",
+          "screen": "/assets/work-edition-20261008/steal-comic-ep2-fd537216ed14-screen.webp",
+          "full": "/assets/work-edition-20261008/steal-comic-ep2-fd537216ed14-full.webp",
+          "width": 690,
+          "height": 1160,
+          "fullBytes": 74550
+        },
+        {
+          "id": "steal-comic-ep3",
+          "label": "第 3 話節選・在戀愛之前",
+          "role": "comic",
+          "thumb": "/assets/work-edition-20261008/steal-comic-ep3-319cde4b8b53-thumb.webp",
+          "screen": "/assets/work-edition-20261008/steal-comic-ep3-319cde4b8b53-screen.webp",
+          "full": "/assets/work-edition-20261008/steal-comic-ep3-319cde4b8b53-full.webp",
+          "width": 690,
+          "height": 1450,
+          "fullBytes": 121470
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "外送夥伴即將抵達",
+      "year": "2025",
+      "setting": "台北 / 外送日常 / 校園浪漫",
+      "synopsis": "一筆深夜外送訂單，讓曾煒舟闖進洪佑謹混亂的感情生活。外送學弟與跳舞學長，從一場意外相遇開始，在台北的日常裡慢慢靠近彼此。",
+      "read": "https://www.webtoons.com/zh-hant/romance/your-dielivery-is-almost-there/list?title_no=8064",
+      "buy": "https://www.kadokawa.com.tw/products/9786264456784",
+      "cover": {
+        "id": "delivery-cover",
+        "label": "正式封面",
+        "role": "cover",
+        "thumb": "/assets/work-edition-20261008/delivery-cover-800dc95673f4-thumb.webp",
+        "screen": "/assets/work-edition-20261008/delivery-cover-800dc95673f4-screen.webp",
+        "full": "/assets/work-edition-20261008/delivery-cover-800dc95673f4-full.webp",
+        "width": 1067,
+        "height": 1600,
+        "fullBytes": 631464
+      },
+      "hero": {
+        "id": "delivery-hero",
+        "label": "主視覺・本次選用",
+        "role": "hero",
+        "thumb": "/assets/work-edition-20261008/delivery-hero-c12c4b52a835-thumb.webp",
+        "screen": "/assets/work-edition-20261008/delivery-hero-c12c4b52a835-screen.webp",
+        "full": "/assets/work-edition-20261008/delivery-hero-c12c4b52a835-full.webp",
+        "width": 1080,
+        "height": 1080,
+        "fullBytes": 253618
+      },
+      "characters": [
+        {
+          "name": "洪佑謹",
+          "description": "22 歲的影片創作者，使用「匿名海豹」的身分。低調內斂，重視自己的風格，受傷時卻不總是說出口。",
+          "art": {
+            "id": "delivery-character-0",
+            "label": "洪佑謹・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/delivery-character-0-678b8264cae4-thumb.webp",
+            "screen": "/assets/work-edition-20261008/delivery-character-0-678b8264cae4-screen.webp",
+            "full": "/assets/work-edition-20261008/delivery-character-0-678b8264cae4-full.webp",
+            "width": 348,
+            "height": 1200,
+            "fullBytes": 175774
+          }
+        },
+        {
+          "name": "曾煒舟",
+          "description": "21 歲的學生與外送夥伴。熱情、善於溝通，也很會照顧人；總忍不住把別人的心情放在自己前面。",
+          "art": {
+            "id": "delivery-character-1",
+            "label": "曾煒舟・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/delivery-character-1-127dcc6333d7-thumb.webp",
+            "screen": "/assets/work-edition-20261008/delivery-character-1-127dcc6333d7-screen.webp",
+            "full": "/assets/work-edition-20261008/delivery-character-1-127dcc6333d7-full.webp",
+            "width": 352,
+            "height": 1200,
+            "fullBytes": 110922
+          }
+        }
+      ],
+      "gallery": [
+        {
+          "id": "delivery-gallery-0",
+          "label": "延伸視覺 01・KaMi Cafe 獨立主題",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/delivery-gallery-0-650e7d97d817-thumb.webp",
+          "screen": "/assets/work-edition-20261008/delivery-gallery-0-650e7d97d817-screen.webp",
+          "full": "/assets/work-edition-20261008/delivery-gallery-0-650e7d97d817-full.webp",
+          "width": 1274,
+          "height": 1600,
+          "fullBytes": 342770
+        },
+        {
+          "id": "delivery-gallery-1",
+          "label": "延伸視覺 02・KV6",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/delivery-gallery-1-939e50915bef-thumb.webp",
+          "screen": "/assets/work-edition-20261008/delivery-gallery-1-939e50915bef-screen.webp",
+          "full": "/assets/work-edition-20261008/delivery-gallery-1-939e50915bef-full.webp",
+          "width": 900,
+          "height": 1600,
+          "fullBytes": 571746
+        }
+      ],
+      "book": {
+        "publisher": "台灣角川",
+        "edition": "第 1 集",
+        "caption": "第 1 集書影",
+        "copy": "把相遇，收藏進書架。",
+        "art": {
+          "id": "delivery-book",
+          "label": "第 1 集・實體書去背圖",
+          "role": "book",
+          "thumb": "/assets/work-books-20261008/delivery-ddfa8886f690-thumb.webp",
+          "screen": "/assets/work-books-20261008/delivery-ddfa8886f690-screen.webp",
+          "full": "/assets/work-books-20261008/delivery-ddfa8886f690-full.webp",
+          "width": 1081,
+          "height": 1455,
+          "fullBytes": 159914
+        }
+      }
+    },
+    {
+      "id": "roommate",
+      "title": "我的室友帥哥學長",
+      "year": "2021",
+      "setting": "大學生活 / 同居 / 青春戀愛",
+      "synopsis": "考上理想大學的林子云，帶著成為學霸系草的夢想北上租屋，卻發現室友是個搶盡風頭的帥哥學長。原本想像中的大學生活，從同住的第一天開始偏離計畫。",
+      "read": "https://www.webtoons.com/zh-hant/bl-gl/myroommatesenior-full-length/list?title_no=6149",
+      "buy": "https://www.kadokawa.com.tw/products/myroommateisadropdeadgorgeoussenior",
+      "cover": {
+        "id": "roommate-cover",
+        "label": "正式封面",
+        "role": "cover",
+        "thumb": "/assets/work-edition-20261008/roommate-cover-bf7d0d4eb422-thumb.webp",
+        "screen": "/assets/work-edition-20261008/roommate-cover-bf7d0d4eb422-screen.webp",
+        "full": "/assets/work-edition-20261008/roommate-cover-bf7d0d4eb422-full.webp",
+        "width": 1067,
+        "height": 1600,
+        "fullBytes": 563496
+      },
+      "hero": {
+        "id": "roommate-hero",
+        "label": "主視覺・本次選用",
+        "role": "hero",
+        "thumb": "/assets/work-edition-20261008/roommate-hero-2682ece085a4-thumb.webp",
+        "screen": "/assets/work-edition-20261008/roommate-hero-2682ece085a4-screen.webp",
+        "full": "/assets/work-edition-20261008/roommate-hero-2682ece085a4-full.webp",
+        "width": 1080,
+        "height": 1080,
+        "fullBytes": 232646
+      },
+      "pair": {
+        "id": "roommate-pair",
+        "label": "雙人全身立繪",
+        "role": "character",
+        "thumb": "/assets/work-edition-20261008/roommate-pair-a6a26c3bcc11-thumb.webp",
+        "screen": "/assets/work-edition-20261008/roommate-pair-a6a26c3bcc11-screen.webp",
+        "full": "/assets/work-edition-20261008/roommate-pair-a6a26c3bcc11-full.webp",
+        "width": 690,
+        "height": 1200,
+        "fullBytes": 216060
+      },
+      "characters": [
+        {
+          "name": "林子云",
+          "description": "懷抱大學夢想、北上租屋的新生。自信迎接新生活，卻先迎來了一位意料之外的帥哥室友。"
+        },
+        {
+          "name": "吳均廷",
+          "description": "與林子云同住的帥哥學長。兩人的相遇，成為這段校園戀愛的起點。"
+        }
+      ],
+      "gallery": [
+        {
+          "id": "roommate-gallery-0",
+          "label": "延伸視覺 01",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/roommate-gallery-0-4f2e29b58615-thumb.webp",
+          "screen": "/assets/work-edition-20261008/roommate-gallery-0-4f2e29b58615-screen.webp",
+          "full": "/assets/work-edition-20261008/roommate-gallery-0-4f2e29b58615-full.webp",
+          "width": 1135,
+          "height": 1600,
+          "fullBytes": 165974
+        }
+      ],
+      "book": {
+        "publisher": "台灣角川",
+        "edition": "全 6 集・已完結",
+        "caption": "第 6 集書影",
+        "copy": "從第一眼，到最後一頁。",
+        "art": {
+          "id": "roommate-book",
+          "label": "第 6 集・實體書去背圖",
+          "role": "book",
+          "thumb": "/assets/work-books-20261008/roommate-766fb813835f-thumb.webp",
+          "screen": "/assets/work-books-20261008/roommate-766fb813835f-screen.webp",
+          "full": "/assets/work-books-20261008/roommate-766fb813835f-full.webp",
+          "width": 1081,
+          "height": 1455,
+          "fullBytes": 210556
+        }
+      }
+    },
+    {
+      "id": "pry",
+      "title": "窺 PRY",
+      "year": "2023",
+      "setting": "都市 / 藝術圈 / 懸疑情感",
+      "synopsis": "視線越過距離，秘密藏在日常裡。李駿銘與袁振弘的相遇，牽動了藝術圈、舊識與彼此難以言說的過往；靠近一個人，也意味著踏進他的秘密。",
+      "read": "https://www.webtoons.com/zh-hant/romance/pry/list?title_no=5558",
+      "cover": {
+        "id": "pry-cover",
+        "label": "正式封面",
+        "role": "cover",
+        "thumb": "/assets/work-edition-20261008/pry-cover-2f9f6fc8c084-thumb.webp",
+        "screen": "/assets/work-edition-20261008/pry-cover-2f9f6fc8c084-screen.webp",
+        "full": "/assets/work-edition-20261008/pry-cover-2f9f6fc8c084-full.webp",
+        "width": 1067,
+        "height": 1600,
+        "fullBytes": 717856
+      },
+      "hero": {
+        "id": "pry-hero",
+        "label": "主視覺・本次選用",
+        "role": "hero",
+        "thumb": "/assets/work-edition-20261008/pry-hero-8c0ae90e8f54-thumb.webp",
+        "screen": "/assets/work-edition-20261008/pry-hero-8c0ae90e8f54-screen.webp",
+        "full": "/assets/work-edition-20261008/pry-hero-8c0ae90e8f54-full.webp",
+        "width": 900,
+        "height": 1600,
+        "fullBytes": 712784
+      },
+      "characters": [
+        {
+          "name": "李駿銘",
+          "description": "45 歲，銀白髮與紫色眼睛是他的鮮明印象。沉著的外表之下，藏著與過往緊密相連的情感。",
+          "art": {
+            "id": "pry-character-0",
+            "label": "李駿銘・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/pry-character-0-6a7e86a595ff-thumb.webp",
+            "screen": "/assets/work-edition-20261008/pry-character-0-6a7e86a595ff-screen.webp",
+            "full": "/assets/work-edition-20261008/pry-character-0-6a7e86a595ff-full.webp",
+            "width": 377,
+            "height": 1200,
+            "fullBytes": 92638
+          }
+        },
+        {
+          "name": "袁振弘",
+          "description": "25 歲，與李駿銘交會的另一位主角。他的人際關係連結著藝術圈與何奎平，也牽動故事中的秘密。",
+          "art": {
+            "id": "pry-character-1",
+            "label": "袁振弘・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/pry-character-1-08822e8936b8-thumb.webp",
+            "screen": "/assets/work-edition-20261008/pry-character-1-08822e8936b8-screen.webp",
+            "full": "/assets/work-edition-20261008/pry-character-1-08822e8936b8-full.webp",
+            "width": 416,
+            "height": 1200,
+            "fullBytes": 249650
+          }
+        }
+      ],
+      "gallery": [
+        {
+          "id": "pry-gallery-0",
+          "label": "延伸視覺 01・KV1 EN",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/pry-gallery-0-9025afbd9e89-thumb.webp",
+          "screen": "/assets/work-edition-20261008/pry-gallery-0-9025afbd9e89-screen.webp",
+          "full": "/assets/work-edition-20261008/pry-gallery-0-9025afbd9e89-full.webp",
+          "width": 1131,
+          "height": 1600,
+          "fullBytes": 1172452
+        },
+        {
+          "id": "pry-gallery-1",
+          "label": "延伸視覺 02",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/pry-gallery-1-4444ee69bfb0-thumb.webp",
+          "screen": "/assets/work-edition-20261008/pry-gallery-1-4444ee69bfb0-screen.webp",
+          "full": "/assets/work-edition-20261008/pry-gallery-1-4444ee69bfb0-full.webp",
+          "width": 1080,
+          "height": 1080,
+          "fullBytes": 291166
+        }
+      ]
+    },
+    {
+      "id": "kill",
+      "title": "就要弄死你",
+      "year": "2024",
+      "setting": "傭兵 / 動作 / 危險關係",
+      "synopsis": "代號「小偷」與「強盜」的兩名傭兵，脾氣、手段與行事方式都互不相讓。任務把他們綁在一起，衝突卻讓關係越纏越深。",
+      "read": "https://www.webtoons.com/zh-hant/bl-gl/robberandthief-r18/list?title_no=7704",
+      "buy": "https://www.kadokawa.com.tw/products/9786264353342",
+      "cover": {
+        "id": "kill-cover",
+        "label": "正式封面",
+        "role": "cover",
+        "thumb": "/assets/work-edition-20261008/kill-cover-d4c02153bc8a-thumb.webp",
+        "screen": "/assets/work-edition-20261008/kill-cover-d4c02153bc8a-screen.webp",
+        "full": "/assets/work-edition-20261008/kill-cover-d4c02153bc8a-full.webp",
+        "width": 1067,
+        "height": 1600,
+        "fullBytes": 485824
+      },
+      "hero": {
+        "id": "kill-hero",
+        "label": "主視覺・本次選用",
+        "role": "hero",
+        "thumb": "/assets/work-edition-20261008/kill-hero-f40c160103db-thumb.webp",
+        "screen": "/assets/work-edition-20261008/kill-hero-f40c160103db-screen.webp",
+        "full": "/assets/work-edition-20261008/kill-hero-f40c160103db-full.webp",
+        "width": 1600,
+        "height": 900,
+        "fullBytes": 402152
+      },
+      "characters": [
+        {
+          "name": "小偷 Thief",
+          "description": "30 歲的傭兵。與強盜針鋒相對，是這段危險關係中不肯輕易退讓的一方。",
+          "art": {
+            "id": "kill-character-0",
+            "label": "小偷 Thief・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/kill-character-0-e3eba5fa6124-thumb.webp",
+            "screen": "/assets/work-edition-20261008/kill-character-0-e3eba5fa6124-screen.webp",
+            "full": "/assets/work-edition-20261008/kill-character-0-e3eba5fa6124-full.webp",
+            "width": 331,
+            "height": 1200,
+            "fullBytes": 106482
+          }
+        },
+        {
+          "name": "強盜 Robber",
+          "description": "26 歲的傭兵。強勢直接，和小偷碰面時總少不了衝突，也讓兩人的關係不斷升溫。",
+          "art": {
+            "id": "kill-character-1",
+            "label": "強盜 Robber・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-edition-20261008/kill-character-1-ab29bbbb53a9-thumb.webp",
+            "screen": "/assets/work-edition-20261008/kill-character-1-ab29bbbb53a9-screen.webp",
+            "full": "/assets/work-edition-20261008/kill-character-1-ab29bbbb53a9-full.webp",
+            "width": 368,
+            "height": 1200,
+            "fullBytes": 135746
+          }
+        }
+      ],
+      "gallery": [
+        {
+          "id": "kill-gallery-0",
+          "label": "延伸視覺 01",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/kill-gallery-0-a03c92cefcbd-thumb.webp",
+          "screen": "/assets/work-edition-20261008/kill-gallery-0-a03c92cefcbd-screen.webp",
+          "full": "/assets/work-edition-20261008/kill-gallery-0-a03c92cefcbd-full.webp",
+          "width": 1600,
+          "height": 800,
+          "fullBytes": 193148
+        },
+        {
+          "id": "kill-gallery-1",
+          "label": "延伸視覺 02",
+          "role": "gallery",
+          "thumb": "/assets/work-edition-20261008/kill-gallery-1-277db1bae2c0-thumb.webp",
+          "screen": "/assets/work-edition-20261008/kill-gallery-1-277db1bae2c0-screen.webp",
+          "full": "/assets/work-edition-20261008/kill-gallery-1-277db1bae2c0-full.webp",
+          "width": 900,
+          "height": 1600,
+          "fullBytes": 723888
+        }
+      ],
+      "book": {
+        "publisher": "台灣角川",
+        "edition": "全 1 集・已完結",
+        "caption": "單行本書影",
+        "copy": "讓這場交鋒，留在手邊。",
+        "art": {
+          "id": "kill-book",
+          "label": "全 1 集・實體書去背圖",
+          "role": "book",
+          "thumb": "/assets/work-books-20261008/kill-88e3cb01f6c8-thumb.webp",
+          "screen": "/assets/work-books-20261008/kill-88e3cb01f6c8-screen.webp",
+          "full": "/assets/work-books-20261008/kill-88e3cb01f6c8-full.webp",
+          "width": 1080,
+          "height": 1456,
+          "fullBytes": 191168
+        }
+      }
+    },
+    {
+      "id": "portfolio",
+      "title": "成為我的作品吧",
+      "year": "2026",
+      "setting": "校園戀愛喜劇 / 反差菁英女 × 禁慾悶騷男",
+      "synopsis": "申請美術名校受挫的陳思于，怎麼也找不到適合作品集的寫生模特。被哥哥拒絕無數次之後，她意外抓到了哥哥的室友兼泳隊隊友——王凱翔的「把柄」。一場寫生契約，讓兩人的校園日常開始偏離計畫。",
+      "releaseAt": "2026-10-10T22:00:00+08:00",
+      "releaseLabel": "2026.10.10 22:00（台灣時間）",
+      "cover": {
+        "id": "portfolio-cover",
+        "label": "正式標題封面・IG 版",
+        "role": "cover",
+        "thumb": "/assets/work-portfolio-20261008/portfolio-cover-f12d53c4143c-thumb.webp",
+        "screen": "/assets/work-portfolio-20261008/portfolio-cover-f12d53c4143c-screen.webp",
+        "full": "/assets/work-portfolio-20261008/portfolio-cover-f12d53c4143c-full.webp",
+        "width": 1080,
+        "height": 1350,
+        "fullBytes": 269138
+      },
+      "hero": {
+        "id": "portfolio-hero",
+        "label": "主視覺・主視覺_02",
+        "role": "hero",
+        "thumb": "/assets/work-portfolio-20261008/portfolio-hero-61627cb80e7c-thumb.webp",
+        "screen": "/assets/work-portfolio-20261008/portfolio-hero-61627cb80e7c-screen.webp",
+        "full": "/assets/work-portfolio-20261008/portfolio-hero-61627cb80e7c-full.webp",
+        "width": 1013,
+        "height": 1800,
+        "fullBytes": 655582
+      },
+      "characters": [
+        {
+          "name": "陳思于",
+          "description": "藝術大學美術系學生，目標明確、擅長精準排程。為了完成申請名校的作品集，她急著尋找男性寫生模特；私下喜歡貓咪梗圖、真實犯罪影集與義式濃縮咖啡。",
+          "art": {
+            "id": "portfolio-character-0",
+            "label": "陳思于・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-portfolio-20261008/portfolio-character-0-99680651b751-thumb.webp",
+            "screen": "/assets/work-portfolio-20261008/portfolio-character-0-99680651b751-screen.webp",
+            "full": "/assets/work-portfolio-20261008/portfolio-character-0-99680651b751-full.webp",
+            "width": 333,
+            "height": 1400,
+            "fullBytes": 153766
+          }
+        },
+        {
+          "name": "王凱翔",
+          "description": "國立苔灣大學機械工程系學生，也是擅長蝶式的泳隊成員。寡言、怕麻煩，喜歡冰美式與高蛋白奶昔；身為陳亞廷的室友，意外捲入思于的作品集計畫。",
+          "art": {
+            "id": "portfolio-character-1",
+            "label": "王凱翔・全身立繪",
+            "role": "character",
+            "thumb": "/assets/work-portfolio-20261008/portfolio-character-1-f68e9e4735dd-thumb.webp",
+            "screen": "/assets/work-portfolio-20261008/portfolio-character-1-f68e9e4735dd-screen.webp",
+            "full": "/assets/work-portfolio-20261008/portfolio-character-1-f68e9e4735dd-full.webp",
+            "width": 415,
+            "height": 1400,
+            "fullBytes": 112410
+          }
+        }
+      ],
+      "gallery": [
+        {
+          "id": "portfolio-gallery-0",
+          "label": "延伸視覺・KV01",
+          "role": "gallery",
+          "thumb": "/assets/work-portfolio-20261008/portfolio-gallery-0-8a0eab3074ea-thumb.webp",
+          "screen": "/assets/work-portfolio-20261008/portfolio-gallery-0-8a0eab3074ea-screen.webp",
+          "full": "/assets/work-portfolio-20261008/portfolio-gallery-0-8a0eab3074ea-full.webp",
+          "width": 1013,
+          "height": 1800,
+          "fullBytes": 870202
+        }
+      ]
+    }
+  ]
+}

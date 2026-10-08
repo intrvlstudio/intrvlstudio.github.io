@@ -1,0 +1,67 @@
+/* Fixed markers stay above the backdrop. Only unoccluded actor pixels cover them. */
+#gameScreen #portalMarkers{z-index:50;pointer-events:none}
+#gameScreen #portalMarkers .door-pointer{pointer-events:auto}
+#gameScreen #walkDestination{z-index:46;pointer-events:none}
+#gameScreen #questMark{z-index:55;pointer-events:none}
+#gameScreen #actorLayer{z-index:60;pointer-events:none}
+body[data-screen="gameScreen"] #gameScreen #actorTargets{z-index:70}
+#gameScreen #questMark,#gameScreen .door-pointer i{animation:none!important;margin-top:0}
+
+/* A single viewport, including the smallest supported landscape phone. */
+body[data-screen="titleScreen"]{margin:0;min-height:100dvh;overflow:hidden}
+body[data-screen="titleScreen"]>.top,body[data-screen="titleScreen"]>footer{display:none!important}
+body[data-screen="titleScreen"] main{height:100dvh;min-height:0;max-width:1100px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));display:grid;place-items:center;overflow:hidden}
+body[data-screen="titleScreen"] #titleScreen{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;gap:clamp(16px,4vw,48px);width:100%;height:100%;min-height:0;margin:0;padding:0;border:0;box-shadow:none;background:transparent;overflow:hidden}
+#titleScreen .title-art{width:100%;height:100%;min-height:0;max-height:100%;aspect-ratio:auto;padding:0;border:0;box-shadow:none;background:transparent;overflow:hidden}
+#titleScreen .title-art img{width:100%;height:100%;max-height:100%;object-fit:contain;display:block}
+#titleScreen .title-copy{display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:12px;min-width:0;padding:0;text-align:left}
+#titleScreen #introDescription{display:block!important;font-size:clamp(14px,2vw,18px);line-height:1.6;margin:0}
+#titleScreen .actions{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;margin:0;order:1}
+#titleScreen #start{flex:1;min-width:0;min-height:56px;padding:10px;gap:6px;white-space:nowrap;font-size:clamp(18px,2.8vw,23px);border-radius:16px!important}
+#titleScreen #continue{flex:none;order:0;min-height:44px;font-size:13px;padding:6px 10px;border:2px solid var(--ink);border-radius:13px!important;box-shadow:none}
+#titleScreen .intro-tools{display:flex;gap:14px;align-items:center;order:2}
+#titleScreen .intro-tools button.ui-icon-only{border-radius:14px!important;background:#fff7ee!important;border:2px solid #dcc4d0!important}
+#titleScreen .intro-audio{order:3;display:flex;flex-wrap:nowrap;gap:8px;margin:0;height:44px}
+#titleScreen .intro-audio label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#titleScreen .intro-audio input{width:min(110px,35vw);margin:0}
+#titleScreen #resumeSummary{display:block;order:0;margin:0;font-size:11px;line-height:1.4;min-height:0}
+#titleScreen #versionNote{display:block!important;order:4;margin:0;font-size:10px;line-height:1.4;opacity:.7}
+#titleScreen #homeHint{display:none!important}
+
+/* The six-page introduction is completed before starting or resuming. */
+#gameTutorial{width:min(780px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:16px 20px;overflow:auto;border-radius:20px}
+#gameTutorial header{display:flex;justify-content:space-between;align-items:center;min-height:32px;margin:0 0 8px}
+#gameTutorial header h2{margin:0;font-size:18px;line-height:1.4}
+#gameTutorial .tutorial-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);align-items:center;gap:20px;margin:0}
+#gameTutorial #tutorialImage,#gameTutorial #tutorialInstall{display:block;width:100%;height:clamp(110px,40dvh,270px);min-height:0;object-fit:contain;margin:0}
+#gameTutorial #tutorialInstall svg{display:block;width:100%;height:100%;object-fit:contain}
+#gameTutorial #tutorialStep{font-size:11px;line-height:1.4}
+#gameTutorial #tutorialHeading{font-size:clamp(16px,2.6vw,22px);line-height:1.4;margin:6px 0}
+#gameTutorial #tutorialText{font-size:14px;line-height:1.6;margin:0}
+#gameTutorial #tutorialPlatforms{display:flex;gap:8px;margin-top:8px}
+#gameTutorial #tutorialPlatforms button{font-size:12px;min-height:44px;padding:4px 10px;box-shadow:none;border-radius:12px!important}
+#gameTutorial #tutorialPlatforms button[aria-pressed="true"]{background:#f6d5e3}
+#gameTutorial .tutorial-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:10px 0 0}
+#gameTutorial #tutorialPrev{margin-right:auto}
+#gameTutorial #backToIntro{margin:0;flex:none}
+#gameTutorial #tutorialCount{font-size:12px;white-space:nowrap}
+#gameTutorial #tutorialNext,#gameTutorial #tutorialDone{font-size:14px;min-height:44px;padding:6px 12px;border-radius:14px!important}
+#gameTutorial [hidden],#titleScreen [hidden]{display:none!important}
+@media(orientation:landscape) and (max-height:420px){
+ #titleScreen .title-copy{gap:8px}
+ #titleScreen #start{min-height:52px}
+ #gameTutorial{padding:10px 16px}
+ #gameTutorial .tutorial-body{gap:16px}
+ #gameTutorial #tutorialImage,#gameTutorial #tutorialInstall{height:calc(100dvh - 156px)}
+ #gameTutorial header{margin-bottom:4px}
+ #gameTutorial #tutorialHeading{font-size:17px}
+ #gameTutorial #tutorialText{font-size:13px;line-height:1.5}
+ #gameTutorial #tutorialPlatforms{margin-top:4px}
+ #gameTutorial .tutorial-actions{margin-top:6px}
+}
+@media(orientation:portrait){
+ body[data-screen="titleScreen"] #titleScreen{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:12px;max-width:540px}
+ #titleScreen .title-copy{padding-bottom:8px}
+ #gameTutorial .tutorial-body{grid-template-columns:1fr;gap:10px}
+ #gameTutorial #tutorialImage,#gameTutorial #tutorialInstall{height:26dvh}
+}

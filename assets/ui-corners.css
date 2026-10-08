@@ -1,0 +1,6 @@
+/* Shared UI finish: compact corners for controls, including dynamic staff tools.
+   Keep circles used by character artwork, avatars and loading indicators intact. */
+button,input:not([type=radio]):not([type=range]):not([type=checkbox]),textarea,select,
+[role=button],.button,.btn,.hero-cta,.job-apply,.email-cta,.scroll-top{
+ border-radius:2px!important;
+}
