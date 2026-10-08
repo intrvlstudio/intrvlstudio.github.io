@@ -72,7 +72,6 @@
     || (path === '/works/' && 'works_list')
     || (detail && 'work_detail')
     || (path === '/course/' && 'course')
-    || (path === '/apply/' && 'apply')
     || (/^\/(be-my-portfolio-rpg\/|rpg-play\.html)$/.test(path) && 'game')
     || 'other';
   const lang = /^\/en\//.test(path) ? 'en' : /^\/ko\//.test(path) ? 'ko'
@@ -104,6 +103,19 @@
   if (type === 'game' && framed) cfg.send_page_view = false;         // 內嵌的遊戲由外層頁負責 page_view，這裡只送互動事件
   let prefLang = lang;
   safe(() => { prefLang = localStorage.getItem('intrvl_lang') || lang; });
+
+  /* 同意（Consent Mode v2）：訪客還沒表態前只送不含 cookie 的匿名訊號；按「同意」才啟用 cookie 做完整統計。
+     廣告相關一律拒絕（網站不做廣告）。選擇存在 localStorage 一年，同網站的其他分頁／內嵌遊戲會同步。 */
+  const CONSENT_KEY = 'intrvl_consent', LATER_KEY = 'intrvl_consent_later';
+  const readConsent = () => {
+    try {
+      const c = JSON.parse(localStorage.getItem(CONSENT_KEY));
+      if (c && (c.a === 'granted' || c.a === 'denied') && Date.now() - c.t < 365 * 864e5) return c.a;
+    } catch {}
+    return '';
+  };
+  let consent = readConsent();                                       // '' 代表還沒表態
+  window.gtag('consent', 'default', { analytics_storage: consent === 'granted' ? 'granted' : 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
   window.gtag('js', new Date());
   window.gtag('set', 'user_properties', { pref_language: prefLang, reduced_motion: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'yes' : 'no' });
   window.gtag('config', ID, cfg);
@@ -125,6 +137,61 @@
   };
   doc.readyState === 'complete' ? armLoader() : addEventListener('load', armLoader, { once: true });
 
+  /* ---------- 同意橫幅：沒表態才顯示；橫幅程式在需要時才載入 ---------- */
+  const clearGaCookies = () => safe(() => document.cookie.split(';').forEach(c => {
+    const n = c.split('=')[0].trim();
+    if (/^_ga(_|$)/.test(n)) document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+  }));
+  const applyConsent = v => {
+    consent = v;
+    window.gtag('consent', 'update', { analytics_storage: v });
+    if (v === 'denied') clearGaCookies();                            // 拒絕時順手清掉先前留下的 GA cookie
+  };
+  const setConsent = v => {
+    safe(() => { localStorage.setItem(CONSENT_KEY, JSON.stringify({ a: v, t: Date.now() })); sessionStorage.removeItem(LATER_KEY); });
+    applyConsent(v);
+    track('consent_choice', { ui_value: v });
+  };
+  const postpone = () => { safe(() => sessionStorage.setItem(LATER_KEY, '1')); track('consent_choice', { ui_value: 'later' }); };
+  addEventListener('storage', e => safe(() => {                      // 另一個分頁或內嵌遊戲做了選擇
+    if (e.key !== CONSENT_KEY) return;
+    const v = readConsent();
+    if (v && v !== consent) { applyConsent(v); if (window.INTRVLConsentBanner) window.INTRVLConsentBanner.hide(); }
+  }));
+  // 首頁彈窗裡的遊戲由外層頁處理；手機直式的外殼頁沒有可用版面，改由裡面的遊戲畫面顯示
+  const bannerPage = entry !== 'home_dialog' && !(entry === 'mobile_shell' && !framed);
+  const selfVersion = ((me && me.src && /[?&]v=([^&]+)/.exec(me.src)) || [])[1] || '';
+  let bannerRequested = false;
+  const openBanner = () => {
+    const go = () => window.INTRVLConsentBanner && window.INTRVLConsentBanner.show();
+    if (window.INTRVLConsentBanner) return go();
+    if (bannerRequested) return;
+    bannerRequested = true;
+    const s = doc.createElement('script');
+    s.src = '/assets/consent-banner.js' + (selfVersion ? '?v=' + selfVersion : '');
+    s.onload = go;
+    s.onerror = () => { bannerRequested = false; };
+    doc.head.appendChild(s);
+  };
+  const postponed = safe(() => sessionStorage.getItem(LATER_KEY) === '1');
+  if (bannerPage && !consent && !postponed && !off && navigator.globalPrivacyControl !== true) {
+    const t0 = performance.now();
+    // 等開場動畫結束，也等所有對話框（宣傳彈窗、遊戲教學…）關閉：它們是封鎖式對話框，會讓橫幅按不到
+    const waitIntro = () => ((root.classList.contains('intro-playing') && performance.now() - t0 < 15000) || doc.querySelector('dialog[open]')) ? setTimeout(waitIntro, 500) : openBanner();
+    const arm = () => setTimeout(waitIntro, 800);
+    doc.readyState === 'complete' ? arm() : addEventListener('load', arm, { once: true });
+  }
+  if (bannerPage) safe(() => {                                       // 頁尾的「統計與隱私設定」：隨時可以改選擇
+    const host = $('.footer-bottom > div:last-child') || $('footer');
+    if (!host) return;
+    const label = { en: 'Analytics & privacy', ko: '통계 및 개인정보 설정' }[lang] || '統計與隱私設定';
+    const b = doc.createElement('button');
+    b.type = 'button'; b.className = 'consent-reopen'; b.textContent = label;
+    b.style.cssText = 'background:none;border:0;padding:0;margin:0 0 0 1.2em;font:inherit;color:inherit;text-decoration:underline;cursor:pointer';
+    b.addEventListener('click', openBanner);
+    host.append(b);
+  });
+
   /* ---------- 版位與連結分類 ---------- */
   const PLACES = [
     ['#loveQuestPromo', 'promo_popup'], ['#chapterAchievement', 'game_achievement'], ['#shareOptions', 'game_share'], ['#endingScreen', 'game_ending'],
@@ -134,7 +201,7 @@
     ['.next-work', 'next_work'], ['.detail-nav', 'top_nav'], ['.public-nav, .course-nav', 'top_nav'], ['.course-hero', 'hero'],
     ['.catalog', 'catalog'], ['.upcoming', 'upcoming'], ['footer', 'footer'], ['#works, .works', 'works'], ['#about', 'about'],
     ['#feature', 'feature'], ['#news', 'news'], ['#team', 'team'], ['#course', 'course'], ['#hiring', 'hiring'], ['#contact', 'contact'],
-    ['#collab', 'collab'], ['dialog', 'dialog'], ['.application-note', 'apply_note'], ['main', 'main'], ['nav, header', 'top_nav']
+    ['#collab', 'collab'], ['dialog', 'dialog'], ['main', 'main'], ['nav, header', 'top_nav']
   ];
   const placeOf = el => { for (const [sel, name] of PLACES) if (el.closest(sel)) return name; return 'page'; };
   const hostIs = (h, d) => h === d || h.endsWith('.' + d);
@@ -179,10 +246,7 @@
     ['[data-character]', null, b => storyCharacter(b, 'click')],
     ['[data-art]', 'art_open', b => ({ ui_item: b.dataset.art })],
     ['#loadContinue', 'story_loader_skip'],
-    ['#course-play', 'course_video_click'],
-    ['#draft-mail', 'apply_mail_click', () => ({ apply_role: roleValue() })],
-    ['#draft-gmail', 'apply_gmail_click', () => ({ apply_role: roleValue() })],
-    ['#copy-draft', 'apply_draft_copy', () => ({ apply_role: roleValue() })]
+    ['#course-play', 'course_video_click']
   ];
   // 遊戲頁專用：避免其他頁剛好有同名 id 時誤觸
   const GAME_RULES = [
@@ -198,7 +262,6 @@
     ['#music, #sfx, #theme, #fullscreen, #gameHelp, #castBook, #episodeCount, #questToggle, #navigateTask, #zoomIn, #zoomOut, #cameraReset, #exitGame, #home, #homeGuideOpen', 'game_ui', b => ({ ui_item: b.id })]
   ];
   const RULES = type === 'game' ? [...COMMON_RULES, ...GAME_RULES] : COMMON_RULES;
-  const roleValue = () => { const s = $('#app-role'); return s && s.value; };
   const dismissReason = new WeakMap();
 
   function onClick(e) {
@@ -263,8 +326,7 @@
     home: () => [['header#top', 'cover'], ['#works', 'works'], ['#about', 'about'], ['.numbers', 'numbers'], ['#feature', 'feature'], ['#news', 'news'], ['#team', 'team'], ['#course', 'course'], ['#hiring', 'hiring'], ['#contact', 'contact']],
     works_list: () => [['.catalog', 'catalog'], ['.upcoming', 'upcoming'], ['#making', 'making']],
     work_detail: () => [['.detail-hero', 'hero'], ['#story', 'story'], ['#characters', 'characters'], ['#visuals', 'visuals'], ['#books', 'books'], ['.read-section', 'read'], ['.next-work', 'next_work'], ['.release-gate', 'release_gate']],
-    course: () => [['.course-hero', 'hero'], ...$$('.course-section[id]').map(e => [e, e.id])],
-    apply: () => [['aside', 'openings'], ['.application-note', 'how_to_apply'], ['#application', 'form']]
+    course: () => [['.course-hero', 'hero'], ...$$('.course-section[id]').map(e => [e, e.id])]
   };
   if (SECTIONS[type]) watchSections(SECTIONS[type]);
 
@@ -357,24 +419,6 @@
     };
     doc.addEventListener('visibilitychange', () => { if (doc.hidden) report(); });
     addEventListener('pagehide', report);
-  });
-
-  /* ---------- 加入我們：只記步驟與職缺，不碰任何欄位內容 ---------- */
-  if (type === 'apply') safe(() => {
-    const form = $('#application'), draft = $('#draft'), err = $('#form-error');
-    let t0 = 0;
-    if (form) {
-      form.addEventListener('focusin', () => once('apply:start', () => { t0 = performance.now(); track('apply_form_start'); }));
-      form.addEventListener('invalid', e => safe(() => once('apply:invalid:' + e.target.name, () => track('apply_form_error', { error_code: 'native_invalid', ui_item: e.target.name }))), true);
-    }
-    const CODES = [['控制字元', 'control_chars'], ['必填', 'required_or_length'], ['Email', 'email_invalid'], ['職缺', 'role_missing']];
-    if (err) new MutationObserver(() => safe(() => {
-      const text = err.textContent.trim();
-      if (text) track('apply_form_error', { error_code: (CODES.find(([k]) => text.includes(k)) || [0, 'other'])[1] });
-    })).observe(err, { childList: true, characterData: true, subtree: true });
-    if (draft) new MutationObserver(() => safe(() => {
-      if (!draft.hidden) track('apply_draft_create', { apply_role: roleValue(), duration_ms: t0 ? performance.now() - t0 : 0 });
-    })).observe(draft, { attributes: true, attributeFilter: ['hidden'] });
   });
 
   /* ---------- 遊戲：掛在既有 DOM、存檔與 data-screen 上，不動 game-r2.min.js ---------- */
@@ -496,6 +540,7 @@
   /* ---------- 對外介面（主要給自己在 Console 排除裝置、給自動化測試用） ---------- */
   window.INTRVLAnalytics = {
     id: ID, enabled, type, track, log,
+    consent: { lang, get: () => consent, set: setConsent, later: postpone },   // 給 consent-banner.js 用
     optOut() { safe(() => localStorage.setItem('intrvl_ga_off', '1')); window['ga-disable-' + ID] = true; return '此裝置已排除統計'; },
     optIn() { safe(() => localStorage.removeItem('intrvl_ga_off')); return '已還原統計，重新整理後生效'; }
   };
