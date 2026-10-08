@@ -5,6 +5,7 @@
 !/assets/
 !/assets/brand-2026/
 !/assets/cards-20260917/
+!/assets/cards-20261010/
 !/assets/coloso/
 !/assets/events/
 !/assets/favicon/
@@ -62,7 +63,10 @@
 !/assets/cards-20260917/roommate.png
 !/assets/cards-20260917/roommate.webp
 !/assets/cards-20260917/steal.webp
+!/assets/cards-20261010/portfolio.webp
+!/assets/cards-20261010/portfolio-reel.webp
 !/assets/catalog-layout.css
+!/assets/cursor-orange.css
 !/assets/catalog-release.js
 !/assets/catalog.js
 !/assets/clean-url.js
@@ -98,6 +102,8 @@
 !/assets/hero/stage-20260917/stage-04-computer.webp
 !/assets/hero/stage-20260917/stage-04-mobile.webp
 !/assets/home-language.js
+!/assets/home-20261010.css
+!/assets/home-release.js
 !/assets/icon.png
 !/assets/icon.svg
 !/assets/instagram-posts.js

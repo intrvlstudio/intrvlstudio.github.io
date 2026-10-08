@@ -1,5 +1,10 @@
 [
   {
+    "id": "portfolio",
+    "poster": "/assets/cards-20261010/portfolio-reel.webp",
+    "releaseAt": "2026-10-10T22:00:00+08:00"
+  },
+  {
     "poster": "/assets/media-20260917/steal-poster.png",
     "id": "steal",
     "src": "/assets/media-20260917/steal.mp4"
