@@ -29,7 +29,7 @@
       const skip = en ? 'Don’t show again today' : ko ? '오늘 하루 보지 않기' : '今天不再顯示';
       dialog = document.createElement('dialog');
       dialog.id = 'loveQuestPromo'; dialog.setAttribute('aria-label', title);
-      dialog.innerHTML = `<a class="quest-promo-link" href="/be-my-portfolio-rpg/" aria-label="${go}"><img src="/assets/love-quest-promo.webp" width="1200" height="1200" alt="${title}" fetchpriority="high"></a><button class="quest-promo-close" type="button" aria-label="${label}" autofocus><img src="/assets/love-quest-close.svg" width="52" height="52" alt=""></button><label class="quest-promo-skip"><input type="checkbox"><span>${skip}</span></label>`;
+      dialog.innerHTML = `<a class="quest-promo-link" href="/be-my-portfolio-rpg/" aria-label="${go}"><img src="/assets/love-quest-promo.webp?v=20261009-no-url" width="1200" height="1200" alt="${title}" fetchpriority="high"></a><button class="quest-promo-close" type="button" aria-label="${label}" autofocus><img src="/assets/love-quest-close.svg" width="52" height="52" alt=""></button><label class="quest-promo-skip"><input type="checkbox"><span>${skip}</span></label>`;
       document.body.append(dialog);
       dialog.querySelector('button').addEventListener('click', close);
       // Saved as soon as it is ticked, so closing by any route (button, backdrop, Esc, link) keeps the choice.
