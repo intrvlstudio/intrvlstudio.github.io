@@ -575,3 +575,11 @@
 !/works/steal/index.html
 !/works.html
 !/_config.yml
+
+# Required public Google OAuth application pages
+!/booking-assistant/
+!/booking-assistant/index.html
+!/booking-assistant/privacy/
+!/booking-assistant/privacy/index.html
+!/booking-assistant/terms/
+!/booking-assistant/terms/index.html
