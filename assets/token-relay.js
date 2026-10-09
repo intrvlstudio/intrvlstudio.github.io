@@ -91,7 +91,7 @@
     update();
   }
 
-  /* 分享連結 https://intrvlstudio.github.io/#token-relay：開場動畫結束後直接捲到活動卡。
+  /* 分享連結 https://www.intrvlstudio.cc/#token-relay：開場動畫結束後直接捲到活動卡。
      首頁是影片式捲動，瀏覽器原生的錨點跳轉不會生效，所以在這裡手動處理。 */
   function jumpToCard() {
     if (location.hash !== '#token-relay') return;
