@@ -107,10 +107,11 @@
   /* 同意（Consent Mode v2）：訪客還沒表態前只送不含 cookie 的匿名訊號；按「同意」才啟用 cookie 做完整統計。
      廣告相關一律拒絕（網站不做廣告）。選擇存在 localStorage 一年，同網站的其他分頁／內嵌遊戲會同步。 */
   const CONSENT_KEY = 'intrvl_consent', LATER_KEY = 'intrvl_consent_later';
+  const CONSENT_VERSION = 2;                                         // 同意的用途有變（例如新增 Metricool）就加一，舊的選擇會重新詢問
   const readConsent = () => {
     try {
       const c = JSON.parse(localStorage.getItem(CONSENT_KEY));
-      if (c && (c.a === 'granted' || c.a === 'denied') && Date.now() - c.t < 365 * 864e5) return c.a;
+      if (c && c.v === CONSENT_VERSION && (c.a === 'granted' || c.a === 'denied') && Date.now() - c.t < 365 * 864e5) return c.a;
     } catch {}
     return '';
   };
@@ -131,8 +132,27 @@
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
     doc.head.appendChild(s);
   };
+  /* ---------- Metricool（社群成效分析）：用圖片請求回報「完整網址、視窗大小、來源頁」，不寫 cookie。
+     比照 GA 的同意機制：訪客按「同意」後才載入；內嵌的遊戲（外層頁已回報）、自己排除的裝置、除錯模式都不載入。 ---------- */
+  const METRICOOL_HASH = '5eb2576d40a642892b5b7c40d88a04bf';
+  let metricoolLoaded = false;
+  const loadMetricool = () => {
+    if (metricoolLoaded || consent !== 'granted' || !enabled || framed || debug) return;
+    metricoolLoaded = true;
+    const s = doc.createElement('script');
+    s.async = true;
+    s.src = 'https://tracker.metricool.com/resources/be.js';
+    s.onload = () => safe(() => {
+      // be.js 會拿 document.location.href 當網址，但 clean-url.js 已經清掉 ?utm_…。
+      // 這裡讓 u 固定回報「保留廣告來源參數」的網址（be.js 對 u 的賦值會被忽略）
+      const hit = { hash: METRICOOL_HASH };
+      Object.defineProperty(hit, 'u', { get: canonical, set() {}, enumerable: true });
+      window.beTracker.t(hit);
+    });
+    doc.head.appendChild(s);
+  };
   const armLoader = () => {
-    (window.requestIdleCallback || (f => setTimeout(f, 1500)))(loadGtag, { timeout: 4000 });
+    (window.requestIdleCallback || (f => setTimeout(f, 1500)))(() => { loadGtag(); loadMetricool(); }, { timeout: 4000 });
     for (const t of ['pointerdown', 'keydown', 'touchstart', 'wheel']) addEventListener(t, loadGtag, { once: true, passive: true, capture: true });
   };
   doc.readyState === 'complete' ? armLoader() : addEventListener('load', armLoader, { once: true });
@@ -146,9 +166,10 @@
     consent = v;
     window.gtag('consent', 'update', { analytics_storage: v });
     if (v === 'denied') clearGaCookies();                            // 拒絕時順手清掉先前留下的 GA cookie
+    if (v === 'granted') loadMetricool();
   };
   const setConsent = v => {
-    safe(() => { localStorage.setItem(CONSENT_KEY, JSON.stringify({ a: v, t: Date.now() })); sessionStorage.removeItem(LATER_KEY); });
+    safe(() => { localStorage.setItem(CONSENT_KEY, JSON.stringify({ a: v, t: Date.now(), v: CONSENT_VERSION })); sessionStorage.removeItem(LATER_KEY); });
     applyConsent(v);
     track('consent_choice', { ui_value: v });
   };
@@ -541,6 +562,7 @@
   window.INTRVLAnalytics = {
     id: ID, enabled, type, track, log,
     consent: { lang, get: () => consent, set: setConsent, later: postpone },   // 給 consent-banner.js 用
+    metricoolLoaded: () => metricoolLoaded,
     optOut() { safe(() => localStorage.setItem('intrvl_ga_off', '1')); window['ga-disable-' + ID] = true; return '此裝置已排除統計'; },
     optIn() { safe(() => localStorage.removeItem('intrvl_ga_off')); return '已還原統計，重新整理後生效'; }
   };

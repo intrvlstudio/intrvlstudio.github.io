@@ -9,17 +9,17 @@
   const TEXT = {
     'zh-TW': {
       label: '統計與隱私設定',
-      body: '我們用 Google Analytics 了解大家怎麼瀏覽這個網站，幫助我們改善內容。<br>按「同意」會在你的裝置存放 cookie，做更完整的統計。<br>按「拒絕」只會收到不含 cookie 的匿名統計。<br>這些資料不會用於廣告。',
+      body: '我們用 Google Analytics 和 Metricool 了解大家怎麼瀏覽這個網站，幫助我們改善內容。<br>按「同意」會在你的裝置存放 cookie，做更完整的統計。<br>按「拒絕」只會收到不含 cookie 的匿名統計，也不會載入 Metricool。<br>我們不會把這些資料用於廣告。',
       accept: '同意', decline: '拒絕', later: '先不決定，關閉'
     },
     en: {
       label: 'Analytics and privacy settings',
-      body: 'We use Google Analytics to see how this site is used and to improve it.<br>Choose Accept to allow cookies for fuller statistics.<br>Choose Decline and we only receive anonymous statistics without cookies.<br>The data is not used for advertising.',
+      body: 'We use Google Analytics and Metricool to see how this site is used and to improve it.<br>Choose Accept to allow cookies for fuller statistics.<br>Choose Decline and we only receive anonymous statistics without cookies, and Metricool is not loaded.<br>We do not use this data for advertising.',
       accept: 'Accept', decline: 'Decline', later: 'Decide later, close'
     },
     ko: {
       label: '통계 및 개인정보 설정',
-      body: 'Google Analytics로 사이트 이용 방식을 파악해 콘텐츠를 개선합니다.<br>동의하시면 기기에 쿠키를 저장해 더 자세한 통계를 수집합니다.<br>거부하시면 쿠키 없이 익명 통계만 수집됩니다.<br>이 데이터는 광고에 사용되지 않습니다.',
+      body: 'Google Analytics와 Metricool로 사이트 이용 방식을 파악해 콘텐츠를 개선합니다.<br>동의하시면 기기에 쿠키를 저장해 더 자세한 통계를 수집합니다.<br>거부하시면 쿠키 없이 익명 통계만 수집되며 Metricool은 불러오지 않습니다.<br>이 데이터를 광고에 사용하지 않습니다.',
       accept: '동의', decline: '거부', later: '나중에 결정, 닫기'
     }
   };
