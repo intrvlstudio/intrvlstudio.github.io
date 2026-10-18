@@ -48,7 +48,7 @@
   const launched = () => Date.now() >= RELEASE;
 
   const WORKS = [
-    { k: 'portfolio', cover: '/assets/cards-20261019/portfolio.webp', tags: L(['愛情', 'WEBTOON'], ['Romance', 'WEBTOON'], ['로맨스', 'WEBTOON']), badge: true,
+    { k: 'portfolio', cover: '/assets/cards-20261019/portfolio.webp', fit: true, tags: L(['愛情', 'WEBTOON'], ['Romance', 'WEBTOON'], ['로맨스', 'WEBTOON']), badge: true,
       title: L('成為我的作品吧', 'Be My Portfolio', '나의 작품이 되어줘!'),
       meta: L(['上線｜ 10/10 22:00 · 台灣時間', '平台｜ LINE WEBTOON'], ['Release｜ 10/10 22:00 · Taiwan time', 'Platform｜ LINE WEBTOON'], ['공개｜ 10/10 22:00 · 대만 시간', '플랫폼｜ LINE WEBTOON']) },
     { k: 'steal', cover: '/assets/cards-20261019/steal.webp',
@@ -232,7 +232,7 @@
         <div class="ctl u-rise" style="--d:.7s;--t:.7s"><button data-w="-1" aria-label="${L('上一個作品', 'Previous story', '이전 작품')}">←</button><div class="ctl-n"><b data-wn>01</b> / 06</div><button data-w="1" aria-label="${L('下一個作品', 'Next story', '다음 작품')}">→</button></div>
       </div>
       <div class="s2-body">
-        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card" data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
+        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card${w.fit ? ' fit' : ''}" data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
         <div class="wd-dots" data-dots>${WORKS.map((w, i) => `<button data-i="${i}" aria-label="${i + 1}"><i></i></button>`).join('')}</div>
         <div class="wd u-rise" ${sd(.8)} data-wd aria-live="polite">${wdHTML(0)}</div>
       </div>
