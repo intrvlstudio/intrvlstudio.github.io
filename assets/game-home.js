@@ -48,22 +48,22 @@
   const launched = () => Date.now() >= RELEASE;
 
   const WORKS = [
-    { k: 'portfolio', cover: '/assets/cards-20261010/portfolio.webp', tags: L(['愛情', 'WEBTOON'], ['Romance', 'WEBTOON'], ['로맨스', 'WEBTOON']), badge: true,
+    { k: 'portfolio', cover: '/assets/cards-20261019/portfolio.webp', tags: L(['愛情', 'WEBTOON'], ['Romance', 'WEBTOON'], ['로맨스', 'WEBTOON']), badge: true,
       title: L('成為我的作品吧', 'Be My Portfolio', '나의 작품이 되어줘!'),
       meta: L(['上線｜ 10/10 22:00 · 台灣時間', '平台｜ LINE WEBTOON'], ['Release｜ 10/10 22:00 · Taiwan time', 'Platform｜ LINE WEBTOON'], ['공개｜ 10/10 22:00 · 대만 시간', '플랫폼｜ LINE WEBTOON']) },
-    { k: 'steal', cover: '/assets/cards-20260917/steal.webp',
+    { k: 'steal', cover: '/assets/cards-20261019/steal.webp',
       title: L('扒進你心裡', 'Steal Your Heart', '너의 마음을 훔치다'),
       meta: L(['年份｜ 2026', '設定｜ 執著死板攻 × 輕浮扒手受'], ['Year｜ 2026', 'Setup｜ A rigid pursuer × a carefree pickpocket'], ['연도｜ 2026', '설정｜ 고지식한 추격자 × 자유분방한 소매치기']) },
-    { k: 'delivery', cover: '/assets/cards-20260917/delivery.webp',
+    { k: 'delivery', cover: '/assets/cards-20261019/delivery.webp',
       title: L('外送夥伴即將抵達', 'Delivery Partner Is on the Way', '배달 파트너가 곧 도착합니다'),
       meta: L(['年份｜ 2025', '設定｜ 衷心乖狗攻 × 網黃無助受'], ['Year｜ 2025', 'Setup｜ A devoted sweetheart × a vulnerable adult creator'], ['연도｜ 2025', '설정｜ 헌신적인 순정남 × 위태로운 성인 크리에이터']) },
-    { k: 'roommate', cover: '/assets/cards-20260917/roommate.webp',
+    { k: 'roommate', cover: '/assets/cards-20261019/roommate.webp',
       title: L('我的室友帥哥學長', 'My Handsome Roommate', '잘생긴 선배 룸메이트'),
       meta: L(['年份｜ 2021', '設定｜ 創傷包袱攻 × 陽光療癒受'], ['Year｜ 2021', 'Setup｜ A troubled past × a healing presence'], ['연도｜ 2021', '설정｜ 상처를 품은 마음 × 따뜻한 위로']) },
-    { k: 'pry', cover: '/assets/cards-20260917/pry.webp',
+    { k: 'pry', cover: '/assets/cards-20261019/pry.webp',
       title: L('窺 PRY', 'PRY', '엿보다 PRY'),
       meta: L(['年份｜ 2023', '設定｜ 禁慾老男攻 × 受虐騷氣受'], ['Year｜ 2023', 'Setup｜ A restrained older man × a provocative partner'], ['연도｜ 2023', '설정｜ 절제하는 연상 × 도발적인 연인']) },
-    { k: 'kill', cover: '/assets/cards-20260917/kill.webp',
+    { k: 'kill', cover: '/assets/cards-20261019/kill.webp',
       title: L('就要弄死你', "I'm Going to Kill You", '너를 죽여줄게'),
       meta: L(['年份｜ 2024', '設定｜ 易怒狼犬攻 × 欠幹奸詐受', '編劇｜ 十八日 18xDay'], ['Year｜ 2024', 'Writer｜ 18xDay 十八日'], ['연도｜ 2024', '각본｜ 18xDay 十八日']) }
   ];
@@ -232,7 +232,7 @@
         <div class="ctl u-rise" style="--d:.7s;--t:.7s"><button data-w="-1" aria-label="${L('上一個作品', 'Previous story', '이전 작품')}">←</button><div class="ctl-n"><b data-wn>01</b> / 06</div><button data-w="1" aria-label="${L('下一個作品', 'Next story', '다음 작품')}">→</button></div>
       </div>
       <div class="s2-body">
-        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card" data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="540" draggable="false" decoding="async"></button>`).join('')}</div>
+        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card" data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
         <div class="wd-dots" data-dots>${WORKS.map((w, i) => `<button data-i="${i}" aria-label="${i + 1}"><i></i></button>`).join('')}</div>
         <div class="wd u-rise" ${sd(.8)} data-wd aria-live="polite">${wdHTML(0)}</div>
       </div>
@@ -710,10 +710,12 @@
     const els = $$(`[data-k="${kind}"]`, elOv);
     els.forEach(el => el.getAnimations().forEach(a => a.cancel()));
     await Promise.all(els.map(el => cover(kind, el)));
-    lab.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }], { duration: 260, fill: 'forwards', easing: 'cubic-bezier(.2,.8,.2,1)' });
-    await anim(bar, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 420, easing: 'cubic-bezier(.7,0,.2,1)' });
+    // The stage title sits on the covered screen: fade in, let the bar fill, then hold a beat so it never reads as a flash.
+    lab.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }], { duration: 320, fill: 'forwards', easing: 'cubic-bezier(.2,.8,.2,1)' });
+    await anim(bar, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 900, easing: 'cubic-bezier(.45,0,.2,1)' });
     mountStage(n);
-    await anim(lab, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-24px)' }], { duration: 200 });
+    await new Promise(r => setTimeout(r, 220));
+    await anim(lab, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-24px)' }], { duration: 260 });
     await Promise.all(els.map(el => reveal(kind, el)));
     elOv.style.visibility = 'hidden';
     bar.getAnimations().forEach(a => a.cancel()); lab.getAnimations().forEach(a => a.cancel());
