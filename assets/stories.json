@@ -485,14 +485,14 @@
       "releaseLabel": "2026.10.10 22:00（台灣時間）",
       "cover": {
         "id": "portfolio-cover",
-        "label": "正式標題封面・IG 版",
+        "label": "正式封面",
         "role": "cover",
-        "thumb": "/assets/work-portfolio-20261008/portfolio-cover-f12d53c4143c-thumb.webp",
-        "screen": "/assets/work-portfolio-20261008/portfolio-cover-f12d53c4143c-screen.webp",
-        "full": "/assets/work-portfolio-20261008/portfolio-cover-f12d53c4143c-full.webp",
-        "width": 1080,
-        "height": 1350,
-        "fullBytes": 269138
+        "thumb": "/assets/work-portfolio-20261008/portfolio-cover-573129e8e4b2-thumb.webp",
+        "screen": "/assets/work-portfolio-20261008/portfolio-cover-573129e8e4b2-screen.webp",
+        "full": "/assets/work-portfolio-20261008/portfolio-cover-573129e8e4b2-full.webp",
+        "width": 1542,
+        "height": 2000,
+        "fullBytes": 160926
       },
       "hero": {
         "id": "portfolio-hero",
