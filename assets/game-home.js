@@ -245,9 +245,9 @@
     const date = L('10 月 7 日晚上 9 點開放（台灣時間）', 'Opened October 7 at 9 PM (Taiwan time)', '10월 7일 오후 9시 공개 (대만 시간)');
     const rows = MENU.map((m, i) => {
       const inner = `<i>▶</i><span>${m.zh}</span><em>${m.en}</em>`;
-      if (i === 0) return `<a class="mrow${i === S.sel ? ' on' : ''}" data-i="${i}" href="${GAME}" role="menuitem">${inner}</a>`;
-      if (i === 2) return `<a class="mrow${i === S.sel ? ' on' : ''}" data-i="${i}" href="https://www.instagram.com/intrvl_studio/" target="_blank" rel="noopener noreferrer" role="menuitem">${inner}</a>`;
-      return `<button class="mrow${i === S.sel ? ' on' : ''}" data-i="${i}" type="button" role="menuitem">${inner}</button>`;
+      if (i === 0) return `<a class="mrow${i === S.sel ? ' on' : ''}" data-i="${i}" href="${GAME}">${inner}</a>`;
+      if (i === 2) return `<a class="mrow${i === S.sel ? ' on' : ''}" data-i="${i}" href="https://www.instagram.com/intrvl_studio/" target="_blank" rel="noopener noreferrer">${inner}</a>`;
+      return `<button class="mrow${i === S.sel ? ' on' : ''}" data-i="${i}" type="button">${inner}</button>`;
     }).join('');
     return `<div class="gh-s s3" data-screen="play">
       <a class="pg u-wipeUp" ${sd(.5)} href="${GAME}" aria-label="${L('開始遊戲：成為我的作品吧！心動任務', 'Start the game: Be My Portfolio — Love Quest', '게임 시작: 나의 작품이 되어줘! 두근두근 퀘스트')}">
@@ -259,7 +259,7 @@
         <span class="eyebrow u-fade" ${sd(.3)}>${eb}</span>
         <h2><span class="u-line" ${sd(.35)}>${h2}</span></h2>
         <p class="u-rise" ${sd(.6)}>${date}</p>
-        <div class="menu u-wipeR" style="--d:.75s;--t:.8s" role="menu" data-menu>${rows}</div>
+        <div class="menu u-wipeR" style="--d:.75s;--t:.8s"  data-menu>${rows}</div>
       </div>
     </div>`;
   }
@@ -750,7 +750,7 @@
     if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
     if (s === 0) { if (S.bootDone && k !== 'Tab' && k !== 'Shift') leaveBoot(); return; }
     if (s === 3 && (k === 'ArrowDown' || k === 'ArrowUp')) { if (isApp()) return; e.preventDefault(); $('.s3', elStage)._pick(S.sel + (k === 'ArrowDown' ? 1 : -1)); return; }
-    if (s === 3 && k === 'Enter' && !e.target.closest('a,button,[role=menuitem]')) { e.preventDefault(); $('.s3', elStage)._run(S.sel); return; }
+    if (s === 3 && k === 'Enter' && !e.target.closest('a,button')) { e.preventDefault(); $('.s3', elStage)._run(S.sel); return; }
     if (!isApp() && (k === 'ArrowDown' || k === 'PageDown')) { if (canScroll(1)) return; e.preventDefault(); step(1); }
     else if (!isApp() && (k === 'ArrowUp' || k === 'PageUp')) { if (canScroll(-1)) return; e.preventDefault(); step(-1); }
     else if (/^[1-7]$/.test(k)) go(+k);
