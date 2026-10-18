@@ -69,6 +69,7 @@
   const detail = /^\/works\/([a-z0-9-]+)\/$/.exec(path);
   const type = override
     || (/^\/(?:(?:en|ko)\/)?$/.test(path) && 'home')
+    || (/^\/(?:(?:en|ko)\/)?news\/$/.test(path) && 'news')
     || (path === '/works/' && 'works_list')
     || (detail && 'work_detail')
     || (path === '/course/' && 'course')
@@ -221,7 +222,7 @@
     ['.hero-copy', 'hero'], ['.detail-hero', 'hero'], ['.chapter-nav', 'chapter_nav'], ['.book-section', 'book'], ['.read-section', 'read_section'],
     ['.next-work', 'next_work'], ['.detail-nav', 'top_nav'], ['.public-nav, .course-nav', 'top_nav'], ['.course-hero', 'hero'],
     ['.catalog', 'catalog'], ['.upcoming', 'upcoming'], ['footer', 'footer'], ['#works, .works', 'works'], ['#about', 'about'],
-    ['#feature', 'feature'], ['#news', 'news'], ['#team', 'team'], ['#course', 'course'], ['#hiring', 'hiring'], ['#contact', 'contact'],
+    ['#feature', 'feature'], ['#news, .s4', 'news'], ['#team, .s5', 'team'], ['#course, .s6', 'course'], ['#hiring, .jt-h', 'hiring'], ['#contact, .jt-c', 'contact'],
     ['#collab', 'collab'], ['dialog', 'dialog'], ['main', 'main'], ['nav, header', 'top_nav']
   ];
   const placeOf = el => { for (const [sel, name] of PLACES) if (el.closest(sel)) return name; return 'page'; };
@@ -350,6 +351,8 @@
     course: () => [['.course-hero', 'hero'], ...$$('.course-section[id]').map(e => [e, e.id])]
   };
   if (SECTIONS[type]) watchSections(SECTIONS[type]);
+  // 遊戲化首頁以「關卡」切換畫面：每個關卡第一次進入時回報一次 section_view（同樣的 section_id）
+  if (type === 'home') addEventListener('intrvl:stage', e => safe(() => { const id = e.detail; if (id && id !== 'home') once('sec:' + id, () => track('section_view', { section_id: id })); }));
 
   /* ---------- 首頁：彈窗宣傳、Instagram 內嵌、遊戲彈窗 ---------- */
   const PROMO = { promotion_id: 'love_quest_2026_10', promotion_name: 'Be My Portfolio Love Quest', creative_slot: 'home_popup', location_id: lang };

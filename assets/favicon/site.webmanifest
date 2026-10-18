@@ -1,11 +1,11 @@
 {
   "name": "之間工作室 INTRVL Studio",
   "short_name": "INTRVL",
-  "start_url": "../../index.html",
-  "scope": "../../",
-  "display": "browser",
-  "background_color": "#252525",
-  "theme_color": "#252525",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "icon-192.png",
@@ -19,5 +19,9 @@
       "type": "image/png",
       "purpose": "any"
     }
-  ]
+  ],
+  "id": "/",
+  "orientation": "any",
+  "lang": "zh-TW",
+  "description": "之間工作室 INTRVL Studio｜來自台灣的 WEBTOON 製作團隊。"
 }
