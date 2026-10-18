@@ -1,0 +1,120 @@
+{
+  "version": "20261018",
+  "posts": [
+    {
+      "id": "2026-10-11-be-my-portfolio-live",
+      "date": "2026-10-11",
+      "cat": "work",
+      "url": "https://www.instagram.com/reel/DeW0QZYEiTS/",
+      "image": "/assets/cards-20261010/portfolio.webp",
+      "title": {
+        "zh": "《成為我的作品吧！》正式上線",
+        "en": "“Be My Portfolio” is now live",
+        "ko": "《나의 작품이 되어줘!》 정식 공개"
+      },
+      "body": {
+        "zh": "愛情 · WEBTOON，現正於 LINE WEBTOON 連載。",
+        "en": "Romance · WEBTOON, now on LINE WEBTOON.",
+        "ko": "로맨스 · WEBTOON, 지금 LINE WEBTOON에서 연재 중입니다."
+      }
+    },
+    {
+      "id": "2026-10-10-webtoon-release",
+      "date": "2026-10-10",
+      "cat": "work",
+      "url": "/works/portfolio/",
+      "image": "/assets/cards-20261010/portfolio-reel.webp",
+      "title": {
+        "zh": "《成為我的作品吧》LINE WEBTOON 上線",
+        "en": "“Be My Portfolio” launches on LINE WEBTOON",
+        "ko": "《나의 작품이 되어줘!》 LINE WEBTOON 공개"
+      },
+      "body": {
+        "zh": "10 月 10 日晚上 10 點（台灣時間）上線。",
+        "en": "Released October 10 at 10 PM (Taiwan time).",
+        "ko": "10월 10일 오후 10시(대만 시간)에 공개되었습니다."
+      }
+    },
+    {
+      "id": "2026-10-09-token-relay-day-6",
+      "date": "2026-10-09",
+      "cat": "event",
+      "url": "https://www.instagram.com/reel/DeRkur3igki/",
+      "title": {
+        "zh": "台漫搶代幣接力賽 Day 6",
+        "en": "Taiwan Comics Token Relay — Day 6",
+        "ko": "대만 만화 코인 릴레이 — Day 6"
+      },
+      "body": {
+        "zh": "LINE WEBTOON × INTRVL 活動第六天，官方 Instagram 貼文。",
+        "en": "Day 6 of the LINE WEBTOON × INTRVL event, on our official Instagram.",
+        "ko": "LINE WEBTOON × INTRVL 이벤트 6일째, 공식 Instagram 게시물입니다."
+      }
+    },
+    {
+      "id": "2026-10-08-token-relay-day-5",
+      "date": "2026-10-08",
+      "cat": "event",
+      "url": "https://www.instagram.com/reel/DeO_N-ejBe-/",
+      "title": {
+        "zh": "台漫搶代幣接力賽 Day 5",
+        "en": "Taiwan Comics Token Relay — Day 5",
+        "ko": "대만 만화 코인 릴레이 — Day 5"
+      },
+      "body": {
+        "zh": "LINE WEBTOON × INTRVL 活動第五天，官方 Instagram 貼文。",
+        "en": "Day 5 of the LINE WEBTOON × INTRVL event, on our official Instagram.",
+        "ko": "LINE WEBTOON × INTRVL 이벤트 5일째, 공식 Instagram 게시물입니다."
+      }
+    },
+    {
+      "id": "2026-10-07-token-relay-day-4",
+      "date": "2026-10-07",
+      "cat": "event",
+      "url": "https://www.instagram.com/reel/DeMauedladz/",
+      "title": {
+        "zh": "台漫搶代幣接力賽 Day 4",
+        "en": "Taiwan Comics Token Relay — Day 4",
+        "ko": "대만 만화 코인 릴레이 — Day 4"
+      },
+      "body": {
+        "zh": "LINE WEBTOON × INTRVL 活動第四天，官方 Instagram 貼文。",
+        "en": "Day 4 of the LINE WEBTOON × INTRVL event, on our official Instagram.",
+        "ko": "LINE WEBTOON × INTRVL 이벤트 4일째, 공식 Instagram 게시물입니다."
+      }
+    },
+    {
+      "id": "2026-10-07-love-quest-open",
+      "date": "2026-10-07",
+      "cat": "game",
+      "url": "/be-my-portfolio-rpg/",
+      "image": "/assets/love-quest-promo.webp",
+      "title": {
+        "zh": "《成為我的作品吧！》心動任務 開放遊玩",
+        "en": "“Be My Portfolio” Love Quest is open to play",
+        "ko": "《나의 작품이 되어줘!》 두근두근 퀘스트 오픈"
+      },
+      "body": {
+        "zh": "10 月 7 日晚上 9 點（台灣時間）開放，直接在官網就能玩。",
+        "en": "Opened October 7 at 9 PM (Taiwan time) — play it right here on our site.",
+        "ko": "10월 7일 오후 9시(대만 시간)에 오픈했습니다. 공식 사이트에서 바로 플레이하세요."
+      }
+    },
+    {
+      "id": "2026-09-22-token-relay-start",
+      "date": "2026-09-22",
+      "cat": "event",
+      "url": "https://www.instagram.com/intrvl_studio/",
+      "title": {
+        "zh": "台漫搶代幣接力賽 開跑",
+        "en": "Taiwan Comics Token Relay kicks off",
+        "ko": "대만 만화 코인 릴레이 시작"
+      },
+      "body": {
+        "zh": "LINE WEBTOON × INTRVL｜活動期間 9/22 22:00 ～ 10/18 23:59（台灣時間）。",
+        "en": "LINE WEBTOON × INTRVL — runs 9/22 22:00 to 10/18 23:59 (Taiwan time).",
+        "ko": "LINE WEBTOON × INTRVL｜이벤트 기간 9/22 22:00 ~ 10/18 23:59 (대만 시간)."
+      }
+    }
+  ]
+}
