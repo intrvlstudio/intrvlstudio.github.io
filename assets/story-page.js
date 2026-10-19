@@ -116,7 +116,7 @@ async function openArt(id) {
   if (count) count.textContent = artOrder.length > 1 && at >= 0 ? `${at + 1} / ${artOrder.length}` : '';
   $$('#artPrev,#artNext').forEach(b => b.hidden = artOrder.length < 2);
   $('#artContainer').classList.toggle('comic-reader', a.role === 'comic'); $('#artTitle').textContent = a.label;
-  $('#artStatus').textContent = `正在載入大圖 · ${kb(a.fullBytes)}`; $('#artContainer').replaceChildren();
+  $('#artStatus').textContent = `正在載入大圖，${kb(a.fullBytes)}`; $('#artContainer').replaceChildren();
   if (!dialog.open) dialog.showModal();
   const img = new Image(); img.alt = a.label; img.src = a.full;
   try { await img.decode(); if (token !== modalToken) return; $('#artContainer').replaceChildren(img); $('#artStatus').textContent = `${a.label} / 點擊「關閉」或按 Esc 返回` }
@@ -148,9 +148,9 @@ function renderStory() {
   const csFigures = w.pair
     ? `<div class="cs-figure pair-figure">${image(w.pair, { alt: `${w.characters.map(c => c.name).join('與')}的去背全身立繪` })}<div class="pair-hotspots">${w.characters.map((c, i) => `<button class="character-trigger" data-character="${i}" aria-label="認識${esc(c.name)}" aria-controls="profile-${i}" aria-expanded="false"><span class="cs-plate"><b>P${i + 1}</b>${esc(c.name)}<i aria-hidden="true">＋</i></span></button>`).join('')}</div></div>`
     : `<div class="cs-figure cs-p1">${figure({ ...w.characters[0], i: 0 })}</div><div class="cs-figure cs-p2">${figure({ ...w.characters[1], i: 1 })}</div>`;
-  const centerCol = `<div class="cs-center"><div class="cs-meter" aria-hidden="true"><span class="cs-dots">${w.characters.map(() => '<i></i>').join('')}</span><b data-cs-count>0 / ${w.characters.length}</b></div><div class="holo-zone" aria-live="polite"><div class="holo-hint"><span class="micro">CHARACTER SIGNAL / STANDBY</span><br>選一位角色，開始認識他。<br>點擊可固定面板，再點一次收起。</div>${w.characters.map((c, i) => `<article class="holo-panel" id="profile-${i}" hidden><span class="micro">PLAYER ${i + 1} / PROFILE — CONNECTED</span><h3>${esc(c.name)}</h3><ul class="tags">${(c.tags || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul><p>${esc(c.description)}</p></article>`).join('')}</div>${w.pairing ? `<p class="cs-pairing" data-pairing hidden><span class="micro">LINK ESTABLISHED</span><b>${esc(w.pairing)}</b></p>` : ''}</div>`;
+  const centerCol = `<div class="cs-center"><div class="cs-meter" aria-hidden="true"><span class="cs-dots">${w.characters.map(() => '<i></i>').join('')}</span><b data-cs-count>0 / ${w.characters.length}</b></div><div class="holo-zone" aria-live="polite"><div class="holo-hint"><span class="micro">CHARACTER SIGNAL / STANDBY</span><br>選一位角色，開始認識他。<br>點擊可固定面板，再點一次收起。</div>${w.characters.map((c, i) => `<article class="holo-panel" id="profile-${i}" hidden><span class="micro">PLAYER ${i + 1} / PROFILE — CONNECTED</span><h3>${esc(c.name)}</h3><ul class="tags">${(c.tags || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul><p>${esc(c.description).replace(/。(?=.)/g, '。<br>')}</p></article>`).join('')}</div>${w.pairing ? `<p class="cs-pairing" data-pairing hidden><span class="micro">LINK ESTABLISHED</span><b>${esc(w.pairing)}</b></p>` : ''}</div>`;
   const card = (a, i) => `<li class="card" data-card="${esc(a.id)}" style="--arn:${ratio(a)}"><button type="button" class="card-btn" data-flip aria-label="翻開收藏卡 No.${pad2(i + 1)}"><span class="card-inner"><span class="card-back" aria-hidden="true">${ICON.mark}<small>No.${pad2(i + 1)}</small><em>TAP TO OPEN</em></span><span class="card-front"><span class="card-art" style="--bg:url('${esc(a.thumb)}')">${image(a, { lazy: true })}</span><span class="card-label"><small>No.${pad2(i + 1)}</small><span>${esc(a.label)}</span><b aria-hidden="true">放大 ↗</b></span></span></span></button></li>`;
-  const bookHTML = w.book ? `<section class="book-section stage" id="books" data-stage="books" aria-labelledby="bookTitle"><div class="book-header reveal"><span class="eyebrow">MISSION 04 / ITEM DROP</span><span class="micro">INTRVL × KADOKAWA</span></div><div class="book-layout reveal"><div class="book-viewer"><div class="book-3d" data-book tabindex="0" role="group" aria-label="${esc(w.title)}實體書：拖曳或用方向鍵轉動"><span class="book-orbit" aria-hidden="true"></span><span class="book-cross cross-one" aria-hidden="true">＋</span><span class="book-cross cross-two" aria-hidden="true">＋</span><div class="book-float"><div class="book-tilt">${image(w.book.art, { lazy: true, alt: w.title + '・' + w.book.caption })}<span class="book-glare" style="--m:url('${esc(w.book.art.screen)}')" aria-hidden="true"></span></div></div><span class="book-get" aria-hidden="true">ITEM GET!</span></div><p class="book-caption micro">${esc(w.book.caption)} / PRINT EDITION · 拖曳轉動</p></div><div class="book-copy"><p class="book-edition">${esc(w.book.publisher)}出版 <span>／ ${esc(w.book.edition)}</span></p><h2 id="bookTitle">故事，<br>也能握在手裡。</h2><p class="book-subtitle">${esc(w.book.copy)}</p><p class="book-name">${esc(w.title)}</p><a class="book-buy" href="${esc(w.buy)}" data-book-buy target="_blank" rel="noopener noreferrer"><span><small>TAIWAN KADOKAWA</small><strong>前往角川購買</strong></span><span class="buy-arrow" aria-hidden="true">↗</span></a><p class="book-fineprint">${w.id === 'roommate' ? '前往系列頁選擇集數。' : ''}版本與供貨以角川官網為準。</p></div></div></section>` : '';
+  const bookHTML = w.book ? `<section class="book-section stage" id="books" data-stage="books" aria-labelledby="bookTitle"><div class="book-header reveal"><span class="eyebrow">MISSION 04 / ITEM DROP</span><span class="micro">INTRVL × KADOKAWA</span></div><div class="book-layout reveal"><div class="book-viewer"><div class="book-3d" data-book tabindex="0" role="group" aria-label="${esc(w.title)}實體書：拖曳或用方向鍵轉動"><span class="book-orbit" aria-hidden="true"></span><span class="book-cross cross-one" aria-hidden="true">＋</span><span class="book-cross cross-two" aria-hidden="true">＋</span><div class="book-float"><div class="book-tilt">${image(w.book.art, { lazy: true, alt: w.title + '・' + w.book.caption })}<span class="book-glare" style="--m:url('${esc(w.book.art.screen)}')" aria-hidden="true"></span></div></div><span class="book-get" aria-hidden="true">ITEM GET!</span></div><p class="book-caption micro">${esc(w.book.caption)} ／ PRINT EDITION ／ 拖曳轉動</p></div><div class="book-copy"><p class="book-edition">${esc(w.book.publisher)}出版 <span>／ ${esc(w.book.edition)}</span></p><h2 id="bookTitle">故事，<br>也能握在手裡</h2><p class="book-subtitle">${esc(w.book.copy)}</p><p class="book-name">${esc(w.title)}</p><a class="book-buy" href="${esc(w.buy)}" data-book-buy target="_blank" rel="noopener noreferrer"><span><small>TAIWAN KADOKAWA</small><strong>前往角川購買</strong></span><span class="buy-arrow" aria-hidden="true">↗</span></a><p class="book-fineprint">${w.id === 'roommate' ? '前往系列頁選擇集數。' : ''}版本與供貨以角川官網為準。</p></div></div></section>` : '';
   const tally = [['story', '故事'], ['chars', '角色'], ['cards', '收藏'], ...(needsBook ? [['book', '實體書']] : []), ...(w.read ? [['read', '前往閱讀']] : [])];
 
   root.innerHTML = `
@@ -163,7 +163,7 @@ function renderStory() {
     <h1 id="workTitle">${esc(w.title)}</h1>
     <ul class="chips" aria-label="作品設定">${chips.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
     <div class="hero-start"><button type="button" class="press-start" data-start><span>PRESS START</span><i aria-hidden="true">▶</i></button>${w.read ? `<a class="hero-read" href="${esc(w.read)}" data-read target="_blank" rel="noopener noreferrer">直接閱讀 ↗</a>` : '<span class="reading-pending">閱讀連結即將公布</span>'}</div>
-    <p class="hero-hint micro">按 Enter 開始 · 點擊作品畫面，送出心動</p>
+    <p class="hero-hint micro">按 Enter 開始，點擊作品畫面送出心動</p>
   </div>
   <figure class="hero-art" style="--arn:${ratio(hero)}">
     <div class="hero-art-in">${image(hero, { critical: true, alt: w.title + '主視覺' })}<span class="hero-scan" aria-hidden="true"></span><span class="hero-glare" aria-hidden="true"></span></div>
@@ -176,7 +176,7 @@ function renderStory() {
 
 <section class="story-stage stage" id="story" data-stage="story" aria-labelledby="storyTitle">
   <div class="stage-bg" style="--bg:url('${esc(w.cover.thumb)}')" aria-hidden="true"></div>
-  <header class="stage-head reveal"><div><div class="eyebrow">MISSION 01 / THE STORY</div><h2 id="storyTitle" class="section-title">一切，<br>從相遇開始。</h2></div><p class="stage-hint">點擊對話框，或按「NEXT」，<br>把故事讀下去。</p></header>
+  <header class="stage-head reveal"><div><div class="eyebrow">MISSION 01 / THE STORY</div><h2 id="storyTitle" class="section-title">一切，<br>從相遇開始</h2></div><p class="stage-hint">點擊對話框，或按「NEXT」，<br>把故事讀下去。</p></header>
   <div class="vn reveal">
     <figure class="vn-art" style="--arn:${ratio(w.cover)}">${image(w.cover, { lazy: true, alt: w.title + ' 正式封面' })}<figcaption class="micro">FILE ${stageNo} · 正式封面</figcaption></figure>
     <div class="vn-box" data-vn>
@@ -186,16 +186,16 @@ function renderStory() {
       <div class="vn-foot"><div class="vn-dots" aria-hidden="true">${beats.map(() => '<i></i>').join('')}</div><div class="vn-btns"><button type="button" class="ghost" data-vn-skip>全部顯示</button><button type="button" class="solid" data-vn-next>NEXT <i aria-hidden="true">▶</i></button></div></div>
     </div>
   </div>
-  <small class="stage-note">${esc(w.title)} / ${esc(w.setting)}</small>
+  <small class="stage-note">${esc(w.title)}／${chips.map(esc).join('／')}</small>
 </section>
 
 <section class="chars-stage stage detail-section characters-section" id="characters" data-stage="characters" aria-labelledby="charsTitle">
-  <header class="stage-head reveal"><div><div class="eyebrow">MISSION 02 / CHARACTER SELECT</div><h2 id="charsTitle" class="section-title">靠近一點，<br>認識他們。</h2></div><p class="stage-hint">移到角色身上，或輕點立繪，<br>打開屬於他的故事。<br><span class="micro">← → 切換角色</span></p></header>
+  <header class="stage-head reveal"><div><div class="eyebrow">MISSION 02 / CHARACTER SELECT</div><h2 id="charsTitle" class="section-title">靠近一點，<br>認識他們</h2></div><p class="stage-hint">移到角色身上，或輕點立繪，<br>打開屬於他的故事。<br><span class="micro">← → 切換角色</span></p></header>
   <div class="cs ${w.pair ? 'cs-pair' : ''} reveal" data-cs>${w.pair ? csFigures + centerCol : csFigures.replace('<div class="cs-figure cs-p2">', centerCol + '<div class="cs-figure cs-p2">')}</div>
 </section>
 
 <section class="coll-stage stage detail-section gallery-section" id="visuals" data-stage="visuals" aria-labelledby="visualsTitle">
-  <header class="stage-head reveal"><div><div class="eyebrow">MISSION 03 / COLLECTION</div><h2 id="visualsTitle" class="section-title">故事以外的瞬間。</h2></div><div class="coll-side"><p class="stage-hint">翻開卡片，收集畫面。<br>翻開後再點一次可放大。</p><div class="coll-bar"><b data-coll-count>0 / ${cards.length}</b><button type="button" data-flip-all>全部翻開</button></div></div></header>
+  <header class="stage-head reveal"><div><div class="eyebrow">MISSION 03 / COLLECTION</div><h2 id="visualsTitle" class="section-title">故事以外的瞬間</h2></div><div class="coll-side"><p class="stage-hint">翻開卡片，收集畫面。<br>翻開後再點一次可放大。</p><div class="coll-bar"><b data-coll-count>0 / ${cards.length}</b><button type="button" data-flip-all>全部翻開</button></div></div></header>
   <ul class="cards reveal" aria-label="收藏卡">${cards.map(card).join('')}</ul>
 </section>
 
@@ -210,7 +210,7 @@ ${bookHTML}
       <div class="tally-exp"><div class="exp-bar"><i data-clear-bar></i></div><b data-clear-pct>0%</b></div>
       <div class="rank" aria-label="評價"><small>RANK</small><b data-rank>D</b></div>
     </div>
-    <div class="clear-cta"><p class="clear-line">下一幕，等你翻開。</p><p>閱讀《${esc(w.title)}》，把故事繼續下去。</p>${actions(w)}</div>
+    <div class="clear-cta"><p class="clear-line">下一幕，等你翻開</p><p>閱讀《${esc(w.title)}》，把故事繼續下去。</p>${actions(w)}</div>
   </div>
   <div class="world"><div class="world-head micro"><span>ALL STAGES</span><b data-world-count>0 / ${N} CLEARED</b></div><ol class="world-list">${data.works.map((x, i) => `<li><a class="world-item${x.id === w.id ? ' is-current' : ''}" href="/works/${x.id}/" data-world="${x.id}" aria-label="第 ${i + 1} 關：${esc(x.title)}"><span class="world-img"><img src="${esc(x.cover.thumb)}" width="${x.cover.width}" height="${x.cover.height}" alt="" loading="lazy" decoding="async"></span><span class="world-no">${pad2(i + 1)}</span><i class="world-ok" aria-hidden="true">${ICON.check}</i></a></li>`).join('')}</ol></div>
 </section>
@@ -280,7 +280,7 @@ ${bookHTML}
     $('[data-clear-pct]').textContent = `${p}%`; $('[data-clear-bar]').style.transform = `scaleX(${p / 100})`; $('[data-rank]').textContent = rankOf(p);
     root.classList.toggle('is-cleared', clearedNow);
     $('[data-clear-title]').textContent = clearedNow ? 'STAGE CLEAR' : `STAGE ${stageNo}`;
-    $('[data-clear-sub]').textContent = clearedNow ? '全部任務完成。這一關，你通關了。' : '完成所有任務，就能通關這一關。';
+    $('[data-clear-sub]').textContent = clearedNow ? '全部任務完成，這一關通關了。' :'完成所有任務，就能通關這一關。';
     const cleared = data.works.filter(x => x.id === w.id ? clearedNow : (store[x.id] && store[x.id].clear)).length;
     $('[data-world-count]').textContent = `${cleared} / ${N} CLEARED`;
     $$('[data-world]').forEach(a => a.classList.toggle('is-cleared', a.dataset.world === w.id ? clearedNow : !!(store[a.dataset.world] && store[a.dataset.world].clear)));
@@ -293,7 +293,7 @@ ${bookHTML}
   function bump(id) {
     const d = defs.find(q => q.id === id); paint();
     if (d && isDone(d) && !announced.has(id)) {
-      announced.add(id); rec.hearts += 10; toast('QUEST COMPLETE', d.label, `+10 心動值 · 進度 ${percent()}%`); paint();
+      announced.add(id); rec.hearts += 10; toast('QUEST COMPLETE', d.label, `+10 心動值，進度 ${percent()}%`); paint();
       if (defs.every(isDone) && !rec.clear) stageClear();
     }
   }
@@ -352,7 +352,7 @@ ${bookHTML}
     typer && typer.skip(); beat = n; vnText.classList.remove('is-all');
     typer = typeInto(vnText, beats[n], 34, () => { if (n === lastBeat) finishStory(); else vnPaint() }); vnPaint();
   }
-  function showAll() { typer && typer.skip(); beat = -2; vnText.classList.add('is-all'); typer = null; vnText.textContent = beats.join(''); finishStory() }
+  function showAll() { typer && typer.skip(); beat = -2; vnText.classList.add('is-all'); typer = null; vnText.textContent = beats.join('\n'); finishStory() }
   function vnAdvance() {
     if (typer && !typer.done) { typer.skip(); return }
     if (beat === -2 || (beat === lastBeat && rec.story)) { $('#characters').scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth' }); return }
