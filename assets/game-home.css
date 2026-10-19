@@ -366,7 +366,7 @@ html[lang=en] .ov-lab strong{font-family:var(--fe);font-size:clamp(48px,6.4vw,11
 /* =====================================================================
    PHONE / APP MODE (<=760px)
    ===================================================================== */
-@media (max-width:760px){
+@media (max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse){
   html,body{overflow:hidden}
   .gh-v{right:-30vw;top:calc(var(--bar) + var(--sat));width:110vw;opacity:.08}
   .hud,.cur-ring,.cur-dot{display:none!important}
@@ -454,8 +454,8 @@ html[lang=en] .ov-lab strong{font-family:var(--fe);font-size:clamp(48px,6.4vw,11
   .wd-no{font-size:clamp(72px,24vw,110px)}
   .wd h3{font-size:clamp(28px,8.4vw,36px)}
   .wd-btns .btn{flex:1 1 0;justify-content:space-between}
-  .wd-dots{display:flex;justify-content:center;gap:6px;padding:4px 20px 2px}
-  .wd-dots button{width:22px;height:22px;background:none;border:0;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .wd-dots{display:flex;justify-content:center;gap:2px;padding:4px 20px 2px}
+  .wd-dots button{width:44px;height:44px;background:none;border:0;padding:0 8px;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation}
   .wd-dots i{display:block;width:100%;height:3px;background:var(--ln);transition:background .3s}
   .wd-dots button.on i{background:var(--o)}
 
@@ -498,6 +498,9 @@ html[lang=en] .ov-lab strong{font-family:var(--fe);font-size:clamp(48px,6.4vw,11
   .s6-btns .btn{flex:1 1 100%;justify-content:space-between}
   .cs{max-height:none}
   .s6-r{order:0}
+  .cs-bars button{height:44px;touch-action:manipulation}
+  .chips button{min-height:44px}
+  .post a,.bull-foot a{display:inline-flex;align-items:center;min-height:44px}
 
   .s7{padding:16px 16px 24px}
   .s7-f{height:auto;display:flex;flex-direction:column;border-width:8px}
@@ -511,7 +514,7 @@ html[lang=en] .ov-lab strong{font-family:var(--fe);font-size:clamp(48px,6.4vw,11
   .jt-btns .btn{flex:1 1 100%;justify-content:space-between}
   .jt-btns .btn.mail{word-break:break-all}
 }
-@media (max-width:760px){
+@media (max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse){
   @view-transition{navigation:auto}
   ::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}
   html #intrvl-consent{bottom:calc(var(--tab) + var(--sab) + 10px)}

@@ -12,7 +12,7 @@
   --out:cubic-bezier(.2,.8,.2,1);--ease:cubic-bezier(.7,0,.2,1);
   font-family:var(--fz);background:#000;color:#fff;
 }
-@media(max-width:760px){:root{--hud:44px}html.as-on{--chrome:calc(var(--as-bar) + var(--as-sat) + var(--as-tab) + var(--as-sab))}}
+@media(max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse){:root{--hud:44px}html.as-on{--chrome:calc(var(--as-bar) + var(--as-sat) + var(--as-tab) + var(--as-sab))}}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hud) + 8px);-webkit-text-size-adjust:100%}
 html.as-on:root{scroll-padding-top:calc(var(--as-bar,0px) + var(--as-sat,0px) + var(--hud) + 8px)}
@@ -90,7 +90,7 @@ html.as-on .qhud{top:calc(var(--as-bar) + var(--as-sat))}
 .qhud-all:hover{color:var(--o)}
 .qhud.is-clear .qhud-exp i{background:#fff}
 @media(max-width:1180px){.qhud-steps a:not([aria-current]) span{display:none}.qhud-steps a:not([aria-current]){padding:0 2px}}
-@media(max-width:760px){
+@media(max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse){
   .qhud{gap:10px;padding:0 max(12px,env(safe-area-inset-left,0px))}
   .qhud-logo,.qhud-steps,.qhud-all{display:none}
   .qhud-cur{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--o);white-space:nowrap}
@@ -102,10 +102,10 @@ html.as-on .qhud{top:calc(var(--as-bar) + var(--as-sat))}
 }
 
 /* quest log */
-.quest-panel{position:fixed;z-index:45;top:calc(var(--hud) + 8px);right:max(16px,3vw);width:min(340px,92vw);background:var(--bt);box-shadow:inset 0 0 0 1px var(--o);font-family:var(--fz);animation:rise .25s var(--out) both}
-html.as-on .quest-panel{top:auto;left:0;right:0;width:auto;bottom:calc(var(--as-tab) + var(--as-sab));box-shadow:inset 0 1px 0 var(--o)}
+.quest-panel{position:fixed;z-index:45;top:calc(var(--hud) + 8px);right:max(16px,3vw);width:min(340px,92vw);max-height:calc(100dvh - var(--hud) - 24px);overflow-y:auto;overscroll-behavior:contain;background:var(--bt);box-shadow:inset 0 0 0 1px var(--o);font-family:var(--fz);animation:rise .25s var(--out) both}
+html.as-on .quest-panel{top:auto;left:0;right:0;width:auto;bottom:calc(var(--as-tab) + var(--as-sab));max-height:calc(100dvh - var(--chrome) - var(--hud) - 8px);box-shadow:inset 0 1px 0 var(--o)}
 .quest-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px;color:var(--o)}
-.quest-close{width:36px;height:36px;font-size:22px;line-height:1;color:var(--g);margin-right:-8px}
+.quest-close{width:44px;height:44px;font-size:22px;line-height:1;color:var(--g);margin-right:-8px}
 .quest-list{padding:0 18px}
 .quest-list li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #262626;font-size:14px;color:var(--g)}
 .quest-list i{flex:none;width:20px;height:20px;box-shadow:inset 0 0 0 1px var(--ln);display:grid;place-items:center}
@@ -117,7 +117,7 @@ html.as-on .quest-panel{top:auto;left:0;right:0;width:auto;bottom:calc(var(--as-
 .quest-list li.done b{color:var(--o)}
 .quest-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px 16px;border-top:1px solid #262626}
 .quest-foot small{font-size:11px;color:var(--dg)}
-.quest-foot button{font-size:12px;color:var(--g);text-decoration:underline;padding:6px 0}
+.quest-foot button{min-height:44px;font-size:12px;color:var(--g);text-decoration:underline;padding:6px 0}
 .quest-foot button:hover{color:var(--o)}
 
 /* toasts, hearts, stage clear banner */
@@ -428,7 +428,7 @@ body:has(dialog[open]){overflow:hidden}
 }
 
 /* ---------- phone ---------- */
-@media(max-width:760px){
+@media(max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse){
   .stage{min-height:calc(100svh - var(--hud) - var(--chrome))}
   .detail-section,.story-stage,.read-section{padding:44px 20px 56px}
   .detail-hero{padding:22px 20px 84px;gap:24px;min-height:0}

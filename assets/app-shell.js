@@ -5,7 +5,7 @@
   const D = document, R = D.documentElement;
   if (R.dataset.asInit) return;
   R.dataset.asInit = '1';
-  const mq = matchMedia('(max-width:760px)');
+  const mq = matchMedia('(max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse)');
   const path = location.pathname.replace(/index\.html$/, '');
   let pref = '';
   try { pref = localStorage.getItem('intrvl_lang') || ''; } catch {}
@@ -86,7 +86,7 @@
       try { same = !!D.referrer && new URL(D.referrer).origin === location.origin; } catch {}
       if (same && history.length > 1) { e.preventDefault(); history.back(); }
     });
-    share.addEventListener('click', () => { navigator.share({ title: D.title, url: location.href.split('#')[0] }).catch(() => {}); });
+    share.addEventListener('click', () => { navigator.share({ title: D.title, url: location.href }).catch(() => {}); });
     tabs.querySelector('[data-more]').addEventListener('click', () => sheet.showModal());
     sheet.addEventListener('click', e => { if (e.target === sheet || e.target.closest('[data-close]')) sheet.close(); });
     sheet.querySelectorAll('.as-sf a[hreflang]').forEach(a => a.addEventListener('click', () => { try { localStorage.setItem('intrvl_lang', a.getAttribute('hreflang')); } catch {} }));
@@ -107,7 +107,7 @@
     onScroll();
   }
   function apply() {
-    if (mq.matches) { if (D.body) { build(); R.classList.add('as-on'); } } else R.classList.remove('as-on');
+    if (mq.matches) { if (D.body) { build(); R.classList.add('as-on'); } } else { if (sheet && sheet.open) sheet.close(); R.classList.remove('as-on'); }
   }
   mq.addEventListener && mq.addEventListener('change', apply);
   if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', apply); else apply();

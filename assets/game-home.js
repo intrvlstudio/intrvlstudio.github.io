@@ -8,7 +8,7 @@
   const $ = (s, r = D) => r.querySelector(s);
   const $$ = (s, r = D) => [...r.querySelectorAll(s)];
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const mqApp = matchMedia('(max-width:760px)');
+  const mqApp = matchMedia('(max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse)');
   const mqReduce = matchMedia('(prefers-reduced-motion:reduce)');
   const mqFine = matchMedia('(hover:hover) and (pointer:fine)');
   const isApp = () => mqApp.matches;
@@ -121,6 +121,7 @@
   const logoSrc = LANG === 'zh' ? '/assets/brand-2026/lockup-zh-white.svg' : '/assets/brand-2026/lockup-en-white.svg';
   const logoAlt = L('之間工作室 INTRVL', 'INTRVL Studio', 'INTRVL Studio');
   const langHref = h => ({ zh: '/', en: '/en/', ko: '/ko/' }[h]);
+  const newsHref = langHref(LANG) + 'news/';
   const langLinks = () => `<a href="/" hreflang="zh-TW" lang="zh-TW"${LANG === 'zh' ? ' aria-current="page"' : ''}>中文</a><a href="/en/" hreflang="en" lang="en"${LANG === 'en' ? ' aria-current="page"' : ''}>EN</a><a href="/ko/" hreflang="ko" lang="ko"${LANG === 'ko' ? ' aria-current="page"' : ''}>한국어</a>`;
   const ICON = {
     home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 3.5 20.5 11M5.5 9.5V20.5h13V9.5M10 20.5v-6h4v6"/></svg>',
@@ -161,7 +162,7 @@
       <div class="sheet-h"><i></i><b>MORE</b><button class="sheet-x" data-close aria-label="${L('關閉', 'Close', '닫기')}">×</button></div>
       <div class="sheet-l">
         ${[5, 6, 7].map(id => `<button data-go="${id}"><em>${STAGES[id].n}</em><span>${STAGES[id].name}</span><small>${STAGES[id].en}</small><i>→</i></button>`).join('')}
-        <a href="/news/"><em>↗</em><span>${L('全部消息', 'All news', '전체 소식')}</span><small>NEWS ARCHIVE</small><i>→</i></a>
+        <a href="${newsHref}"><em>↗</em><span>${L('全部消息', 'All news', '전체 소식')}</span><small>NEWS ARCHIVE</small><i>→</i></a>
         <a href="/works/"><em>↗</em><span>${L('作品列表', 'All stories', '작품 목록')}</span><small>ALL STORIES</small><i>→</i></a>
       </div>
       <div class="sheet-f">
@@ -233,7 +234,7 @@
       </div>
       <div class="s2-body">
         <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card${w.fit ? ' fit' : ''}"${w.fit ? ` style="--fill:url(${w.cover})"` : ''} data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
-        <div class="wd-dots" data-dots>${WORKS.map((w, i) => `<button data-i="${i}" aria-label="${i + 1}"><i></i></button>`).join('')}</div>
+        <div class="wd-dots" data-dots>${WORKS.map((w, i) => `<button data-i="${i}" aria-label="${esc(w.title)}"><i></i></button>`).join('')}</div>
         <div class="wd u-rise" ${sd(.8)} data-wd aria-live="polite">${wdHTML(0)}</div>
       </div>
     </div>`;
@@ -277,7 +278,7 @@
           <div class="bull-t">${L('官方佈告欄', 'Studio bulletin', '공식 게시판')}</div>
           <div class="chips" data-chips></div>
           <div class="posts" data-posts aria-live="polite"><div class="post" style="color:var(--g);font-size:14px">${L('載入中…', 'Loading…', '불러오는 중…')}</div></div>
-          <a class="bull-all" href="/news/"><span>${L('查看全部消息', 'See all news', '전체 소식 보기')}</span><b>→</b></a>
+          <a class="bull-all" href="${newsHref}"><span>${L('查看全部消息', 'See all news', '전체 소식 보기')}</span><b>→</b></a>
           <div class="bull-foot"><span>${L('最新消息都在 Instagram，歡迎追蹤', 'Studio updates are posted on Instagram. Follow', '스튜디오 소식은 Instagram에서 확인하세요')}</span><a href="https://www.instagram.com/intrvl_studio/" target="_blank" rel="noopener noreferrer">@intrvl_studio ↗</a></div>
         </section>
         <div class="fu u-rise" style="--d:.7s;--t:.9s">
@@ -430,7 +431,9 @@
   }
   function startStage() { return hashStage().n || 1; }
   function hashStage() {
-    const h = decodeURIComponent((location.hash || '').replace(/^#/, '')).toLowerCase();
+    let h = (location.hash || '').replace(/^#/, '');
+    try { h = decodeURIComponent(h); } catch { h = ''; }
+    h = h.toLowerCase();
     const n = HASH_MAP[h] || 0;
     return { n, tab: h === 'contact' ? 1 : 0 };
   }
@@ -503,7 +506,7 @@
       c.tabIndex = o === 0 ? 0 : -1;
       c.setAttribute('aria-current', o === 0 ? 'true' : 'false');
     });
-    $$('.wd-dots button', elStage).forEach((b, i) => b.classList.toggle('on', i === S.wi));
+    $$('.wd-dots button', elStage).forEach((b, i) => { b.classList.toggle('on', i === S.wi); b.setAttribute('aria-pressed', String(i === S.wi)); });
     const wn = $('[data-wn]', elStage); if (wn) wn.textContent = String(S.wi + 1).padStart(2, '0');
     const wd = $('[data-wd]', elStage); if (!wd) return;
     if (!swap) { wd.innerHTML = wdHTML(S.wi); return; }
@@ -628,7 +631,7 @@
       s.style.clipPath = on || was ? 'inset(0 0 0 0)' : 'inset(0 0 0 100%)';
       s.style.transition = on && !reduced() ? 'clip-path .9s cubic-bezier(.7,0,.2,1)' : 'none';
     });
-    $$('.cs-bars button', elStage).forEach((b, i) => b.classList.toggle('on', i === a));
+    $$('.cs-bars button', elStage).forEach((b, i) => { b.classList.toggle('on', i === a); b.setAttribute('aria-pressed', String(i === a)); });
     $('[data-cpart]', el).textContent = COURSE[a].part;
     $('[data-cn]', el).textContent = String(a + 1).padStart(2, '0');
     $('[data-ct]', elStage).textContent = COURSE[a].t; $('[data-cd]', elStage).textContent = COURSE[a].d;
@@ -808,7 +811,7 @@
   }
   addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; if (!seen) { seen = true; rx = e.clientX; ry = e.clientY; pointerFx(); } px = e.clientX; py = e.clientY; mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
   [mqApp, mqReduce, mqFine].forEach(m => m.addEventListener && m.addEventListener('change', pointerFx));
-  mqApp.addEventListener && mqApp.addEventListener('change', () => { if (S.stage > 0) { const n = S.stage; S.stage = -1; mountStage(n); } });
+  mqApp.addEventListener && mqApp.addEventListener('change', () => { if (elSheet.open) elSheet.close(); if (S.stage > 0) { const n = S.stage; S.stage = -1; mountStage(n); } });
   D.addEventListener('visibilitychange', () => { if (D.hidden) cancelAnimationFrame(raf); else pointerFx(); });
 
   /* ----------------------------------------------------------------- start */

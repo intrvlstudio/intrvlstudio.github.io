@@ -103,7 +103,7 @@ html[lang=en] .np-nav b{font-family:var(--fe);font-size:12px;letter-spacing:.06e
 @media (max-width:1100px){.np-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* phones: app list */
-@media (max-width:760px){
+@media (max-width:760px), (max-width:1000px) and (max-height:500px) and (pointer:coarse){
   .np-top{display:none}
   .np-vmark{right:-30vw;top:20px;width:110vw}
   .np-main{padding:0 0 28px}
@@ -115,8 +115,9 @@ html[lang=en] .np-nav b{font-family:var(--fe);font-size:12px;letter-spacing:.06e
   .np-bar{scroll-margin-top:calc(var(--as-bar,52px) + env(safe-area-inset-top,0px));position:sticky;top:calc(var(--as-bar,52px) + env(safe-area-inset-top,0px));z-index:30;margin:18px 0 0;padding:10px 20px;background:#000;border-top:0;flex-wrap:nowrap}
   .np-chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px;padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1}
   .np-chips::-webkit-scrollbar{display:none}
+  .np-chip{min-height:44px}
   .np-count{display:none}
-  .np-count-m{display:block;padding:12px 20px 0}
+  html.as-on .np-count-m{display:block;padding:12px 20px 0}
   .np-grid{display:block;padding:0 20px;min-height:160px}
   .np-item{display:block}
   .np-card{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;padding:16px 0;background:none;border-top:0;border-bottom:1px solid var(--ln);box-shadow:none;transform:translateY(16px)}
@@ -133,9 +134,10 @@ html[lang=en] .np-nav b{font-family:var(--fe);font-size:12px;letter-spacing:.06e
   .np-pager{padding:0 20px;gap:4px;margin-top:24px}
   .np-pager button,.np-pager span{min-width:44px;height:48px}
   .np-pager .num{display:none}
-  .np-pager .cur{display:inline-flex;border:0;background:none;cursor:default;min-width:84px;color:var(--g)}
+  html.as-on .np-pager .cur{display:inline-flex;border:0;background:none;cursor:default;min-width:84px;color:var(--g)}
   .np-pager .cur b{color:#fff}
   .np-foot{margin:28px 20px 0;flex-direction:column}
+  .np-foot a{display:inline-flex;align-items:center;min-height:44px}
   .np-footer{display:none}
 }
 @media (min-width:761px){.np-pager .cur{display:none}.np-count-m{display:none}}
