@@ -232,7 +232,7 @@
         <div class="ctl u-rise" style="--d:.7s;--t:.7s"><button data-w="-1" aria-label="${L('上一個作品', 'Previous story', '이전 작품')}">←</button><div class="ctl-n"><b data-wn>01</b> / 06</div><button data-w="1" aria-label="${L('下一個作品', 'Next story', '다음 작품')}">→</button></div>
       </div>
       <div class="s2-body">
-        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card${w.fit ? ' fit' : ''}" data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
+        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card${w.fit ? ' fit' : ''}"${w.fit ? ` style="--fill:url(${w.cover})"` : ''} data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
         <div class="wd-dots" data-dots>${WORKS.map((w, i) => `<button data-i="${i}" aria-label="${i + 1}"><i></i></button>`).join('')}</div>
         <div class="wd u-rise" ${sd(.8)} data-wd aria-live="polite">${wdHTML(0)}</div>
       </div>
