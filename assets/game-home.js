@@ -18,6 +18,20 @@
   if (!root) return;
   try { localStorage.setItem('intrvl_lang', R.lang); } catch {}
 
+  /* Images the staff portal can replace (assets/site-slots.js). slotUrl() returns the published override when it is already
+     known, otherwise the built-in default; elements carry data-slot so an override that arrives later is swapped in place. */
+  const SL = window.INTRVLSlots || { ready: Promise.resolve(), get: (_, fallback) => fallback };
+  const slotUrl = (id, fallback) => SL.get(id, fallback);
+  const applySlots = (scope = D) => {
+    $$('[data-slot]', scope).forEach(el => {
+      const url = SL.get(el.dataset.slot, '');
+      if (!url) return;
+      if (el.tagName === 'IMG') { if (!el.src.endsWith(url)) el.src = url; } else el.style.backgroundImage = `url(${url})`;
+    });
+    $$('[data-slot-fill]', scope).forEach(el => { const url = SL.get(el.dataset.slotFill, ''); if (url) el.style.setProperty('--fill', `url(${url})`); });
+  };
+  SL.ready.then(() => applySlots());
+
   /* ------------------------------------------------------------------ data */
   const V = {
     tri: 'M 10.765 18.403 L 0 0 L 57.312 0 Z',
@@ -233,7 +247,7 @@
         <div class="ctl u-rise" style="--d:.7s;--t:.7s"><button data-w="-1" aria-label="${L('上一個作品', 'Previous story', '이전 작품')}">←</button><div class="ctl-n"><b data-wn>01</b> / 06</div><button data-w="1" aria-label="${L('下一個作品', 'Next story', '다음 작품')}">→</button></div>
       </div>
       <div class="s2-body">
-        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card${w.fit ? ' fit' : ''}"${w.fit ? ` style="--fill:url(${w.cover})"` : ''} data-i="${i}" aria-label="${esc(w.title)}"><img src="${w.cover}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
+        <div class="car u-fade" ${sd(.5)} data-car data-noswipe role="group" aria-label="${L('作品輪播', 'Stories carousel', '작품 캐러셀')}">${WORKS.map((w, i) => `<button class="car-card${w.fit ? ' fit' : ''}"${w.fit ? ` style="--fill:url(${slotUrl('works.' + w.k, w.cover)})" data-slot-fill="works.${w.k}"` : ''} data-i="${i}" aria-label="${esc(w.title)}"><img src="${slotUrl('works.' + w.k, w.cover)}" data-slot="works.${w.k}" alt="" width="400" height="600" draggable="false" decoding="async"></button>`).join('')}</div>
         <div class="wd-dots" data-dots>${WORKS.map((w, i) => `<button data-i="${i}" aria-label="${esc(w.title)}"><i></i></button>`).join('')}</div>
         <div class="wd u-rise" ${sd(.8)} data-wd aria-live="polite">${wdHTML(0)}</div>
       </div>
@@ -252,7 +266,7 @@
     }).join('');
     return `<div class="gh-s s3" data-screen="play">
       <a class="pg u-wipeUp" ${sd(.5)} href="${GAME}" aria-label="${L('開始遊戲：成為我的作品吧！心動任務', 'Start the game: Be My Portfolio — Love Quest', '게임 시작: 나의 작품이 되어줘! 두근두근 퀘스트')}">
-        <div class="pg-img" style="background-image:url(/assets/love-quest-promo.webp?v=20261009-no-url)"></div>
+        <div class="pg-img" data-slot="promo" style="background-image:url(${slotUrl('promo', '/assets/love-quest-promo.webp?v=20261009-no-url')})"></div>
         <div class="pg-top"><span>INTRVL RPG · <b>● ONLINE</b></span><span class="blink o" style="font-weight:700">${mqFine.matches ? 'PRESS ENTER' : 'TAP TO START'}</span></div>
         <div class="pg-dlg"><b>INTRVL</b><div><span data-type></span><i data-arrow style="opacity:0">▼</i></div></div>
       </a>
@@ -327,7 +341,7 @@
       </div>
       <div class="s6-r u-rise" ${sd(.6)} style="--t:.9s" data-cwrap>
         <div class="cs" data-cs data-noswipe role="group" aria-label="${L('課程圖片輪播', 'Course images', '강의 이미지')}">
-          ${COURSE.map(c => `<div class="cs-s" style="background-image:url(/assets/coloso/${c.k}.webp);clip-path:inset(0 0 0 100%)"></div>`).join('')}
+          ${COURSE.map(c => `<div class="cs-s" data-slot="course.${c.k}" style="background-image:url(${slotUrl('course.' + c.k, '/assets/coloso/' + c.k + '.webp')});clip-path:inset(0 0 0 100%)"></div>`).join('')}
           <div class="cs-part" data-cpart></div>
           <div class="cs-c"><button data-c="-1" aria-label="${L('上一張', 'Previous', '이전')}">←</button><div><b data-cn>01</b> / 06</div><button data-c="1" aria-label="${L('下一張', 'Next', '다음')}">→</button></div>
         </div>
@@ -359,7 +373,7 @@
   function sJoin() {
     return `<div class="gh-s s7" data-screen="join">
       <div class="s7-f u-zoom" style="--d:.3s;--t:1s">
-        <div class="s7-img u-wipeR" ${sd(.6)} data-jimg style="background:#1F1F1F"><i class="on" style="background-image:url(/assets/join/hiring.webp)"></i><i style="background-image:url(/assets/join/contact.webp)"></i><b data-jcap></b></div>
+        <div class="s7-img u-wipeR" ${sd(.6)} data-jimg style="background:#1F1F1F"><i class="on" data-slot="join.hiring" style="background-image:url(${slotUrl('join.hiring', '/assets/join/hiring.webp')})"></i><i data-slot="join.contact" style="background-image:url(${slotUrl('join.contact', '/assets/join/contact.webp')})"></i><b data-jcap></b></div>
         <div class="s7-c">
           <div class="tabs u-fade" ${sd(.6)} role="tablist">${L(['徵才', '合作'], ['Hiring', 'Contact'], ['채용', '문의']).map((z, i) => `<button role="tab" data-jt="${i}" aria-selected="${i === 0}" class="${i === 0 ? 'on' : ''}"><b>${z}</b><small>${['HIRING', 'CONTACT'][i]}</small></button>`).join('')}</div>
           <div data-jbody>${joinTab(0)}</div>
