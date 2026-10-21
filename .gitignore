@@ -39,6 +39,7 @@
 !/works/steal/
 !/assets/join/
 !/assets/news/
+!/assets/site/
 !/news/
 !/en/news/
 !/ko/news/
@@ -511,9 +512,11 @@
 !/assets/game-home.css
 !/assets/game-home.js
 !/assets/news-feed.js
+!/assets/site-slots.js
 !/assets/news-page.css
 !/assets/news-page.js
 !/assets/news/news.json
+!/assets/site/home.json
 !/assets/join/hiring.webp
 !/assets/join/contact.webp
 !/assets/team/mascots.json

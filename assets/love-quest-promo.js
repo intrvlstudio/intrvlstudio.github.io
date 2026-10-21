@@ -1,6 +1,7 @@
 /* Europe/Berlin: CEST at opening; CET after the October 25 clock change.
    End is exclusive, so the campaign includes all of October 31. */
 (() => {
+  const SL = window.INTRVLSlots || { ready: Promise.resolve(), get: (_, fallback) => fallback };
   const begins = Date.parse('2026-10-07T15:00:00+02:00');
   const ends = Date.parse('2026-11-01T00:00:00+01:00');
   // "Don't show again today": a first-party preference cookie that lapses at local midnight.
@@ -29,8 +30,10 @@
       const skip = en ? 'Don’t show again today' : ko ? '오늘 하루 보지 않기' : '今天不再顯示';
       dialog = document.createElement('dialog');
       dialog.id = 'loveQuestPromo'; dialog.setAttribute('aria-label', title);
-      dialog.innerHTML = `<a class="quest-promo-link" href="/be-my-portfolio-rpg/" aria-label="${go}"><img src="/assets/love-quest-promo.webp?v=20261009-no-url" width="1200" height="1200" alt="${title}" fetchpriority="high"></a><button class="quest-promo-close" type="button" aria-label="${label}" autofocus><img src="/assets/love-quest-close.svg" width="52" height="52" alt=""></button><label class="quest-promo-skip"><input type="checkbox"><span>${skip}</span></label>`;
+      dialog.innerHTML = `<a class="quest-promo-link" href="/be-my-portfolio-rpg/" aria-label="${go}"><img src="${SL.get('promo', '/assets/love-quest-promo.webp?v=20261009-no-url')}" width="1200" height="1200" alt="${title}" fetchpriority="high"></a><button class="quest-promo-close" type="button" aria-label="${label}" autofocus><img src="/assets/love-quest-close.svg" width="52" height="52" alt=""></button><label class="quest-promo-skip"><input type="checkbox"><span>${skip}</span></label>`;
       document.body.append(dialog);
+      // The published image list can arrive after the popup was built; swap the picture once.
+      SL.ready.then(() => { const url = SL.get('promo', ''), img = dialog.querySelector('img'); if (url && img && !img.src.endsWith(url)) img.src = url; });
       dialog.querySelector('button').addEventListener('click', close);
       // Saved as soon as it is ticked, so closing by any route (button, backdrop, Esc, link) keeps the choice.
       dialog.querySelector('.quest-promo-skip input').addEventListener('change', event => hideToday(event.target.checked));
