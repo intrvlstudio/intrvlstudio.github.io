@@ -1,4 +1,10 @@
 {
   "version": 1,
-  "slots": {}
+  "slots": {
+    "course.form": "/assets/site/img/505127dfdde0cabe.webp",
+    "course.light": "/assets/site/img/1e6a7f055bb0a2da.webp",
+    "course.sketch-study": "/assets/site/img/cfec01c08a7d7309.webp",
+    "course.sketch-to-comic": "/assets/site/img/975313974d589a13.webp",
+    "course.structure": "/assets/site/img/e70ac1098f7400ff.webp"
+  }
 }
