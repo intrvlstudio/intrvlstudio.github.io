@@ -123,7 +123,7 @@
     ['TWITTER (X)', '@intrvlstudio', 'https://x.com/intrvlstudio'],
     ['FACEBOOK', 'INTRVL Studio', 'https://www.facebook.com/profile.php?id=61593313695069']
   ];
-  const EMAIL = 'intrvlstudio@gmail.com';
+  const EMAIL = 'contact@intrvlstudio.cc';
   const GAME = '/be-my-portfolio-rpg/';
   const sd = n => `style="--d:${n}s"`;
 

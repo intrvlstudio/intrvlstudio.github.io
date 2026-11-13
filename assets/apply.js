@@ -11,12 +11,12 @@
     if(!roles.includes(input.role))throw Error('請選擇應徵職缺');
     const subject=`[INTRVL 應徵] ${input.role} — ${data.name}`;
     const body=`稱呼：${data.name}\nEmail：${data.email}\n應徵職缺：${input.role}\n\n相關經驗與工具：\n${data.experience}\n\n可投入時間與開始日期：\n${data.availability}\n\n請附上 PDF：個人介紹、作品集、工作經歷。`;
-    return {subject,body,href:'mailto:intrvlstudio@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),gmail:'https://mail.google.com/mail/?view=cm&fs=1&to=intrvlstudio%40gmail.com&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body)};
+    return {subject,body,href:'mailto:contact@intrvlstudio.cc?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),gmail:'https://mail.google.com/mail/?view=cm&fs=1&to=contact%40intrvlstudio.cc&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body)};
   }
   if(typeof module!=='undefined')module.exports={prepare};
   if(typeof document==='undefined')return;
   const form=document.getElementById('application'),draft=document.getElementById('draft'),error=document.getElementById('form-error');let prepared;
   form.addEventListener('input',()=>{draft.hidden=true;prepared=null;error.textContent='';document.getElementById('draft-mail').removeAttribute('href');document.getElementById('draft-gmail').removeAttribute('href')});
-  form.addEventListener('submit',event=>{event.preventDefault();error.textContent='';if(!form.reportValidity())return;try{prepared=prepare(Object.fromEntries(new FormData(form)));document.getElementById('draft-text').textContent='收件人：intrvlstudio@gmail.com\n主旨：'+prepared.subject+'\n\n'+prepared.body;document.getElementById('draft-mail').href=prepared.href;document.getElementById('draft-gmail').href=prepared.gmail;draft.hidden=false;document.getElementById('draft-heading').focus()}catch(e){error.textContent=e.message;draft.hidden=true}});
+  form.addEventListener('submit',event=>{event.preventDefault();error.textContent='';if(!form.reportValidity())return;try{prepared=prepare(Object.fromEntries(new FormData(form)));document.getElementById('draft-text').textContent='收件人：contact@intrvlstudio.cc\n主旨：'+prepared.subject+'\n\n'+prepared.body;document.getElementById('draft-mail').href=prepared.href;document.getElementById('draft-gmail').href=prepared.gmail;draft.hidden=false;document.getElementById('draft-heading').focus()}catch(e){error.textContent=e.message;draft.hidden=true}});
   document.getElementById('copy-draft').addEventListener('click',async()=>{if(!prepared)return;try{await navigator.clipboard.writeText(document.getElementById('draft-text').textContent);document.getElementById('copy-status').textContent='已複製，請貼入郵件並附上 PDF。'}catch{document.getElementById('copy-status').textContent='請選取上方草稿文字並手動複製。'}});
 })(typeof window==='undefined'?globalThis:window);
